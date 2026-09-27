@@ -25,6 +25,6 @@ Evidence is saved in [controls-evidence](controls-evidence/), including the fina
 
 ## Compatibility and remaining gaps
 
-The hosted 0.4.2 build and API29/34/36 core emulator matrix passed in [run 36331987438](https://github.com/vabxsen/saygo/actions/runs/36331987438). That result does not establish compatibility for these new 0.5.0 controls. A fresh hosted run is required after this change is pushed. Hosted instrumentation excludes three tests requiring actual YouTube/Chrome installations; those passed in the local full run.
+**Version 0.5.0 passed the hosted build and all three emulator jobs in [run 36333025318](https://github.com/vabxsen/saygo/actions/runs/36333025318), for app commit `2201feb`. Downloaded test XML confirms 40 tests on each API (29, 34 and 36), with zero failures, errors or skips. The [saved result summary](controls-evidence/hosted-results.json) lists the exact tests.** Hosted instrumentation excludes three tests requiring actual YouTube/Chrome installations; those passed in the local full run.
 
 This is still **not universal phone control**. Unlabelled/canvas controls, unsupported fields, free-form task planning, automatic Reels navigation, continuous listening, wake words, repeated scrolling and dedicated messaging/purchase workflows are not implemented. Real speech accuracy and actual Instagram behavior remain unverified under the user's emulator-only testing preference. The packaged APK is debug signed; the bundle is unsigned. Google Play submission and approval are still outstanding.
