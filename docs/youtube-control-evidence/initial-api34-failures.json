@@ -1,0 +1,24 @@
+{
+  "run": "https://github.com/vabxsen/saygo/actions/runs/36347434280",
+  "commit": "3d6953631bb415c10e63de85caa3af0e223a6c3d",
+  "api": 34,
+  "tests": 56,
+  "failures": [
+    {
+      "name": "queuedTapRejectsChangedAppAndQueuedTextRejectsRevokedConsent",
+      "class": "dev.saygo.app.PhoneControlServiceTest",
+      "failure": "java.lang.AssertionError: Settings setup failed: serviceRoot=null; uiRoot=com.android.settings; connected=true\nat dev.saygo.app.PhoneControlServiceTest.openSettings(PhoneControlServiceTest.kt:1048)\nat dev.saygo.app.PhoneControlServiceTest.queuedTapRejectsChangedAppAndQueuedTextRejectsRevokedConsent(PhoneControlServiceTest.kt:399)\n... 33 trimmed\nCaused by: java.lang.AssertionError: Timed out waiting for Settings foreground\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:1059)\nat dev.saygo.app.PhoneControlServiceTest.openSettings(PhoneControlServiceTest.kt:1040)\n... 35 more\n"
+    },
+    {
+      "name": "dispatchesExactlyOneGestureToTheValidatedForegroundApp",
+      "class": "dev.saygo.app.PhoneControlServiceTest",
+      "failure": "java.lang.AssertionError: Settings setup failed: serviceRoot=null; uiRoot=com.android.settings; connected=true\nat dev.saygo.app.PhoneControlServiceTest.openSettings(PhoneControlServiceTest.kt:1048)\nat dev.saygo.app.PhoneControlServiceTest.dispatchesExactlyOneGestureToTheValidatedForegroundApp(PhoneControlServiceTest.kt:67)\n... 33 trimmed\nCaused by: java.lang.AssertionError: Timed out waiting for Settings foreground\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:1059)\nat dev.saygo.app.PhoneControlServiceTest.openSettings(PhoneControlServiceTest.kt:1040)\n... 35 more\n"
+    },
+    {
+      "name": "interruptionCancelsWorkWaitingForTheVoicePanel",
+      "class": "dev.saygo.app.PhoneControlServiceTest",
+      "failure": "java.lang.AssertionError: Settings setup failed: serviceRoot=null; uiRoot=com.android.settings; connected=true\nat dev.saygo.app.PhoneControlServiceTest.openSettings(PhoneControlServiceTest.kt:1048)\nat dev.saygo.app.PhoneControlServiceTest.interruptionCancelsWorkWaitingForTheVoicePanel(PhoneControlServiceTest.kt:88)\n... 33 trimmed\nCaused by: java.lang.AssertionError: Timed out waiting for Settings foreground\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:1059)\nat dev.saygo.app.PhoneControlServiceTest.openSettings(PhoneControlServiceTest.kt:1040)\n... 35 more\n"
+    }
+  ],
+  "phase": "Settings fixture setup; assertions failed before the tested command was sent"
+}

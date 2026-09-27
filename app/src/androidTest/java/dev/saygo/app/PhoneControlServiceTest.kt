@@ -1035,7 +1035,11 @@ class PhoneControlServiceTest {
     }
 
     private fun openSettings() {
+        // Each test rebinds accessibility. Use a fresh Settings window so setup does
+        // not depend on the retained window and accessibility state of earlier tests.
+        shell("am force-stop com.android.settings")
         context.startActivity(Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        automation.waitForIdle(300, 5_000)
         try {
             await("Settings foreground") {
                 val root = PhoneControlService.current?.rootInActiveWindow
