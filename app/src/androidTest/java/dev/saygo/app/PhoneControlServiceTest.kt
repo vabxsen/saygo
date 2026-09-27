@@ -589,7 +589,7 @@ class PhoneControlServiceTest {
         assertTrue(screenHas("Grid receiver ready"))
     }
 
-    @Test fun gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay() {
+    @Test fun gridHideCancelAndRotationRemoveTheOverlay() {
         openGridTarget()
         runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
         runControl(Command.Grid(dev.saygo.app.commands.GridOperation.HIDE))
@@ -610,6 +610,9 @@ class PhoneControlServiceTest {
             automation.waitForIdle(300, 5000)
             if (autoRotation == "1") automation.setRotation(UiAutomation.ROTATION_UNFREEZE)
         }
+    }
+
+    @Test fun stableGridExpiresAfterOneMinuteAndShutdownRemovesIt() {
         openGridTarget()
         val started = SystemClock.uptimeMillis()
         runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
@@ -633,8 +636,15 @@ class PhoneControlServiceTest {
             if (root?.packageName?.toString() != "dev.saygo.app.test" || root.findAccessibilityNodeInfosByText("Grid receiver ready").isEmpty()) false
             else {
                 val bounds = android.graphics.Rect().also(root::getBoundsInScreen)
-                if (!bounds.isEmpty) observedBounds = bounds
-                !bounds.isEmpty
+                val serviceRoot = PhoneControlService.current?.rootInActiveWindow
+                val serviceBounds = android.graphics.Rect()
+                serviceRoot?.getBoundsInScreen(serviceBounds)
+                val ready = !bounds.isEmpty && serviceRoot?.windowId == root.windowId && serviceBounds == bounds &&
+                    serviceRoot.findAccessibilityNodeInfosByText("Grid receiver ready").isNotEmpty()
+                @Suppress("DEPRECATION")
+                serviceRoot?.recycle()
+                if (ready) observedBounds = bounds
+                ready
             }
         }
         return checkNotNull(observedBounds)
