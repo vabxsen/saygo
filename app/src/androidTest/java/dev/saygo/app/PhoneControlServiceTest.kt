@@ -708,6 +708,176 @@ class PhoneControlServiceTest {
         }
     }
 
+    @Test fun dragHoldsOnePointerAndDeliversNativeDropWithBubbleAtSource() {
+        val evidence = mutableListOf<String>()
+        for (native in listOf(false, true)) for (offset in listOf(false, true)) {
+            val bounds = openDragTarget(native, offset)
+            val region = dev.saygo.app.control.GridRegion(bounds.left, bounds.top, bounds.right, bounds.bottom)
+            val source = region.cell(1)!!; val destination = region.cell(9)!!
+            showTestBubble()
+            dragBubbleTo(source.centerX, source.centerY, allowOverlap = true)
+            val placed = bubbleBounds()
+            runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+            val before = SessionState.feedback.value.sequence
+            instrumentation.runOnMainSync {
+                val executor = dev.saygo.app.commands.CommandExecutor(context)
+                executor.execute(executor.parse("Drag cell one to cell nine")!!, "dev.saygo.app.test")
+            }
+            await("drag completed") { SessionState.feedback.value.sequence > before }
+            assertEquals("Drag gesture sent.", SessionState.feedback.value.title)
+            var receipt = ""
+            await("actual drag received") {
+                receipt = dragReceipt(native)
+                receipt.contains("held=true")
+            }
+            assertDragCoordinates(receipt, source.centerX, source.centerY, destination.centerX, destination.centerY)
+            if (native) assertTrue(receipt, receipt.endsWith("payload=saygo drag"))
+            else {
+                assertTrue(receipt, receipt.contains("down=1 up=1"))
+                val firstMove = Regex("firstMove=([0-9]+)").find(receipt)!!.groupValues[1].toLong()
+                assertTrue(receipt, firstMove >= android.view.ViewConfiguration.getLongPressTimeout())
+            }
+            assertNull(gridNode())
+            await("bubble restored after drag") { bubbleNode() != null }
+            assertEquals(placed, bubbleBounds())
+            evidence += "native=$native offset=$offset bounds=$bounds: $receipt; bubble restored"
+        }
+        java.io.File(context.filesDir, "drag-delivery.txt").writeText(evidence.joinToString("\n"))
+    }
+
+    @Test fun dragUsesTheZoomedGridAndRejectsMissingOrIdenticalCells() {
+        val bounds = openDragTarget(false, true)
+        val drag = Command.Grid(dev.saygo.app.commands.GridOperation.DRAG, 1, 9)
+        runControl(drag)
+        assertFalse(SessionState.feedback.value.success)
+        assertTrue(screenHas("Drag receiver ready"))
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        for (invalid in listOf(Command.Grid(dev.saygo.app.commands.GridOperation.DRAG, 1, 1),
+            Command.Grid(dev.saygo.app.commands.GridOperation.DRAG, 0, 9), Command.Grid(dev.saygo.app.commands.GridOperation.DRAG, 1))) {
+            runControl(invalid)
+            assertFalse(SessionState.feedback.value.success)
+            assertTrue(screenHas("Drag receiver ready"))
+        }
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.ZOOM, 5))
+        runControl(drag)
+        assertEquals("Drag gesture sent.", SessionState.feedback.value.title)
+        val region = dev.saygo.app.control.GridRegion(bounds.left, bounds.top, bounds.right, bounds.bottom).cell(5)!!
+        val source = region.cell(1)!!; val destination = region.cell(9)!!
+        await("zoomed drag received") { dragReceipt(false).contains("held=true") }
+        assertDragCoordinates(dragReceipt(false), source.centerX, source.centerY, destination.centerX, destination.centerY)
+    }
+
+    @Test fun cancellationAndConsentRevocationDuringHoldReleaseWithoutMoving() {
+        for (withdrawConsent in listOf(false, true)) {
+            Preferences(context).controlConsent = true
+            openDragTarget(false)
+            showTestBubble()
+            runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+            val before = SessionState.feedback.value.sequence
+            onDragDown({
+                if (withdrawConsent) Preferences(context).controlConsent = false
+                else dev.saygo.app.commands.CommandExecutor(context).execute(Command.Stop)
+            }) {
+                instrumentation.runOnMainSync {
+                    PhoneControlService.current!!.executeWhenReady(Command.Grid(dev.saygo.app.commands.GridOperation.DRAG, 1, 9), "dev.saygo.app.test")
+                }
+                await("held pointer released") { dragReceipt(false).contains("down=1 up=1") }
+            }
+            val receipt = dragReceipt(false)
+            assertTrue(receipt, receipt.contains("firstMove=-1 distance=0"))
+            await("drag cancellation result") {
+                SessionState.feedback.value.sequence > before && SessionState.feedback.value.title.startsWith("Drag stopped before moving")
+            }
+            assertFalse(SessionState.feedback.value.success)
+            assertNull(gridNode())
+            if (withdrawConsent) assertNull(bubbleNode())
+            else await("bubble restored after cancelled drag") { bubbleNode() != null }
+        }
+    }
+
+    @Test fun replacedWindowDuringHoldNeverReceivesDragMovement() {
+        openDragTarget(false)
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        val before = SessionState.feedback.value.sequence
+        onDragDown({
+            context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.GridTargetActivity")
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        }) {
+            instrumentation.runOnMainSync {
+                PhoneControlService.current!!.executeWhenReady(Command.Grid(dev.saygo.app.commands.GridOperation.DRAG, 1, 9), "dev.saygo.app.test")
+            }
+            await("drag abort callback") { SessionState.feedback.value.sequence > before }
+        }
+        await("replacement window visible") { screenHas("Grid receiver ready") }
+        assertFalse(SessionState.feedback.value.title, SessionState.feedback.value.success)
+        assertTrue(screenHas("Grid receiver ready"))
+    }
+
+    @Test fun cancelCommandClearsActionsWaitingForVoicePanel() {
+        openGridTarget()
+        val before = SessionState.feedback.value.sequence
+        instrumentation.runOnMainSync {
+            PhoneControlService.voiceUiVisible = true
+            PhoneControlService.current!!.executeWhenReady(Command.Swipe(Direction.UP), "dev.saygo.app.test")
+            dev.saygo.app.commands.CommandExecutor(context).execute(Command.Stop)
+            PhoneControlService.voiceUiVisible = false
+        }
+        assertEquals(before + 1, SessionState.feedback.value.sequence)
+        assertEquals("Cancelled. Nothing changed.", SessionState.feedback.value.title)
+        SystemClock.sleep(700)
+        assertEquals(before + 1, SessionState.feedback.value.sequence)
+        assertTrue(screenHas("Grid receiver ready"))
+    }
+
+    // The native receiver signals DOWN directly: accessibility content updates may be
+    // delayed until the entire gesture finishes and cannot synchronize mid-hold checks.
+    private fun onDragDown(action: () -> Unit, test: () -> Unit) {
+        var received = false
+        val receiver = object : android.content.BroadcastReceiver() {
+            override fun onReceive(context: android.content.Context?, intent: Intent?) {
+                received = true
+                action()
+            }
+        }
+        androidx.core.content.ContextCompat.registerReceiver(context, receiver,
+            android.content.IntentFilter("dev.saygo.app.test.DRAG_DOWN"), androidx.core.content.ContextCompat.RECEIVER_EXPORTED)
+        try { test(); assertTrue("The test app must signal actual pointer DOWN", received) }
+        finally { context.unregisterReceiver(receiver) }
+    }
+
+    private fun dragReceipt(native: Boolean): String = automation.rootInActiveWindow
+        ?.findAccessibilityNodeInfosByText(if (native) "Native drop from" else "Raw drag from")
+        ?.firstOrNull()?.text?.toString().orEmpty()
+
+    private fun assertDragCoordinates(receipt: String, startX: Float, startY: Float, endX: Float, endY: Float) {
+        val match = Regex("from ([0-9]+),([0-9]+) to ([0-9]+),([0-9]+)").find(receipt) ?: error(receipt)
+        listOf(startX, startY, endX, endY).forEachIndexed { index, expected ->
+            assertEquals(receipt, expected, match.groupValues[index + 1].toFloat(), 2f)
+        }
+    }
+
+    private fun openDragTarget(native: Boolean, offset: Boolean = false): android.graphics.Rect {
+        context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.DragTargetActivity")
+            .putExtra("native", native).putExtra("offset", offset)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        automation.waitForIdle(300, 5000)
+        var result: android.graphics.Rect? = null
+        await("drag fixture ready in both clients") {
+            val root = automation.rootInActiveWindow
+            val serviceRoot = PhoneControlService.current?.rootInActiveWindow
+            val bounds = android.graphics.Rect().also { root?.getBoundsInScreen(it) }
+            val other = android.graphics.Rect().also { serviceRoot?.getBoundsInScreen(it) }
+            val ready = root?.packageName?.toString() == "dev.saygo.app.test" &&
+                root.findAccessibilityNodeInfosByText("Drag receiver ready").isNotEmpty() &&
+                serviceRoot?.windowId == root.windowId && other == bounds && !bounds.isEmpty
+            @Suppress("DEPRECATION")
+            serviceRoot?.recycle()
+            if (ready) result = bounds
+            ready
+        }
+        return checkNotNull(result)
+    }
+
     private fun openPinchTarget(offset: Boolean, wide: Boolean = false): android.graphics.Rect {
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.PinchTargetActivity")
             .putExtra("offset", offset).putExtra("wide", wide).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))

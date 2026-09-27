@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">saygo</string>
     <string name="accessibility_label">saygo phone controls</string>
-    <string name="accessibility_description">Optional voice controls for taps, long presses, text editing, swipes, pinch zoom and navigation. saygo reads the foreground app identity, control labels and focused text field locally to carry out one command, and displays a floating microphone and optional numbered grid. It does not save screen contents. Enable only after reviewing the disclosure in saygo.</string>
+    <string name="accessibility_description">Optional voice controls for taps, long presses, text editing, swipes, drags, pinch zoom and navigation. saygo reads the foreground app identity, control labels and focused text field locally to carry out one command, and displays a floating microphone and optional numbered grid. It does not save screen contents. Enable only after reviewing the disclosure in saygo.</string>
 </resources>
 
 

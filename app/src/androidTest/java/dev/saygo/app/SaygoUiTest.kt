@@ -80,7 +80,7 @@ class SaygoUiTest {
         compose.onNodeWithText("Search Google for coffee").performScrollTo().performClick()
         listOf("Open Instagram", "Open YouTube", "Search Google for coffee nearby",
             "Search YouTube for cooking", "Next reel", "Previous reel", "Swipe left / Swipe right", "Zoom in / Zoom out",
-            "Go back", "Go home", "Recent apps", "Show grid", "Zoom cell 5", "Tap cell 5", "Long press cell 5", "Grid back / Hide grid", "Tap Search", "Long press a label", "Type your words", "Replace text with your words", "Clear text", "Select all", "Cancel").forEach {
+            "Go back", "Go home", "Recent apps", "Show grid", "Zoom cell 5", "Tap cell 5", "Long press cell 5", "Drag cell 1 to cell 9", "Grid back / Hide grid", "Tap Search", "Long press a label", "Type your words", "Replace text with your words", "Clear text", "Select all", "Cancel").forEach {
             compose.onNodeWithText("“" + it + "”").performScrollTo().assertIsDisplayed()
         }
         compose.onNodeWithText("Home", useUnmergedTree = true).performClick()

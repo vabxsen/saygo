@@ -28,7 +28,10 @@ class CommandExecutor(private val context: Context) {
                     if (service == null) SessionState.report("Enable phone controls in Setup first.", false)
                     else service.executeWhenReady(command, originPackage)
                 }
-                Command.Stop -> SessionState.report("Cancelled. Nothing changed.")
+                Command.Stop -> {
+                    val inFlight = PhoneControlService.current?.cancelActions() == true
+                    SessionState.report(if (inFlight) "Cancelled. Input already sent may still finish." else "Cancelled. Nothing changed.")
+                }
             }
         } catch (_: ActivityNotFoundException) {
             SessionState.report("No app is available to open this. Install a browser or the requested app.", false)

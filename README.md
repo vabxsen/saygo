@@ -1,6 +1,8 @@
 # saygo
 
-**Current version: 0.7.0.** Adds native two-finger zoom. **74 local tests passed** (54 Android/API36 + 20 JVM), with build, lint and release checks passing. GitHub also passed 51 core tests on each of Android 10, 14 and 16. See [pinch commands and verification](docs/PINCH_0.7.0.md).
+**Current version: 0.8.0.** Adds explicit hold-and-drag between numbered grid cells and cancellation of queued input. **80 local tests passed** (59 Android/API36 + 21 JVM), with build, lint and release checks passing. See [drag commands and verification](docs/DRAG_0.8.0.md).
+
+**Previous version: 0.7.0.** Adds native two-finger zoom. **74 local tests passed** (54 Android/API36 + 20 JVM), with build, lint and release checks passing. GitHub also passed 51 core tests on each of Android 10, 14 and 16. See [pinch commands and verification](docs/PINCH_0.7.0.md).
 
 **Previous version: 0.6.0.** Adds a numbered grid for unlabelled controls. **69 local tests passed** (50 Android/API36 + 19 JVM), with debug/release builds and lint passing. GitHub also passed 47 core tests on each of Android 10, 14 and 16. See [grid controls and verification](docs/GRID_0.6.0.md).
 
@@ -8,7 +10,7 @@ Previous version **0.5.0**: Adds direct taps, long presses and text editing. **5
 
 A minimal Android voice-command app, written in Kotlin and Jetpack Compose.
 
-saygo opens installed apps, searches Google and YouTube, and optionally performs one tap, long press, text edit, swipe, pinch-zoom or system navigation action per spoken command. English only. Android 10+ (`minSdk 29`), targeting Android 16 (`targetSdk 36`).
+saygo opens installed apps, searches Google and YouTube, and optionally performs one tap, long press, text edit, swipe, drag, pinch-zoom or system navigation action per spoken command. English only. Android 10+ (`minSdk 29`), targeting Android 16 (`targetSdk 36`).
 
 Version 0.4.0 implements the selected cobalt-and-white design: a bold two-line headline, circular microphone, concise command rows, and bottom navigation. Commands, Setup, the listening sheet, launcher accent, and floating microphone share the same visual system. Dark mode and enlarged system text are supported.
 
@@ -36,6 +38,7 @@ Android may restrict accessibility settings for apps installed outside a trusted
 | `Search YouTube for <query>` | Open YouTube search in a handler app or browser |
 | `Show grid`, `Zoom cell 5`, `Grid back`, `Hide grid` | Display and refine a 3×3 coordinate guide; up to two zooms |
 | `Tap cell 5`, `Long press cell 5` | One touch at that cell’s centre; English number words also work |
+| `Drag cell 1 to cell 9` | Hold, move and release between two different cells of the current grid |
 | `Tap Search`, `Long press Download` | Act on one visible control with that exact, unique label |
 | `Type <text>` | Insert literal text at the cursor, replacing selected text, in the focused field |
 | `Replace text with <text>`, `Clear text`, `Select all` | Edit the focused text field |
@@ -44,11 +47,11 @@ Android may restrict accessibility settings for apps installed outside a trusted
 | `Zoom in`, `Zoom out` | One two-finger gesture centred on the current app window; the target content must support pinch zoom |
 | `Swipe left`, `Swipe right` | One horizontal swipe |
 | `Go back`, `Go home`, `Recent apps` | Android system navigation |
-| `Cancel`, `Stop`, `Never mind` | End the command without an action |
+| `Cancel`, `Stop`, `Never mind` | Cancel listening and queued input; input already sent cannot be undone |
 
 The parser is case insensitive and tolerates extra spaces and sentence-ending punctuation. Unknown commands and chained instructions are rejected. Queries are URL encoded and never interpreted as additional actions.
 
-Not implemented: always-on listening, a wake word, hold-and-drag or arbitrary multi-finger gestures, automatic Reels navigation, repeat scrolling, dedicated purchase/messaging workflows, or autonomous planning. Named controls must expose a unique usable accessibility label. For an unlabelled control, say “Show grid”, narrow its area with “Zoom cell <number>”, then say “Tap cell <number>”. The grid closes after a touch, app/window change, scroll, rotation, screen-off, cancellation, or one minute without another grid command. Coordinate taps do not identify what a button does; choose the area yourself. Focus a text field before dictation; password fields require the keyboard. The app never presses Send automatically after typing. saygo does not promise to control every Android screen. It cannot bypass a locked phone or Android security controls.
+Not implemented: always-on listening, a wake word, arbitrary multi-finger gestures, automatic Reels navigation, repeat scrolling, dedicated purchase/messaging workflows, or autonomous planning. Named controls must expose a unique usable accessibility label. For an unlabelled control, say “Show grid”, narrow its area with “Zoom cell <number>”, then say “Tap cell <number>”. The grid closes after a touch, app/window change, scroll, rotation, screen-off, cancellation, or one minute without another grid command. Coordinate taps and drags do not identify what a button does; choose the area yourself. Both drag endpoints use the current grid region. A drag holds first and then moves in a straight line; the receiving app must support that gesture. Cancellation during the hold releases at the source, which may already have reacted to the hold. Movement already sent may finish. Focus a text field before dictation; password fields require the keyboard. The app never presses Send automatically after typing. saygo does not promise to control every Android screen. It cannot bypass a locked phone or Android security controls.
 
 ## Build
 

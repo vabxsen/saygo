@@ -1,0 +1,45 @@
+
+dev.saygo.app.PhoneControlServiceTest:
+Error in dragHoldsOnePointerAndDeliversNativeDropWithBubbleAtSource(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Raw drag from 180,400 to 900,2000 held=true down=1 up=1 firstMove=71 distance=1755
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.dragHoldsOnePointerAndDeliversNativeDropWithBubbleAtSource(PhoneControlServiceTest.kt:738)
+.
+Error in replacedWindowDuringHoldNeverReceivesDragMovement(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Drag gesture sent.
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at dev.saygo.app.PhoneControlServiceTest.replacedWindowDuringHoldNeverReceivesDragMovement(PhoneControlServiceTest.kt:812)
+
+Error in cancellationAndConsentRevocationDuringHoldReleaseWithoutMoving(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Raw drag from 180,400 to 900,2000 held=true down=1 up=1 firstMove=69 distance=1755
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.cancellationAndConsentRevocationDuringHoldReleaseWithoutMoving(PhoneControlServiceTest.kt:787)
+.
+
+Time: 10.825
+There were 3 failures:
+1) dragHoldsOnePointerAndDeliversNativeDropWithBubbleAtSource(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Raw drag from 180,400 to 900,2000 held=true down=1 up=1 firstMove=71 distance=1755
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.dragHoldsOnePointerAndDeliversNativeDropWithBubbleAtSource(PhoneControlServiceTest.kt:738)
+2) replacedWindowDuringHoldNeverReceivesDragMovement(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Drag gesture sent.
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at dev.saygo.app.PhoneControlServiceTest.replacedWindowDuringHoldNeverReceivesDragMovement(PhoneControlServiceTest.kt:812)
+3) cancellationAndConsentRevocationDuringHoldReleaseWithoutMoving(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Raw drag from 180,400 to 900,2000 held=true down=1 up=1 firstMove=69 distance=1755
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.cancellationAndConsentRevocationDuringHoldReleaseWithoutMoving(PhoneControlServiceTest.kt:787)
+
+FAILURES!!!
+Tests run: 5,  Failures: 3
+
+

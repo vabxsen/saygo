@@ -1,3 +1,5 @@
+> Current version: **0.8.0**. See [hold-and-drag verification](DRAG_0.8.0.md). Earlier sections preserve verification history.
+
 > Current version: **0.7.0**. See [native pinch zoom and current results](PINCH_0.7.0.md). Earlier sections preserve verification history.
 
 > Current version: **0.6.0**. See [numbered grid and current results](GRID_0.6.0.md). The sections below preserve earlier verification history.

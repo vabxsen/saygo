@@ -8,11 +8,11 @@ sealed interface Command {
     data class Navigate(val destination: Destination) : Command
     data class Tap(val label: String, val longPress: Boolean = false) : Command
     data class EditText(val operation: TextOperation, val text: String = "") : Command
-    data class Grid(val operation: GridOperation, val cell: Int? = null) : Command
+    data class Grid(val operation: GridOperation, val cell: Int? = null, val destinationCell: Int? = null) : Command
     data object Stop : Command
 }
 
-enum class GridOperation { SHOW, HIDE, ZOOM, BACK, TAP, LONG_PRESS }
+enum class GridOperation { SHOW, HIDE, ZOOM, BACK, TAP, LONG_PRESS, DRAG }
 
 enum class TextOperation { INSERT, REPLACE, CLEAR, SELECT_ALL }
 
@@ -48,6 +48,14 @@ object CommandParser {
             "previous reel", "previous video", "scroll up", "swipe down" -> return Command.Swipe(Direction.DOWN)
             "swipe left" -> return Command.Swipe(Direction.LEFT)
             "swipe right" -> return Command.Swipe(Direction.RIGHT)
+        }
+        if (key.startsWith("drag ")) {
+            val cellWord = "([1-9]|one|two|three|four|five|six|seven|eight|nine)"
+            val match = Regex("^drag cell $cellWord to cell $cellWord$").matchEntire(key) ?: return null
+            fun cell(value: String) = value.toIntOrNull() ?:
+                (listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine").indexOf(value) + 1)
+            val start = cell(match.groupValues[1]); val end = cell(match.groupValues[2])
+            return if (start == end) null else Command.Grid(GridOperation.DRAG, start, end)
         }
         if (Regex("^(zoom|tap|long press) cell(?: |$)").containsMatchIn(key)) {
             val match = Regex("^(zoom|tap|long press) cell ([1-9]|one|two|three|four|five|six|seven|eight|nine)$").matchEntire(key) ?: return null

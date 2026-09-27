@@ -49,6 +49,7 @@ class PhoneControlService : AccessibilityService() {
     private var bubbleParams: WindowManager.LayoutParams? = null
     private var pending: Runnable? = null
     private var gestureInFlight = false
+    private var activeDrag: HeldDrag? = null
     private var bubbleSuspended = false
     private var grid: GridOverlay? = null
     private val expireGrid = Runnable { dismissGrid() }
@@ -65,7 +66,7 @@ class PhoneControlService : AccessibilityService() {
     }
     private var screenReceiverRegistered = false
     private val screenReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) { cancelPending(); dismissGrid() }
+        override fun onReceive(context: Context?, intent: Intent?) { cancelActions() }
     }
     private lateinit var prefs: Preferences
     private val windows get() = getSystemService(WindowManager::class.java)
@@ -98,11 +99,10 @@ class PhoneControlService : AccessibilityService() {
             handler.postDelayed(validateGridWindow, 100)
         }
     }
-    override fun onInterrupt() { cancelPending(); dismissGrid() }
+    override fun onInterrupt() { cancelActions() }
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
-        dismissGrid()
-        cancelPending()
+        cancelActions()
         if (::prefs.isInitialized) refreshBubble()
     }
 
@@ -279,14 +279,23 @@ class PhoneControlService : AccessibilityService() {
                             extendGridTimeout()
                             SessionState.report(if (ok) "Previous grid shown." else "Already at the full grid.", ok)
                         }
-                        GridOperation.TAP, GridOperation.LONG_PRESS -> {
+                        GridOperation.TAP, GridOperation.LONG_PRESS, GridOperation.DRAG -> {
                             val cell = command.cell?.let(active.region::cell)
                             if (cell == null) { cancelPending(); SessionState.report("Choose a cell from 1 to 9.", false); return }
+                            val destination = command.destinationCell?.let(active.region::cell)
+                            if (command.operation == GridOperation.DRAG && (destination == null || destination == cell)) {
+                                cancelPending(); SessionState.report("Choose two different cells from 1 to 9.", false); return
+                            }
                             if (!bubbleSuspended) {
                                 bubbleSuspended = true
                                 active.setVisible(false)
                                 bubble?.let { if (it.isAttachedToWindow) windows.removeViewImmediate(it) }
                                 handler.postDelayed(this, 80)
+                                return
+                            }
+                            if (command.operation == GridOperation.DRAG) {
+                                dismissGrid()
+                                drag(cell, checkNotNull(destination), target!!, targetWindow, bounds)
                                 return
                             }
                             val longPress = command.operation == GridOperation.LONG_PRESS
@@ -391,6 +400,34 @@ class PhoneControlService : AccessibilityService() {
         if (!accepted) finishGesture("Android couldn’t perform this gesture.", false)
     }
 
+    private fun drag(start: GridRegion, end: GridRegion, origin: String, windowId: Int, bounds: Rect) {
+        gestureInFlight = true
+        cancelPending()
+        val operation = HeldDrag(this, handler, start.centerX, start.centerY, end.centerX, end.centerY,
+            canMove = {
+                val root = rootInActiveWindow
+                val now = Rect()
+                root?.getBoundsInScreen(now)
+                val sameWindow = root?.packageName?.toString() == origin && root.windowId == windowId && now == bounds
+                @Suppress("DEPRECATION")
+                root?.recycle()
+                current === this && prefs.controlConsent && !voiceUiVisible && sameWindow &&
+                    !getSystemService(KeyguardManager::class.java).isKeyguardLocked &&
+                    getSystemService(android.os.PowerManager::class.java).isInteractive
+            },
+            onFinished = { message, success -> activeDrag = null; finishGesture(message, success) })
+        activeDrag = operation
+        operation.start()
+    }
+
+    /** Cancels queued input. Already dispatched input cannot be undone. */
+    fun cancelActions(): Boolean {
+        activeDrag?.cancel()
+        cancelPending()
+        dismissGrid()
+        return gestureInFlight
+    }
+
     fun dismissGrid() {
         handler.removeCallbacks(validateGridWindow)
         handler.removeCallbacks(expireGrid)
@@ -429,7 +466,7 @@ class PhoneControlService : AccessibilityService() {
     }
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
     override fun onDestroy() {
-        dismissGrid()
+        cancelActions()
         if (screenReceiverRegistered) { unregisterReceiver(screenReceiver); screenReceiverRegistered = false }
         if (current === this) { reference.clear(); mutableConnected.value = false }
         cancelPending()

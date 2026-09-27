@@ -81,5 +81,14 @@ class CommandParserTest {
         assertEquals(Command.Grid(GridOperation.ZOOM, 5), CommandParser.parse("zoom cell 5"))
         assertEquals(Command.EditText(TextOperation.INSERT, "zoom in"), CommandParser.parse("type zoom in"))
     }
+    @Test fun `drag selects two different grid cells without planning`() {
+        assertEquals(Command.Grid(GridOperation.DRAG, 1, 9), CommandParser.parse("Drag cell one to cell nine!"))
+        assertEquals(Command.Grid(GridOperation.DRAG, 6, 2), CommandParser.parse("DRAG  cell 6 to cell 2"))
+        listOf("drag", "drag cell 1", "drag cell 1 to 9", "drag cell 0 to cell 9", "drag cell 1 to cell 10",
+            "drag cell 1 to cell 1", "drag cell 1 to cell 9 then go home", "drag cell 1 to cell 9 twice").forEach {
+            assertNull(it, CommandParser.parse(it))
+        }
+        assertEquals(Command.EditText(TextOperation.INSERT, "drag cell 1 to cell 9"), CommandParser.parse("type drag cell 1 to cell 9"))
+    }
     private fun inputDescription(value: String) = "Should reject: $value"
 }

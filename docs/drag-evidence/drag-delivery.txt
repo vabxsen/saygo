@@ -1,0 +1,4 @@
+native=false offset=false bounds=Rect(0, 0 - 1080, 2400): Raw drag from 180,400 to 900,2000 held=true down=1 up=1 firstMove=607 distance=1755; bubble restored
+native=false offset=true bounds=Rect(30, 60 - 840, 1660): Raw drag from 165,327 to 705,1393 held=true down=1 up=1 firstMove=612 distance=1195; bubble restored
+native=true offset=false bounds=Rect(0, 0 - 1080, 2400): Native drop from 180,400 to 900,2000 held=true payload=saygo drag; bubble restored
+native=true offset=true bounds=Rect(30, 60 - 840, 1660): Native drop from 165,327 to 705,1393 held=true payload=saygo drag; bubble restored

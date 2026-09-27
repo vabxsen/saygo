@@ -47,3 +47,7 @@ The user selected individual voice commands with Google Play support. Version 0.
 ## Follow-up: grid and pinch controls
 
 Version 0.6.0 added a numbered grid for unlabelled tap targets, with 47 core tests passing on each of Android 10, 14 and 16. Version 0.7.0 adds explicit native pinch zoom and verifies real scaling in a separate app, including offset windows. See [grid results](GRID_0.6.0.md) and [pinch results](PINCH_0.7.0.md). These additions do not establish universal phone control or Google Play approval.
+
+## Follow-up: hold-and-drag
+
+Version 0.8.0 adds an explicit drag between two different numbered grid cells and fixes cancellation of queued input. Native drag-and-drop and pointer timing are verified in a separate test app. See [drag results](DRAG_0.8.0.md). Arbitrary phone tasks and Play approval remain unverified.
