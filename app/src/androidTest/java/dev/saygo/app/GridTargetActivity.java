@@ -11,11 +11,21 @@ import android.widget.TextView;
 
 /** Unlabelled canvas in a separate process; reports real touch delivery. */
 public class GridTargetActivity extends Activity {
+    private TextView result;
+    private boolean entered;
+
+    @Override public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        if (!entered) {
+            entered = true;
+            result.setText("Grid receiver ready");
+        }
+    }
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         FrameLayout frame = new FrameLayout(this);
-        TextView result = new TextView(this);
-        result.setText("Grid receiver ready");
+        result = new TextView(this);
+        result.setText("Grid receiver opening");
         View canvas = new View(this) {
             private boolean held;
             private float x, y;

@@ -12,11 +12,21 @@ import java.util.Locale;
 
 /** Receives real two-finger events and runs Android's native scale detector. */
 public class PinchTargetActivity extends Activity {
+    private TextView result;
+    private boolean entered;
+
+    @Override public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        if (!entered) {
+            entered = true;
+            result.setText("Pinch receiver ready");
+        }
+    }
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         FrameLayout frame = new FrameLayout(this);
-        TextView result = new TextView(this);
-        result.setText("Pinch receiver ready");
+        result = new TextView(this);
+        result.setText("Pinch receiver opening");
         View canvas = new View(this) {
             private float scale = 1f;
             private int pointers, downs, ups;

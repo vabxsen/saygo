@@ -857,25 +857,28 @@ class PhoneControlServiceTest {
     }
 
     private fun openDragTarget(native: Boolean, offset: Boolean = false): android.graphics.Rect {
+        val previousWindowId = automation.rootInActiveWindow?.windowId
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.DragTargetActivity")
             .putExtra("native", native).putExtra("offset", offset)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-        return awaitStableFixture("Drag receiver ready")
+        return awaitStableFixture("Drag receiver ready", previousWindowId)
     }
 
     private fun openPinchTarget(offset: Boolean, wide: Boolean = false): android.graphics.Rect {
+        val previousWindowId = automation.rootInActiveWindow?.windowId
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.PinchTargetActivity")
             .putExtra("offset", offset).putExtra("wide", wide).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-        return awaitStableFixture("Pinch receiver ready")
+        return awaitStableFixture("Pinch receiver ready", previousWindowId)
     }
 
     private fun openGridTarget(): android.graphics.Rect {
+        val previousWindowId = automation.rootInActiveWindow?.windowId
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.GridTargetActivity")
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-        return awaitStableFixture("Grid receiver ready")
+        return awaitStableFixture("Grid receiver ready", previousWindowId)
     }
 
-    private fun awaitStableFixture(label: String): android.graphics.Rect {
+    private fun awaitStableFixture(label: String, previousWindowId: Int?): android.graphics.Rect {
         automation.waitForIdle(300, 5000)
         var observed: android.graphics.Rect? = null
         var windowId: Int? = null
@@ -894,6 +897,7 @@ class PhoneControlServiceTest {
                 val bounds = android.graphics.Rect().also { root?.getBoundsInScreen(it) }
                 val other = android.graphics.Rect().also { serviceRoot?.getBoundsInScreen(it) }
                 val ready = refreshed && root?.packageName?.toString() == "dev.saygo.app.test" &&
+                    root.windowId != previousWindowId &&
                     root.findAccessibilityNodeInfosByText(label).isNotEmpty() &&
                     serviceRoot?.windowId == root.windowId && other == bounds && !bounds.isEmpty
                 if (!ready) {

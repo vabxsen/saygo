@@ -14,12 +14,22 @@ import java.util.Locale;
 
 /** Separate app: native drag-and-drop or raw continuous-pointer evidence. */
 public class DragTargetActivity extends Activity {
+    private TextView result;
+    private boolean entered;
+
+    @Override public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        if (!entered) {
+            entered = true;
+            result.setText("Drag receiver ready");
+        }
+    }
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         boolean nativeDrag = getIntent().getBooleanExtra("native", false);
         FrameLayout frame = new FrameLayout(this);
-        TextView result = new TextView(this);
-        result.setText("Drag receiver ready");
+        result = new TextView(this);
+        result.setText("Drag receiver opening");
         View canvas = new View(this) {
             private float startX, startY, lastX, lastY, distance;
             private long downTime, firstMove = -1;
