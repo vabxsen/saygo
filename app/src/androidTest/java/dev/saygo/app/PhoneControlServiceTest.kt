@@ -31,12 +31,23 @@ class PhoneControlServiceTest {
         automation = instrumentation.getUiAutomation(UiAutomation.FLAG_DONT_SUPPRESS_ACCESSIBILITY_SERVICES)
         previousServices = shell("settings get secure enabled_accessibility_services")
         previousEnabled = shell("settings get secure accessibility_enabled")
+        // A previous test's unbind can still be queued after its settings command returns.
+        // Establish a genuinely disconnected state before waiting for a fresh binding.
+        val otherServices = previousServices.split(':').filter { it != "null" && it.isNotBlank() && !it.startsWith("dev.saygo.app/") }
+        if (otherServices.isEmpty()) shell("settings delete secure enabled_accessibility_services")
+        else {
+            val retained = otherServices.joinToString(":")
+            require(retained.matches(Regex("[a-zA-Z0-9_.$/:]+")))
+            shell("settings put secure enabled_accessibility_services $retained")
+        }
+        await("previous service disconnected") { PhoneControlService.current == null }
         val prefs = Preferences(context)
         previousConsent = prefs.controlConsent
         previousBubble = prefs.showBubble
         prefs.controlConsent = true
         prefs.showBubble = false
-        shell("settings put secure enabled_accessibility_services dev.saygo.app/dev.saygo.app.control.PhoneControlService")
+        val services = (otherServices + "dev.saygo.app/dev.saygo.app.control.PhoneControlService").joinToString(":")
+        shell("settings put secure enabled_accessibility_services $services")
         shell("settings put secure accessibility_enabled 1")
         await("service connection") { PhoneControlService.current != null }
     }
@@ -495,10 +506,24 @@ class PhoneControlServiceTest {
         openGridTarget()
         showTestBubble()
         runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
-        instrumentation.runOnMainSync { PhoneControlService.voiceUiVisible = true }
-        await("grid hidden for voice") { gridNode() == null }
-        instrumentation.runOnMainSync { PhoneControlService.voiceUiVisible = false }
-        await("grid restored after voice") { gridNode() != null }
+        val previousSpeechConsent = Preferences(context).speechConsent
+        Preferences(context).speechConsent = false // Exercise the real panel without recording audio.
+        try {
+            val intent = Intent(context, VoiceActivity::class.java)
+                .putExtra(VoiceActivity.EXTRA_ORIGIN, "dev.saygo.app.test")
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            androidx.test.core.app.ActivityScenario.launch<VoiceActivity>(intent).use { panel ->
+                await("actual voice panel hides grid") { PhoneControlService.voiceUiVisible && gridNode() == null }
+                panel.onActivity {
+                    PhoneControlService.current!!.executeWhenReady(Command.Grid(dev.saygo.app.commands.GridOperation.ZOOM, 5), "dev.saygo.app.test")
+                    it.finish()
+                }
+                await("queued grid command completes on original app after voice panel closes") {
+                    !PhoneControlService.voiceUiVisible && automation.rootInActiveWindow?.packageName?.toString() == "dev.saygo.app.test" &&
+                        gridNode()?.contentDescription?.toString()?.contains("level 2") == true
+                }
+            }
+        } finally { Preferences(context).speechConsent = previousSpeechConsent }
         val before = SessionState.feedback.value.sequence
         instrumentation.runOnMainSync {
             PhoneControlService.current!!.executeWhenReady(Command.Grid(dev.saygo.app.commands.GridOperation.TAP, 5), "dev.saygo.app.test")
@@ -573,10 +598,18 @@ class PhoneControlServiceTest {
         instrumentation.runOnMainSync { dev.saygo.app.commands.CommandExecutor(context).execute(Command.Stop) }
         assertNull(gridNode())
         runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        val display = context.getSystemService(android.hardware.display.DisplayManager::class.java).getDisplay(android.view.Display.DEFAULT_DISPLAY)
+        val originalRotation = display.rotation
+        val autoRotation = shell("settings get system accelerometer_rotation")
         try {
-            assertTrue(automation.setRotation(UiAutomation.ROTATION_FREEZE_90))
+            assertTrue(automation.setRotation(if (originalRotation == android.view.Surface.ROTATION_90) UiAutomation.ROTATION_FREEZE_0 else UiAutomation.ROTATION_FREEZE_90))
             await("grid dismissed on rotation") { gridNode() == null }
-        } finally { automation.setRotation(UiAutomation.ROTATION_UNFREEZE) }
+        } finally {
+            assertTrue(automation.setRotation(originalRotation))
+            await("original display rotation restored") { display.rotation == originalRotation }
+            automation.waitForIdle(300, 5000)
+            if (autoRotation == "1") automation.setRotation(UiAutomation.ROTATION_UNFREEZE)
+        }
         openGridTarget()
         val started = SystemClock.uptimeMillis()
         runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
@@ -592,8 +625,19 @@ class PhoneControlServiceTest {
     private fun openGridTarget(): android.graphics.Rect {
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.GridTargetActivity")
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-        await("grid target ready") { automation.rootInActiveWindow?.packageName?.toString() == "dev.saygo.app.test" && screenHas("Grid receiver ready") }
-        return android.graphics.Rect().also { automation.rootInActiveWindow!!.getBoundsInScreen(it) }
+        // The node tree can appear before the Activity launch animation settles its bounds.
+        automation.waitForIdle(300, 5000)
+        var observedBounds: android.graphics.Rect? = null
+        await("grid target ready") {
+            val root = automation.rootInActiveWindow
+            if (root?.packageName?.toString() != "dev.saygo.app.test" || root.findAccessibilityNodeInfosByText("Grid receiver ready").isEmpty()) false
+            else {
+                val bounds = android.graphics.Rect().also(root::getBoundsInScreen)
+                if (!bounds.isEmpty) observedBounds = bounds
+                !bounds.isEmpty
+            }
+        }
+        return checkNotNull(observedBounds)
     }
     private fun enableWindowInspection() {
         val info = automation.serviceInfo
@@ -613,7 +657,7 @@ class PhoneControlServiceTest {
         return visible
     }
     private fun captureGrid(name: String) {
-        val view = gridNode() ?: error("Grid missing")
+        val view = gridNode() ?: error("Grid missing; feedback=${SessionState.feedback.value.title}")
         val drawn = java.util.concurrent.CountDownLatch(1)
         instrumentation.runOnMainSync {
             view.postOnAnimation { view.postOnAnimation { drawn.countDown() } }
@@ -706,12 +750,17 @@ class PhoneControlServiceTest {
 
     private fun openSettings() {
         context.startActivity(Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-        await("Settings foreground") {
-            val root = PhoneControlService.current?.rootInActiveWindow
-            val name = root?.packageName?.toString()
-            @Suppress("DEPRECATION")
-            root?.recycle()
-            name == "com.android.settings"
+        try {
+            await("Settings foreground") {
+                val root = PhoneControlService.current?.rootInActiveWindow
+                val name = root?.packageName?.toString()
+                @Suppress("DEPRECATION")
+                root?.recycle()
+                name == "com.android.settings"
+            }
+        } catch (failure: AssertionError) {
+            throw AssertionError("Settings setup failed: serviceRoot=" + PhoneControlService.current?.rootInActiveWindow?.packageName +
+                "; uiRoot=" + automation.rootInActiveWindow?.packageName + "; connected=" + PhoneControlService.connected.value, failure)
         }
     }
     private fun shell(command: String): String = ParcelFileDescriptor.AutoCloseInputStream(automation.executeShellCommand(command)).bufferedReader().use { it.readText().trim() }
