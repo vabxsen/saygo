@@ -1,0 +1,12 @@
+{
+  "run": "https://github.com/vabxsen/saygo/actions/runs/36350569326",
+  "commit": "7cc6a0131281febd66bae0fa087597d84cd682bf",
+  "tests": 62,
+  "failures": [
+    {
+      "class": "dev.saygo.app.PhoneControlServiceTest",
+      "name": "quickSettingsCommandOpensTheExpandedNativePanel",
+      "message": null
+    }
+  ]
+}

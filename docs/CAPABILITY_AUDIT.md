@@ -1,5 +1,32 @@
 # Capability audit against the original requirement
 
+## Current assessment: 0.9.1
+
+The original “anything a person can do on their phone” requirement remains **unmet and unproven**. The user selected individual deterministic commands with Google Play support. The app now covers a wider set of those commands, but passing tests must not be treated as universal task coverage.
+
+| Requirement | Authoritative evidence and current limit | Assessment |
+|---|---|---|
+| English speech | Four real-provider synthetic-audio probes passed in 0.8.0. Production microphone UI started the provider, but no microphone command was recognized in the emulator checks. [Speech audit](SPEECH_APP_AUDIT_0.8.0.md) | Synthetic recognition verified; complete live spoken flow unverified |
+| Open installed apps | Exact launcher-label/known-alias resolution; current executor and actual YouTube routing tests pass. Instagram is absent from the owned emulator. | Implemented and bounded; Instagram launch unverified |
+| Google search | Encoded query routing passes. Chrome received the requested query, but Google displayed a traffic challenge. [Receiving-app evidence](SPEECH_APP_AUDIT_0.8.0.md) | Search routing verified; results blocked/unverified |
+| YouTube search, playback and next/previous | Actual search results, opening a Short, pause/resume and next/previous clips were observed through explicit production commands in 0.8.0. [YouTube audit](YOUTUBE_CONTROL_0.8.0.md). Current regression tests cover the retained command paths. | Those observed flows verified; no universal YouTube task claim |
+| Instagram Reels | Single upward/downward gestures are delivered to a separate native target app in current tests. Actual Instagram is not installed. | Generic swipe verified; Reels unverified |
+| Tap, long press, typing and selection | Current native target-app tests verify unique labels, clickable ancestors, focused text edits, ambiguity/disabled-target rejection and literal dictation. [Direct controls](DIRECT_CONTROLS_0.5.0.md) | Verified within exposed accessibility-node limits; password fields excluded |
+| Unlabelled controls, pinch and drag | Current tests verify grid coordinates, native scaling, hold timing, drag/drop and cancellation in separate fixture activities. [Grid](GRID_0.6.0.md), [pinch](PINCH_0.7.0.md), [drag](DRAG_0.8.0.md) | Verified fixture behavior; target apps must support the chosen interaction |
+| System navigation and device controls | Back/Home/Recents plus explicit notifications, Quick Settings and media-volume commands. Current native tests inspect visible panels and actual audio state. [0.9.0 controls](SYSTEM_CONTROLS_0.9.0.md), [0.9.1 follow-up](QUICK_SETTINGS_0.9.1.md) | Supported commands verified within the recorded device/test scope |
+| Calls, messages, alarms, files and arbitrary app workflows | Generic individual controls may be used inside compatible apps, but no complete acceptance matrix verifies every such task. There are no dedicated task planners or integrations for these categories. | Broad task coverage incomplete |
+| Continuous listening / wake word | Production listening is tap-initiated, one result per session, bounded to 15 seconds. | Always-on listening and wake word not implemented |
+| Android 10+ on all phones | Packaged minSdk29/target36 verified; per-version emulator reports are linked from the current verification page. OEM variations, physical devices and all-device behavior are not established by the emulator matrix. | Supported minimum verified; universal compatibility unproven |
+| Google Play and GitHub distribution | Source is committed/pushed to the requested GitHub repository. Debug APK and unsigned release AAB are built. Publisher-specific privacy details, production signing, Play submission and review remain outstanding. | GitHub delivered; Google Play release incomplete |
+| Security and platform limits | Locked/non-interactive screen guards, consent rechecks, target validation and cancellation remain. Secure/password fields and Android restrictions are not bypassed. | Deliberate boundaries; these prevent an unrestricted “anything” promise |
+
+The [system-control audit](SYSTEM_CONTROLS_0.9.0.md) and [0.9.1 follow-up](QUICK_SETTINGS_0.9.1.md) record validation and hosted failures/follow-ups. Earlier evidence is explicitly versioned. Live microphone input, actual Instagram/Reels, Google search results, broader task coverage and Play distribution still require additional evidence or external setup. The goal must remain open.
+
+## Historical baseline and follow-ups
+
+The sections below preserve the original 0.4.2 audit and subsequent additions. Its initial implementation column is historical, not the current feature list.
+
+
 Date: 2026-09-27. App: saygo 0.4.2. Audited app source: commit 3b841db; CI repair: 36b7b3a.
 
 ## Verdict

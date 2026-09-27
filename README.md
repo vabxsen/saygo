@@ -1,6 +1,8 @@
 # saygo
 
-**Current version: 0.9.0.** Adds explicit commands for notifications, Quick Settings and media volume. **88 local tests passed** (65 Android/API36 + 23 JVM), with build, lint and release checks passing. See [native system controls and verification](docs/SYSTEM_CONTROLS_0.9.0.md).
+**Current version: 0.9.1.** Fixes the first Quick Settings expansion on Android 16 with animations disabled. Build, lint, 23 JVM tests and the local cold-boot regression passed; the full emulator matrix is pending. See [patch verification and limits](docs/QUICK_SETTINGS_0.9.1.md).
+
+**Previous version: 0.9.0.** Adds explicit commands for notifications, Quick Settings and media volume. **88 local tests passed** (65 Android/API36 + 23 JVM), with build, lint and release checks passing. See [native system controls and verification](docs/SYSTEM_CONTROLS_0.9.0.md).
 
 **Previous version: 0.8.0.** Adds explicit hold-and-drag between numbered grid cells and cancellation of queued input. **80 local tests passed** (59 Android/API36 + 21 JVM), with build, lint and release checks passing. GitHub also passed 56 core tests on each of Android 10, 14 and 16. See [drag commands and verification](docs/DRAG_0.8.0.md).
 

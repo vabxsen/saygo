@@ -34,3 +34,5 @@ The initial [hosted run](https://github.com/vabxsen/saygo/actions/runs/363494960
 The panel test now waits for the launched fixture to become focused and for accessibility events to settle before sending the command. It retains the same native panel ID/visibility assertion, adds window/resource metadata to any failure, and does not retry or skip a failed action. Production behavior and the 0.9.0 APK are unchanged by this test refinement.
 
 Both refined panel tests [passed on the separate fresh 320×640, density-160 API36 emulator](system-control-evidence/device-panel-refinement-tests.txt). The test build also passed.
+
+The focused-fixture refinement did not resolve the hosted API36 failure. The [0.9.1 follow-up](QUICK_SETTINGS_0.9.1.md) records the cold-boot reproduction and production fix.

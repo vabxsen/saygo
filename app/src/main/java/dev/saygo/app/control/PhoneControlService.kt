@@ -182,8 +182,9 @@ class PhoneControlService : AccessibilityService() {
             SessionState.report("Couldn’t identify the original app. Tap the microphone and try again.", false)
             return
         }
-        val deadline = SystemClock.uptimeMillis() + 2_000
+        var deadline = SystemClock.uptimeMillis() + 2_000
         pending = object : Runnable {
+            private var repeatQuickSettingsAt: Long? = null
             private var preparedPinchWindow: Int? = null
             private var preparedPinchBounds: Rect? = null
             override fun run() {
@@ -204,8 +205,37 @@ class PhoneControlService : AccessibilityService() {
                     dismissGrid(); cancelPending(); SessionState.report("Unlock your phone before using phone controls.", false); return
                 }
                 if (command is Command.DeviceControl) {
-                    pending = null
-                    DeviceControls.execute(this@PhoneControlService, command.action)
+                    val repeatAt = repeatQuickSettingsAt
+                    if (repeatAt != null) {
+                        if (SystemClock.uptimeMillis() < repeatAt) {
+                            handler.postDelayed(this, repeatAt - SystemClock.uptimeMillis())
+                            return
+                        }
+                        pending = null
+                        // A global panel can take focus without changing this service's
+                        // cached windows. Refresh before checking current input focus.
+                        if (android.os.Build.VERSION.SDK_INT >= 33) clearCache()
+                        val root = getWindows().firstOrNull { it.isFocused }?.root
+                        val stillInPanel = root?.packageName?.toString() == "com.android.systemui"
+                        @Suppress("DEPRECATION")
+                        root?.recycle()
+                        // Never reopen the panel after the user has left SystemUI.
+                        if (stillInPanel) DeviceControls.execute(this@PhoneControlService, command.action)
+                        return
+                    }
+                    val accepted = DeviceControls.execute(this@PhoneControlService, command.action)
+                    // Android 16 can stop at the collapsed shade on its first expansion
+                    // after boot with animations disabled. One idempotent native repeat
+                    // completes that same request; it stays in the cancellable queue.
+                    val needsRepeat = accepted && command.action == dev.saygo.app.commands.DeviceAction.QUICK_SETTINGS &&
+                        android.os.Build.VERSION.SDK_INT >= 36 &&
+                        android.provider.Settings.Global.getFloat(contentResolver,
+                            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
+                    if (needsRepeat) {
+                        repeatQuickSettingsAt = SystemClock.uptimeMillis() + 800
+                        deadline = repeatQuickSettingsAt!! + 800
+                        handler.postDelayed(this, 800)
+                    } else pending = null
                     return
                 }
                 if (command is Command.Navigate && !isBack) {

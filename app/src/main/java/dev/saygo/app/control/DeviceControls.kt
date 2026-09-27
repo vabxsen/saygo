@@ -7,8 +7,9 @@ import dev.saygo.app.data.SessionState
 
 /** Global controls run only after the service validates consent and the unlocked screen. */
 internal object DeviceControls {
-    fun execute(service: AccessibilityService, action: DeviceAction) {
-        try {
+    /** Returns whether Android accepted a panel request; volume changes are never repeated. */
+    fun execute(service: AccessibilityService, action: DeviceAction): Boolean {
+        return try {
             when (action) {
                 DeviceAction.NOTIFICATIONS, DeviceAction.QUICK_SETTINGS -> {
                     val notifications = action == DeviceAction.NOTIFICATIONS
@@ -17,11 +18,13 @@ internal object DeviceControls {
                     else AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS)
                     val label = if (notifications) "Notifications" else "Quick Settings"
                     SessionState.report(if (accepted) "$label requested." else "$label isn’t available here.", accepted)
+                    accepted
                 }
-                else -> adjustMedia(service.getSystemService(AudioManager::class.java), action)
+                else -> { adjustMedia(service.getSystemService(AudioManager::class.java), action); false }
             }
         } catch (_: SecurityException) {
             SessionState.report("Android blocked this control. Check your device’s settings.", false)
+            false
         }
     }
 

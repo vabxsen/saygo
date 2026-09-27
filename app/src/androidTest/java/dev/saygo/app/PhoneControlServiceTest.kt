@@ -1042,6 +1042,53 @@ class PhoneControlServiceTest {
         assertDevicePanel("open quick settings", "quick_settings_panel")
     }
 
+    @Test fun quickSettingsRepeatIsCancelledByStop() = withAnimationsDisabled {
+        openGestureTarget()
+        executeDevicePhrase("open quick settings")
+        instrumentation.runOnMainSync { dev.saygo.app.commands.CommandExecutor(context).execute(Command.Stop) }
+        val cancelled = SessionState.feedback.value.sequence
+        SystemClock.sleep(1100)
+        assertEquals("No later panel request after Stop", cancelled, SessionState.feedback.value.sequence)
+        assertTrue(SessionState.feedback.value.title.startsWith("Cancelled."))
+    }
+
+    @Test fun quickSettingsRepeatRechecksConsent() = withAnimationsDisabled {
+        openGestureTarget()
+        // Withdraw consent immediately after the native request is accepted, before the
+        // delayed continuation can run. The original expansion may already be underway.
+        val before = SessionState.feedback.value.sequence
+        instrumentation.runOnMainSync {
+            PhoneControlService.current!!.executeWhenReady(
+                Command.DeviceControl(dev.saygo.app.commands.DeviceAction.QUICK_SETTINGS), null)
+        }
+        await("initial panel request") { SessionState.feedback.value.sequence > before && SessionState.feedback.value.title == "Quick Settings requested." }
+        Preferences(context).controlConsent = false
+        if (android.os.Build.VERSION.SDK_INT >= 36) {
+            await("repeat rejected after consent withdrawal") { SessionState.feedback.value.title == "Phone controls are off." }
+            assertFalse(SessionState.feedback.value.success)
+        }
+        val after = SessionState.feedback.value.sequence
+        SystemClock.sleep(1100)
+        assertEquals("No later request after consent withdrawal", after, SessionState.feedback.value.sequence)
+    }
+
+    private fun withAnimationsDisabled(block: () -> Unit) {
+        val key = "animator_duration_scale"
+        val original = shell("settings get global $key")
+        try {
+            shell("settings put global $key 0.0")
+            block()
+        } finally {
+            instrumentation.runOnMainSync { PhoneControlService.current?.onInterrupt() }
+            shell("cmd statusbar collapse")
+            if (original == "null") shell("settings delete global $key")
+            else {
+                require(original.matches(Regex("[0-9.]+")))
+                shell("settings put global $key $original")
+            }
+        }
+    }
+
     private fun assertDevicePanel(phrase: String, panelId: String) {
         val info = automation.serviceInfo
         info.flags = info.flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or

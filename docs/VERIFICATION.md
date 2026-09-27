@@ -1,3 +1,5 @@
+> Current version: **0.9.1**. See [Quick Settings after boot](QUICK_SETTINGS_0.9.1.md). Earlier sections preserve verification history.
+
 > Current version: **0.9.0**. See [native system controls](SYSTEM_CONTROLS_0.9.0.md). Earlier sections preserve verification history.
 
 > Additional 0.8.0 evidence: [actual YouTube Shorts controls](YOUTUBE_CONTROL_0.8.0.md). Opening, pause/resume and next/previous clips were observed through explicit commands; speech input was bypassed.
