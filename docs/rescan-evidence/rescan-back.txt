@@ -1,0 +1,1 @@
+origin=com.android.settings; foreground before dispatch=dev.saygo.app; feedback=ActionFeedback(title=Back requested., success=true, sequence=26)

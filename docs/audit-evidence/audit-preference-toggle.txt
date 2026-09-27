@@ -1,0 +1,3 @@
+PASS: Spoken feedback: True -> False -> True (persisted preferences polled after each tap)
+PASS: Floating microphone: True -> False -> True (persisted preferences polled after each tap)
+Final state: spoken feedback off; floating microphone restored; phone controls disabled.

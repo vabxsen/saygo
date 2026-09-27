@@ -1,0 +1,1 @@
+Workflow YAML parses; Android 29/34/36 matrix and instrumentation command verified. Remote CI execution remains pending.

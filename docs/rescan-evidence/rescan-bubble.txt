@@ -1,0 +1,1 @@
+window=Rect(0, 0 - 1080, 2400) placed=Rect(467, 1654 - 614, 1801) after=Rect(467, 713 - 614, 860) feedback=ActionFeedback(title=Swipe sent., success=true, sequence=11)

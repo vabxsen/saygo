@@ -1,0 +1,21 @@
+
+dev.saygo.app.PhoneControlServiceTest:
+Error in rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Expected to reproduce interception: window=Rect(0, 0 - 1080, 2400) placed=Rect(467, 1654 - 614, 1801) after=Rect(467, 1654 - 614, 1801) feedback=ActionFeedback(title=Swipe sent., success=true, sequence=1)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart(PhoneControlServiceTest.kt:262)
+
+
+Time: 3.139
+There was 1 failure:
+1) rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Expected to reproduce interception: window=Rect(0, 0 - 1080, 2400) placed=Rect(467, 1654 - 614, 1801) after=Rect(467, 1654 - 614, 1801) feedback=ActionFeedback(title=Swipe sent., success=true, sequence=1)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart(PhoneControlServiceTest.kt:262)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

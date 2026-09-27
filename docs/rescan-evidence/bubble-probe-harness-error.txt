@@ -1,0 +1,43 @@
+
+dev.saygo.app.PhoneControlServiceTest:
+Error in rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart(dev.saygo.app.PhoneControlServiceTest):
+java.io.FileNotFoundException: rescan-bubble-before.png: open failed: EROFS (Read-only file system)
+	at libcore.io.IoBridge.open(IoBridge.java:574)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:259)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:208)
+	at dev.saygo.app.PhoneControlServiceTest.rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart$capture(PhoneControlServiceTest.kt:248)
+	at dev.saygo.app.PhoneControlServiceTest.rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart(PhoneControlServiceTest.kt:250)
+	... 33 trimmed
+Caused by: android.system.ErrnoException: open failed: EROFS (Read-only file system)
+	at libcore.io.Linux.open(Native Method)
+	at libcore.io.ForwardingOs.open(ForwardingOs.java:568)
+	at libcore.io.BlockGuardOs.open(BlockGuardOs.java:274)
+	at libcore.io.ForwardingOs.open(ForwardingOs.java:568)
+	at android.app.ActivityThread$AndroidOs.open(ActivityThread.java:8953)
+	at libcore.io.IoBridge.open(IoBridge.java:560)
+	... 38 more
+
+
+Time: 5.782
+There was 1 failure:
+1) rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart(dev.saygo.app.PhoneControlServiceTest)
+java.io.FileNotFoundException: rescan-bubble-before.png: open failed: EROFS (Read-only file system)
+	at libcore.io.IoBridge.open(IoBridge.java:574)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:259)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:208)
+	at dev.saygo.app.PhoneControlServiceTest.rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart$capture(PhoneControlServiceTest.kt:248)
+	at dev.saygo.app.PhoneControlServiceTest.rescanBubbleInterceptsCommandWhenDraggedOntoSwipeStart(PhoneControlServiceTest.kt:250)
+	... 33 trimmed
+Caused by: android.system.ErrnoException: open failed: EROFS (Read-only file system)
+	at libcore.io.Linux.open(Native Method)
+	at libcore.io.ForwardingOs.open(ForwardingOs.java:568)
+	at libcore.io.BlockGuardOs.open(BlockGuardOs.java:274)
+	at libcore.io.ForwardingOs.open(ForwardingOs.java:568)
+	at android.app.ActivityThread$AndroidOs.open(ActivityThread.java:8953)
+	at libcore.io.IoBridge.open(IoBridge.java:560)
+	... 38 more
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

@@ -1,0 +1,5 @@
+UP: target received gesture; bubble position retained at Rect(467, 1654 - 614, 1801)
+DOWN: target received gesture; bubble position retained at Rect(467, 599 - 614, 746)
+LEFT: target received gesture; bubble position retained at Rect(768, 1126 - 915, 1273)
+RIGHT: target received gesture; bubble position retained at Rect(165, 1126 - 312, 1273)
+Post-swipe dragging and clicking passed.
