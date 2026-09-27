@@ -1,0 +1,38 @@
+[
+  {
+    "file": "open-youtube.pcm",
+    "phrase": "Open YouTube",
+    "voice": "Microsoft Zira Desktop",
+    "sampleRate": 16000,
+    "channels": 1,
+    "encoding": "signed 16-bit PCM, little-endian",
+    "sha256": "d4347d9ca214d0d6f6eeeefb6123c721cbda5c906f4e76ea953a4edf098d3055"
+  },
+  {
+    "file": "google-search.pcm",
+    "phrase": "Search Google for Android accessibility",
+    "voice": "Microsoft Zira Desktop",
+    "sampleRate": 16000,
+    "channels": 1,
+    "encoding": "signed 16-bit PCM, little-endian",
+    "sha256": "a97c081b41aeac18df65a7f3129d35a061ad4f209d310b53ccd99f05c310fbda"
+  },
+  {
+    "file": "youtube-search.pcm",
+    "phrase": "Search YouTube for cooking",
+    "voice": "Microsoft Zira Desktop",
+    "sampleRate": 16000,
+    "channels": 1,
+    "encoding": "signed 16-bit PCM, little-endian",
+    "sha256": "89a4aab1ebba998aedf047be33edcc9e83068adfcc1ff78884498420241f9950"
+  },
+  {
+    "file": "cancel.pcm",
+    "phrase": "Cancel",
+    "voice": "Microsoft Zira Desktop",
+    "sampleRate": 16000,
+    "channels": 1,
+    "encoding": "signed 16-bit PCM, little-endian",
+    "sha256": "ee27619b0c8e2404e816431d0e8fe53488d42b5378149070754f19f8b1a5e083"
+  }
+]

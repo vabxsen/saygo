@@ -1,0 +1,10 @@
+INSTRUMENTATION_RESULT: case=open-youtube
+INSTRUMENTATION_RESULT: passed=true
+INSTRUMENTATION_RESULT: trace=onDevice=true
+ready
+speech-began
+speech-ended
+segment=Open YouTube keys=[current_locale, results_recognition, confidence_scores]
+segmented-session-ended
+feedback=Opened YouTube.
+INSTRUMENTATION_CODE: -1

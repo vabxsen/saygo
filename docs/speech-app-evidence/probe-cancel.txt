@@ -1,0 +1,10 @@
+INSTRUMENTATION_RESULT: case=cancel
+INSTRUMENTATION_RESULT: passed=true
+INSTRUMENTATION_RESULT: trace=onDevice=true
+ready
+speech-began
+speech-ended
+segment=Cancel keys=[current_locale, results_recognition, confidence_scores]
+segmented-session-ended
+feedback=Cancelled. Nothing changed.
+INSTRUMENTATION_CODE: -1

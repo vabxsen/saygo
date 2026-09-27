@@ -1,0 +1,10 @@
+INSTRUMENTATION_RESULT: case=google-search
+INSTRUMENTATION_RESULT: passed=true
+INSTRUMENTATION_RESULT: trace=onDevice=true
+ready
+speech-began
+speech-ended
+segment=Search Google for Android accessibility keys=[current_locale, results_recognition, confidence_scores]
+segmented-session-ended
+feedback=Opened Google search.
+INSTRUMENTATION_CODE: -1

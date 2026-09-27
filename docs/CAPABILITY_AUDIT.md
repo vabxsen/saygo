@@ -51,3 +51,7 @@ Version 0.6.0 added a numbered grid for unlabelled tap targets, with 47 core tes
 ## Follow-up: hold-and-drag
 
 Version 0.8.0 adds an explicit drag between two different numbered grid cells and fixes cancellation of queued input. Native drag-and-drop and pointer timing are verified in a separate test app. See [drag results](DRAG_0.8.0.md). Arbitrary phone tasks and Play approval remain unverified.
+
+## Follow-up: actual speech provider and receiving apps
+
+Four synthetic PCM utterances passed through the real on-device recognizer and production command parser/executor on API36. YouTube displayed cooking search results. Chrome initially required onboarding, then Google presented a traffic challenge. Microphone capture and Instagram remain unverified; the file-input probe bypasses the production microphone session. See [speech and app audit](SPEECH_APP_AUDIT_0.8.0.md).

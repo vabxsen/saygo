@@ -1,0 +1,41 @@
+{
+  "appVersion": "0.8.0",
+  "api": 36,
+  "emulator": "37.1.11.0 (15917651)",
+  "syntheticAsr": {
+    "cases": [
+      "open-youtube",
+      "google-search",
+      "youtube-search",
+      "cancel"
+    ],
+    "passed": 4,
+    "onDevice": true,
+    "input": "16kHz mono PCM through a paced pipe with segmented-session mode",
+    "hostMicrophoneUsed": false,
+    "scope": "Real SpeechRecognizer plus production CommandParser and CommandExecutor. Bypasses production SpeechSession microphone input and VoiceActivity lifecycle."
+  },
+  "youtube": {
+    "recognizedQuery": "cooking",
+    "observedPackage": "com.google.android.youtube",
+    "searchQueryVisible": true,
+    "visibleNonAdShortResults": 2,
+    "playbackVerified": false
+  },
+  "google": {
+    "recognizedQuery": "android accessibility",
+    "observedPackage": "com.android.chrome",
+    "observedPath": "/sorry/index",
+    "classification": "Google traffic challenge; search results not verified"
+  },
+  "instagram": {
+    "packageQuery": "com.instagram.android",
+    "installed": false,
+    "reelsVerified": false
+  },
+  "microphone": {
+    "productionListeningUiObserved": true,
+    "recognizedMicrophoneCommandVerified": false,
+    "limitation": "Windows emulator gRPC injectAudio crashed or stalled the emulator in the tested configurations"
+  }
+}

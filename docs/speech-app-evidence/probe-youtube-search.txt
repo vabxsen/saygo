@@ -1,0 +1,10 @@
+INSTRUMENTATION_RESULT: case=youtube-search
+INSTRUMENTATION_RESULT: passed=true
+INSTRUMENTATION_RESULT: trace=onDevice=true
+ready
+speech-began
+speech-ended
+segment=Search YouTube for cooking keys=[current_locale, results_recognition, confidence_scores]
+segmented-session-ended
+feedback=Opened YouTube search.
+INSTRUMENTATION_CODE: -1

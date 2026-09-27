@@ -1,3 +1,5 @@
+> Additional 0.8.0 evidence: [actual speech-provider and receiving-app audit](SPEECH_APP_AUDIT_0.8.0.md). Synthetic-file recognition passes do not establish microphone capture.
+
 > Current version: **0.8.0**. See [hold-and-drag verification](DRAG_0.8.0.md). Earlier sections preserve verification history.
 
 > Current version: **0.7.0**. See [native pinch zoom and current results](PINCH_0.7.0.md). Earlier sections preserve verification history.

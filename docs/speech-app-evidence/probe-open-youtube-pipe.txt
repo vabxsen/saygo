@@ -1,0 +1,10 @@
+INSTRUMENTATION_RESULT: case=open-youtube
+INSTRUMENTATION_RESULT: passed=false
+INSTRUMENTATION_RESULT: trace=onDevice=true
+ready
+speech-began
+speech-ended
+resultKeys=[]
+recognized=null
+failure=Required value was null.
+INSTRUMENTATION_CODE: 0

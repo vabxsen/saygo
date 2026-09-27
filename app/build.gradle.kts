@@ -13,7 +13,10 @@ android {
         targetSdk = 36
         versionCode = 15
         versionName = "0.8.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // The audio-file probe is opt-in and never replaces the normal CI suite.
+        testInstrumentationRunner = if (providers.gradleProperty("syntheticSpeechProbe").orNull == "true") {
+            "dev.saygo.app.SyntheticSpeechProbe"
+        } else "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
