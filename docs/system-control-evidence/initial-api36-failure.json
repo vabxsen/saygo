@@ -1,0 +1,13 @@
+{
+  "run": "https://github.com/vabxsen/saygo/actions/runs/36349496070",
+  "commit": "7903d3b243927199b8bda8685a2158c4bde73609",
+  "api": 36,
+  "tests": 62,
+  "failures": [
+    {
+      "name": "quickSettingsCommandOpensTheExpandedNativePanel",
+      "class": "dev.saygo.app.PhoneControlServiceTest",
+      "failure": "java.lang.AssertionError: Timed out waiting for native quick_settings_panel visible\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:1195)\nat dev.saygo.app.PhoneControlServiceTest.assertDevicePanel(PhoneControlServiceTest.kt:1052)\nat dev.saygo.app.PhoneControlServiceTest.quickSettingsCommandOpensTheExpandedNativePanel(PhoneControlServiceTest.kt:1042)\n"
+    }
+  ]
+}

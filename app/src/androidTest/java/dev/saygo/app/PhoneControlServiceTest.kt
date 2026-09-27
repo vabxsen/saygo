@@ -1044,9 +1044,15 @@ class PhoneControlServiceTest {
 
     private fun assertDevicePanel(phrase: String, panelId: String) {
         val info = automation.serviceInfo
-        info.flags = info.flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
+        info.flags = info.flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or
+            android.accessibilityservice.AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
         automation.serviceInfo = info
         openGestureTarget()
+        // A visible node can precede the end of Activity launch and its shade-collapse work.
+        automation.waitForIdle(300, 5_000)
+        await("target window focused before opening a system panel") {
+            automation.windows.any { it.isFocused && it.root?.packageName?.toString() == "dev.saygo.app.test" }
+        }
         try {
             executeDevicePhrase(phrase)
             await("native $panelId visible") {
@@ -1054,6 +1060,26 @@ class PhoneControlServiceTest {
                 root?.packageName?.toString() == "com.android.systemui" &&
                     root.findAccessibilityNodeInfosByViewId("com.android.systemui:id/$panelId").any { it.isVisibleToUser }
             }
+        } catch (failure: AssertionError) {
+            // Resource metadata only: never include notification text in diagnostic output.
+            val root = automation.rootInActiveWindow
+            val ids = mutableListOf<String>()
+            fun inspect(node: android.view.accessibility.AccessibilityNodeInfo, depth: Int = 0) {
+                if (depth > 20 || ids.size >= 100) return
+                node.viewIdResourceName?.let { ids += "$it visible=${node.isVisibleToUser}" }
+                for (index in 0 until node.childCount) node.getChild(index)?.let { child ->
+                    inspect(child, depth + 1)
+                    @Suppress("DEPRECATION")
+                    child.recycle()
+                }
+            }
+            root?.let { inspect(it) }
+            val details = "package=${root?.packageName}; windows=" + automation.windows.map {
+                "${it.id}:active=${it.isActive}:focused=${it.isFocused}"
+            } + "; viewIds=$ids"
+            @Suppress("DEPRECATION")
+            root?.recycle()
+            throw AssertionError("$phrase: $details", failure)
         } finally {
             shell("cmd statusbar collapse")
             await("system panel closed") { automation.rootInActiveWindow?.packageName?.toString() == "dev.saygo.app.test" }

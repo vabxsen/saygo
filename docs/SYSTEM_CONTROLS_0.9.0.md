@@ -26,3 +26,11 @@ On the owned API36 emulator, the production parser/executor opened the actual Sy
 ## Remaining limits
 
 This expands the supported command set; it does not make the app capable of every phone task. Live microphone recognition, actual Instagram Reels and Google Play approval remain unverified. Bluetooth/cast/fixed-volume hardware and audible output were not checked on the emulator. Opening Quick Settings does not itself toggle Wi-Fi, Bluetooth or other tiles: a subsequent explicit tap is a separate action. “Mute media” also affects spoken feedback if the selected TTS engine uses the media stream. Production signing, publisher details and Play submission remain outstanding.
+
+## Hosted Quick Settings check
+
+The initial [hosted run](https://github.com/vabxsen/saygo/actions/runs/36349496070) passed build and all 62 tests on Android 10/14. On Android 16, 61 tests passed and the Quick Settings visibility assertion timed out after successful dispatch. The [original failure](system-control-evidence/initial-api36-failure.json) is preserved; that run is not counted as a compatibility pass. The native panel was visible on both the existing local Pixel profile and a separate fresh 320dp-wide profile. The local image differs from the hosted Google APIs image, so this did not conclusively reproduce its cause.
+
+The panel test now waits for the launched fixture to become focused and for accessibility events to settle before sending the command. It retains the same native panel ID/visibility assertion, adds window/resource metadata to any failure, and does not retry or skip a failed action. Production behavior and the 0.9.0 APK are unchanged by this test refinement.
+
+Both refined panel tests [passed on the separate fresh 320×640, density-160 API36 emulator](system-control-evidence/device-panel-refinement-tests.txt). The test build also passed.
