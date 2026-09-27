@@ -1,3 +1,5 @@
+> Current version: **0.5.0**. See [direct controls and current results](DIRECT_CONTROLS_0.5.0.md). The sections below preserve the 0.4.2 verification history.
+
 # Verification — saygo 0.4.2
 
 Version code 11; minimum Android API 29, target API 36.

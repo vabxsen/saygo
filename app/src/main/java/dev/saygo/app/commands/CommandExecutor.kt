@@ -22,7 +22,7 @@ class CommandExecutor(private val context: Context) {
             when (command) {
                 is Command.OpenApp -> openApp(command.name)
                 is Command.Search -> search(command)
-                is Command.Swipe, is Command.Navigate -> {
+                is Command.Swipe, is Command.Navigate, is Command.Tap, is Command.EditText -> {
                     val service = PhoneControlService.current
                     if (service == null) SessionState.report("Enable phone controls in Setup first.", false)
                     else service.executeWhenReady(command, originPackage)

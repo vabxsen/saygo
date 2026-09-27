@@ -24,6 +24,12 @@ private val appCommands = listOf(
     CommandExample("Search YouTube for cooking", "Find videos"),
 )
 private val controlCommands = listOf(
+    CommandExample("Tap Search", "Tap one control by its exact label"),
+    CommandExample("Long press a label", "Touch and hold a named control"),
+    CommandExample("Type your words", "Insert text in the focused field"),
+    CommandExample("Replace text with your words", "Replace the focused field’s contents"),
+    CommandExample("Clear text", "Empty the focused field"),
+    CommandExample("Select all", "Select text in the focused field"),
     CommandExample("Next reel", "One upward swipe · also “scroll down”"),
     CommandExample("Previous reel", "One downward swipe · also “scroll up”"),
     CommandExample("Swipe left / Swipe right", "One horizontal swipe"),
@@ -102,7 +108,7 @@ fun SaygoApp(
                                         SectionLabel("Stop listening")
                                         CommandRow(CommandExample("Cancel", "End listening without an action"))
                                     }
-                                    Text("One command at a time. Tapping, typing, and multi-step actions aren't supported yet. Some apps may ignore swipes.",
+                                    Text("One command at a time. Tap a field before dictating. Labels must match exactly and be unique. Some apps don’t expose usable controls. Multi-step actions aren’t supported.",
                                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                                 2 -> {
@@ -115,7 +121,7 @@ fun SaygoApp(
                                             if (microphoneGranted) onAppSettings else speak,
                                             if (microphoneGranted) "Enabled" else "Enable")
                                         Rule()
-                                        ActionRow("Phone controls", "Optional swipes and navigation",
+                                        ActionRow("Phone controls", "Optional taps, typing and navigation",
                                             if (connected) "Review access" else "Set up phone controls",
                                             { controlDisclosure = true }, if (connected) "Enabled" else "Enable")
                                     }
@@ -140,7 +146,7 @@ fun SaygoApp(
                                         }
                                     }
                                     Rule()
-                                    Text("saygo 0.4.2 · English · Android 10+", style = MaterialTheme.typography.labelSmall,
+                                    Text("saygo 0.5.0 · English · Android 10+", style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                             }
@@ -161,8 +167,8 @@ fun SaygoApp(
         onDismissRequest = { controlDisclosure = false },
         icon = { Icon(Icons.Rounded.TouchApp, null) }, title = { Text("Control your phone by voice") },
         text = { Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text("saygo uses Android’s AccessibilityService to display a floating microphone and carry out your explicit swipe, Back, Home, and Recent apps commands.")
-            Text("Android grants access to screen content and interactions. saygo uses only the foreground app’s identity and window bounds to target a swipe; it does not inspect screen text. These details are processed on your device and are not saved or shared.")
+            Text("saygo uses Android’s AccessibilityService to display a floating microphone and carry out your explicit tap, long-press, text-editing, swipe, Back, Home, and Recent apps commands.")
+            Text("Android grants access to screen content and interactions. saygo reads the foreground app identity, window bounds, control labels and focused text field when you request a command. This lets it find the button or field you name. Screen content stays on your device and is not saved or sent to saygo servers. Text you dictate is entered into the other app, which handles it under its own privacy policy.")
             Text("One command triggers one predefined action. saygo never chooses or runs a sequence of actions for you. This permission is optional; opening apps and searching work without it. You can turn it off at any time in Setup or Android accessibility settings.")
         } },
         confirmButton = { TextButton(onClick = { preferences.controlConsent = true; controlDisclosure = false; onAccessibilitySettings() }) { Text("Agree & open settings") } },
@@ -173,7 +179,7 @@ fun SaygoApp(
         text = { Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text("No account, ads, analytics, or saygo server. We don’t save recordings, transcripts, screen contents, or command history. Preferences and disclosure choices stay on this device; Android backup is disabled.")
             Text("Speech uses an on-device recognizer when available. Otherwise your Android speech provider may process audio online. Google and YouTube receive queries you explicitly ask to search. Their own privacy policies apply.")
-            Text("App names are matched locally. Optional phone controls read the active app identity and window bounds only. Spoken feedback uses your Android text-to-speech engine.")
+            Text("App names are matched locally. Optional phone controls read app identity, window bounds, control labels and the focused text field locally to carry out your command. Dictated text is entered into the app you control. Spoken feedback uses your Android text-to-speech engine.")
             Text("Revoke microphone access in Android app settings, disable phone controls here, or clear app storage to reset your preferences and consent.")
         } },
         confirmButton = { TextButton(onClick = { privacy = false }) { Text("Got it") } },

@@ -129,8 +129,8 @@ class PhoneControlService : AccessibilityService() {
         if (gestureInFlight) { SessionState.report("A swipe is still finishing. Try again in a moment.", false); return }
         cancelPending()
         if (!prefs.controlConsent) { SessionState.report("Phone controls are off.", false); return }
-        if (command is Command.Swipe && (originPackage == null || originPackage == packageName)) {
-            SessionState.report("Open the app you want to scroll, then use the floating microphone.", false)
+        if ((command is Command.Swipe || command is Command.Tap || command is Command.EditText) && (originPackage == null || originPackage == packageName)) {
+            SessionState.report("Open the app you want to control, then use the floating microphone.", false)
             return
         }
         val isBack = command == Command.Navigate(Destination.BACK)
@@ -170,6 +170,27 @@ class PhoneControlService : AccessibilityService() {
                 val target = root?.packageName?.toString()
                 val bounds = Rect()
                 root?.getBoundsInScreen(bounds)
+                // A node command owns/recycles this snapshot after all target checks.
+                if (command is Command.Tap || command is Command.EditText) {
+                    if (target == null || target == packageName) {
+                        @Suppress("DEPRECATION")
+                        root?.recycle()
+                        handler.postDelayed(this, 80)
+                        return
+                    }
+                    pending = null
+                    try {
+                        if (target != originPackage) {
+                            SessionState.report("The app changed while you were speaking. Try again on the intended screen.", false)
+                        } else if (root != null) {
+                            NodeActions.execute(root, command)
+                        }
+                    } finally {
+                        @Suppress("DEPRECATION")
+                        root?.recycle()
+                    }
+                    return
+                }
                 @Suppress("DEPRECATION")
                 root?.recycle()
                 // The disappearing voice window can briefly remain Android's active root.

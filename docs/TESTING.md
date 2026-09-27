@@ -31,3 +31,7 @@ Automated unit tests exercise the command grammar and reject unsupported/chained
 Place the floating button at the starting point of each of the four swipes; verify the target receives the gesture and the button returns to the same position. Verify it remains draggable/clickable, and hiding it or disabling controls during an action keeps it hidden. Queue Back for one app and change the foreground before dispatch; Back must be rejected. Check Back from saygo still works. Launcher names containing “and” or “then” must work only as exact installed labels; chained commands remain unsupported.
 
 The full local instrumentation suite includes real YouTube/Chrome routing. CI's API 29/34/36 matrix runs the core suite with that external-app-only class excluded; keep actual third-party app tests in the release acceptance matrix.
+
+## Direct control acceptance (0.5.0)
+
+Test exact labels, content descriptions and labels nested inside clickable parents. Duplicate, absent, disabled and partial labels must not trigger an action. A separate test APK records click and long-click delivery and exposes a real editable field. Verify literal punctuation, inserting at a selection, whole-field replacement, clear and select-all. Text must never be interpreted as another command or echoed in feedback. Repeat against actual messaging/search apps without sending anything during the test. Test changes of foreground app and revoked consent before dispatch. Old v1 disclosure acceptance must not grant v2 screen-reading access.

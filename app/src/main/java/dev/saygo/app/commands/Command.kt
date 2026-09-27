@@ -5,8 +5,12 @@ sealed interface Command {
     data class Search(val provider: SearchProvider, val query: String) : Command
     data class Swipe(val direction: Direction) : Command
     data class Navigate(val destination: Destination) : Command
+    data class Tap(val label: String, val longPress: Boolean = false) : Command
+    data class EditText(val operation: TextOperation, val text: String = "") : Command
     data object Stop : Command
 }
+
+enum class TextOperation { INSERT, REPLACE, CLEAR, SELECT_ALL }
 
 enum class SearchProvider { GOOGLE, YOUTUBE }
 enum class Direction { UP, DOWN, LEFT, RIGHT }
@@ -15,10 +19,18 @@ enum class Destination { BACK, HOME, RECENTS }
 /** Deliberately finite grammar: one utterance maps to at most one predefined action. */
 object CommandParser {
     fun parse(transcript: String, isInstalledAppName: (String) -> Boolean = { false }): Command? {
+        // Dictation is literal data: preserve punctuation and internal whitespace.
+        val raw = transcript.trim()
+        if (raw.length > 2000) return null
+        Regex("^(type|replace text with)\\s+(.+)$", setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)).matchEntire(raw)?.let {
+            return Command.EditText(if (it.groupValues[1].equals("type", true)) TextOperation.INSERT else TextOperation.REPLACE, it.groupValues[2])
+        }
         val text = transcript.trim().replace(Regex("\\s+"), " ").trimEnd('.', '!', '?')
         if (text.isEmpty() || text.length > 240) return null
         val key = text.lowercase(java.util.Locale.ROOT)
         when (key) {
+            "clear text" -> return Command.EditText(TextOperation.CLEAR)
+            "select all" -> return Command.EditText(TextOperation.SELECT_ALL)
             "stop", "cancel", "never mind" -> return Command.Stop
             "go back", "back" -> return Command.Navigate(Destination.BACK)
             "go home", "home", "home screen" -> return Command.Navigate(Destination.HOME)
@@ -27,6 +39,9 @@ object CommandParser {
             "previous reel", "previous video", "scroll up", "swipe down" -> return Command.Swipe(Direction.DOWN)
             "swipe left" -> return Command.Swipe(Direction.LEFT)
             "swipe right" -> return Command.Swipe(Direction.RIGHT)
+        }
+        Regex("^(tap|long press) (.+)$", RegexOption.IGNORE_CASE).matchEntire(text)?.let {
+            return Command.Tap(it.groupValues[2], it.groupValues[1].equals("long press", true))
         }
         Regex("^search (google|youtube) for (.+)$", RegexOption.IGNORE_CASE).matchEntire(text)?.let {
             return Command.Search(

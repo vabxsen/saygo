@@ -16,9 +16,9 @@ On devices offering on-device speech recognition, saygo requests that recognizer
 
 ## Optional phone controls
 
-With your separate consent and manual enablement in Android settings, saygo uses AccessibilityService to display a floating microphone button and perform one explicitly requested swipe or system navigation action. Android grants access to window content. saygo reads only the active package identity and root-window bounds to target a gesture. It does not read text from the screen or save/share screen contents, window bounds, or app identities.
+With your separate consent and manual enablement in Android settings, saygo uses AccessibilityService to display a floating microphone button and perform one explicitly requested tap, long press, text edit, swipe or system navigation action. Android grants access to window content. saygo reads the active package identity and window bounds, and reads control labels and focused-field content when needed to resolve your command. This screen data is processed locally, is not saved, and is not sent to a saygo server. Text you dictate is entered into the app you control; that app may save or transmit it under its own privacy policy. saygo does not read or edit password fields. Users upgrading from the previous narrower control access must accept the expanded disclosure again.
 
-The service receives window-change event notifications but does not inspect or retain their contents. It checks foreground window metadata when you request a command. The app does not autonomously choose actions or run multi-step plans.
+The service receives window-change event notifications but does not inspect or retain their contents. It inspects the foreground window when you request a command; it does not continuously collect screen contents. The app does not autonomously choose actions or run multi-step plans.
 
 ## App launches, searches, and feedback
 

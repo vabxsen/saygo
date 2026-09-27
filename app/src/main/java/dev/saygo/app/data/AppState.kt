@@ -23,8 +23,8 @@ class Preferences(context: Context) {
         get() = storage.getBoolean("microphone_permission_requested", false)
         set(value) { storage.edit { putBoolean("microphone_permission_requested", value) } }
     var controlConsent: Boolean
-        get() = storage.getBoolean("control_disclosure_v1", false)
-        set(value) { storage.edit { putBoolean("control_disclosure_v1", value) } }
+        get() = storage.getBoolean("control_disclosure_v2", false)
+        set(value) { storage.edit { putBoolean("control_disclosure_v2", value) } }
     var showBubble: Boolean
         get() = storage.getBoolean("show_bubble", true)
         set(value) { storage.edit { putBoolean("show_bubble", value) } }

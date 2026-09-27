@@ -1,10 +1,10 @@
 # saygo
 
-**Current release: 0.4.2.** All three rescan defects are fixed: overlay swipe interception, stale-target Back, and app names containing conjunctions. **52 automated tests pass** on the checked emulator/JVM. See [fixes and verification](docs/FIXES_0.4.2.md).
+**Current version: 0.5.0.** Adds direct taps, long presses and text editing. **59 tests passed** locally (43 Android/API36 + 16 JVM), with debug/release builds and lint passing. See [new controls and verification](docs/DIRECT_CONTROLS_0.5.0.md) and the [original capability audit](docs/CAPABILITY_AUDIT.md). This is not unrestricted phone control. Version 0.4.2 fixed all three rescan defects; its hosted build and API 29/34/36 core tests passed after correcting SDK setup. See [previous fixes](docs/FIXES_0.4.2.md).
 
 A minimal Android voice-command app, written in Kotlin and Jetpack Compose.
 
-saygo opens installed apps, searches Google and YouTube, and optionally performs one swipe or system navigation action per spoken command. English only. Android 10+ (`minSdk 29`), targeting Android 16 (`targetSdk 36`).
+saygo opens installed apps, searches Google and YouTube, and optionally performs one tap, long press, text edit, swipe or system navigation action per spoken command. English only. Android 10+ (`minSdk 29`), targeting Android 16 (`targetSdk 36`).
 
 Version 0.4.0 implements the selected cobalt-and-white design: a bold two-line headline, circular microphone, concise command rows, and bottom navigation. Commands, Setup, the listening sheet, launcher accent, and floating microphone share the same visual system. Dark mode and enlarged system text are supported.
 
@@ -30,6 +30,9 @@ Android may restrict accessibility settings for apps installed outside a trusted
 | `Open Instagram`, `Launch YouTube Music` | Launch an installed app by its full label |
 | `Search Google for <query>` | Open a Google web search |
 | `Search YouTube for <query>` | Open YouTube search in a handler app or browser |
+| `Tap Search`, `Long press Download` | Act on one visible control with that exact, unique label |
+| `Type <text>` | Insert literal text at the cursor, replacing selected text, in the focused field |
+| `Replace text with <text>`, `Clear text`, `Select all` | Edit the focused text field |
 | `Next reel`, `Next video`, `Scroll down`, `Swipe up` | One upward swipe |
 | `Previous reel`, `Previous video`, `Scroll up`, `Swipe down` | One downward swipe |
 | `Swipe left`, `Swipe right` | One horizontal swipe |
@@ -38,7 +41,7 @@ Android may restrict accessibility settings for apps installed outside a trusted
 
 The parser is case insensitive and tolerates extra spaces and sentence-ending punctuation. Unknown commands and chained instructions are rejected. Queries are URL encoded and never interpreted as additional actions.
 
-Not implemented: always-on listening, a wake word, arbitrary tapping, dictation into other apps, automatic Reels navigation, repeat scrolling, purchases, messaging, or autonomous planning. saygo does not promise to control every Android screen. It cannot bypass a locked phone or Android security controls.
+Not implemented: always-on listening, a wake word, coordinate/grid tapping, automatic Reels navigation, repeat scrolling, dedicated purchase/messaging workflows, or autonomous planning. Named controls must expose a unique usable accessibility label. Focus a text field before dictation; password fields require the keyboard. The app never presses Send automatically after typing. saygo does not promise to control every Android screen. It cannot bypass a locked phone or Android security controls.
 
 ## Build
 
@@ -59,9 +62,11 @@ Set `ANDROID_HOME` to your SDK or create an ignored `local.properties` with `sdk
 - `speech/SpeechSession`: a single, bounded recognition session. On-device recognition is preferred when Android reports support. Otherwise the system provider is used after disclosure. No automatic retry loop.
 - `commands/CommandParser`: pure, deterministic grammar with unit tests. No LLM, remote planner, fuzzy action selection, or hidden multi-step actions.
 - `commands/CommandExecutor`: app intents, encoded search URLs, and explicit delegation to phone controls.
-- `control/PhoneControlService`: opt-in accessibility overlay, screen-target validation, one gesture, and system navigation. Reads foreground package and root-window bounds, not screen text. Stops pending work when interrupted or disabled.
+- `control/PhoneControlService` and `NodeActions`: opt-in accessibility overlay, target validation, named control actions, focused-field text editing, gestures and navigation. Control labels and field contents are processed locally only when a command needs them. Stops pending work when interrupted or disabled.
 - `VoiceActivity`: visible microphone session over the current app. Closing or backgrounding it cancels recording. The service waits for the voice panel to leave before acting.
 - `data/`: consent/preferences stored locally; only the most recent result is held in memory. No raw audio, transcript, screenshot, or command-history persistence.
+
+Upgrading from 0.4.x requires accepting the expanded phone-control disclosure again before controls can reconnect.
 
 The floating button uses an accessibility overlay, not the general “draw over other apps” permission. Speech happens in a visible activity; there is no always-running microphone service. Google Play review is still required for AccessibilityService usage. Read [publishing](docs/PUBLISHING.md), [privacy draft](docs/PRIVACY.md), and [device test plan](docs/TESTING.md).
 

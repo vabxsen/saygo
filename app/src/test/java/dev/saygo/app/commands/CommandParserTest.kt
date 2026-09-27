@@ -27,7 +27,7 @@ class CommandParserTest {
         listOf("stop", "cancel", "never mind").forEach { assertEquals(Command.Stop, CommandParser.parse(it)) }
     }
     @Test fun `arbitrary or chained instructions never execute`() {
-        listOf("", "  ", "open", "search Google for", "buy milk", "tap Send", "type hello", "I want you to go home",
+        listOf("", "  ", "open", "search Google for", "buy milk", "I want you to go home",
             "go home then open Instagram", "open Instagram and scroll down", "scroll down twice", "keep scrolling", "a".repeat(241)
         ).forEach { assertNull(inputDescription(it), CommandParser.parse(it)) }
     }
@@ -46,6 +46,22 @@ class CommandParserTest {
         listOf("Open Instagram and scroll down", "Open Then and Now then go home", "Open unknown and unknown").forEach {
             assertNull(CommandParser.parse(it, installed))
         }
+    }
+    @Test fun `explicit tap and edit commands stay single actions`() {
+        assertEquals(Command.Tap("Search"), CommandParser.parse("Tap Search"))
+        assertEquals(Command.Tap("Play media", true), CommandParser.parse("Long press Play media"))
+        assertEquals(Command.Tap("Search then Send"), CommandParser.parse("Tap Search then Send"))
+        assertEquals(Command.EditText(TextOperation.CLEAR), CommandParser.parse("clear text"))
+        assertEquals(Command.EditText(TextOperation.SELECT_ALL), CommandParser.parse("select all"))
+        assertNull(CommandParser.parse("tap"))
+        assertNull(CommandParser.parse("type"))
+        assertNull(CommandParser.parse("clear text and go home"))
+    }
+    @Test fun `dictation preserves literal punctuation case and instructions`() {
+        val text = "Hello,  world! Then tap Send."
+        assertEquals(Command.EditText(TextOperation.INSERT, text), CommandParser.parse("Type " + text))
+        assertEquals(Command.EditText(TextOperation.REPLACE, "C++ & café?"), CommandParser.parse("Replace text with C++ & café?"))
+        assertNull(CommandParser.parse("type " + "x".repeat(2001)))
     }
     private fun inputDescription(value: String) = "Should reject: $value"
 }

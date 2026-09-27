@@ -325,6 +325,121 @@ class PhoneControlServiceTest {
         assertFalse(PhoneControlService.connected.value)
     }
 
+    @Test fun namedTapsDescriptionsParentsAndLongPressReachAnotherApp() {
+        openControlTarget()
+        listOf(
+            Command.Tap("search") to "Exact tap",
+            Command.Tap("Play media") to "Description tap",
+            Command.Tap("Nested control") to "Parent tap",
+            Command.Tap("Hold item", true) to "Long press received",
+        ).forEach { (command, result) ->
+            runControl(command)
+            assertTrue(SessionState.feedback.value.title, SessionState.feedback.value.success)
+            await(result) { screenHas(result) }
+        }
+    }
+
+    @Test fun missingAmbiguousAndDisabledLabelsNeverClick() {
+        openControlTarget()
+        listOf("Missing", "Duplicate", "Unavailable", "Search then Send", "Sear").forEach { label ->
+            runControl(Command.Tap(label))
+            assertFalse(label, SessionState.feedback.value.success)
+            assertTrue(screenHas("No action"))
+        }
+    }
+
+    @Test fun dictationSelectionReplacementAndClearReachFocusedField() {
+        openControlTarget()
+        runControl(Command.EditText(dev.saygo.app.commands.TextOperation.INSERT, "wrong"))
+        assertFalse(SessionState.feedback.value.success)
+        runControl(Command.Tap("Message"))
+        await("text field focused after tap") {
+            val field = PhoneControlService.current?.rootInActiveWindow?.findFocus(android.view.accessibility.AccessibilityNodeInfo.FOCUS_INPUT)
+            field?.isEditable == true && field.isFocused && field.isVisibleToUser
+        }
+        assertTrue(SessionState.feedback.value.success)
+        val literal = "Hello,  world! Then tap Send."
+        runControl(Command.EditText(dev.saygo.app.commands.TextOperation.INSERT, literal))
+        assertTrue(SessionState.feedback.value.title, SessionState.feedback.value.success)
+        await("literal text in external field") { focusedText() == literal }
+        runControl(Command.EditText(dev.saygo.app.commands.TextOperation.SELECT_ALL))
+        assertTrue(SessionState.feedback.value.success)
+        await("selection") {
+            val node = automation.rootInActiveWindow?.findFocus(android.view.accessibility.AccessibilityNodeInfo.FOCUS_INPUT)
+            node?.textSelectionStart == 0 && node.textSelectionEnd == literal.length
+        }
+        runControl(Command.EditText(dev.saygo.app.commands.TextOperation.INSERT, "Replacement?"))
+        await("selected text replaced") { focusedText() == "Replacement?" }
+        runControl(Command.EditText(dev.saygo.app.commands.TextOperation.REPLACE, "Entire field."))
+        await("whole field replaced") { focusedText() == "Entire field." }
+        runControl(Command.EditText(dev.saygo.app.commands.TextOperation.CLEAR))
+        await("field cleared") { focusedText().isNullOrEmpty() }
+        assertTrue(screenHas("No action"))
+        assertFalse(SessionState.feedback.value.title.contains(literal))
+    }
+
+    @Test fun queuedTapRejectsChangedAppAndQueuedTextRejectsRevokedConsent() {
+        openControlTarget()
+        var before = SessionState.feedback.value.sequence
+        instrumentation.runOnMainSync {
+            PhoneControlService.voiceUiVisible = true
+            PhoneControlService.current!!.executeWhenReady(Command.Tap("Search"), "dev.saygo.app.test")
+        }
+        openSettings()
+        instrumentation.runOnMainSync { PhoneControlService.voiceUiVisible = false }
+        await("stale tap rejected") { SessionState.feedback.value.sequence > before }
+        assertFalse(SessionState.feedback.value.success)
+        assertTrue(SessionState.feedback.value.title.contains("app changed"))
+        openControlTarget()
+        runControl(Command.Tap("Message"))
+        await("text field focused after tap") {
+            val field = PhoneControlService.current?.rootInActiveWindow?.findFocus(android.view.accessibility.AccessibilityNodeInfo.FOCUS_INPUT)
+            field?.isEditable == true && field.isFocused && field.isVisibleToUser
+        }
+        before = SessionState.feedback.value.sequence
+        instrumentation.runOnMainSync {
+            PhoneControlService.voiceUiVisible = true
+            PhoneControlService.current!!.executeWhenReady(Command.EditText(dev.saygo.app.commands.TextOperation.INSERT, "wrong"), "dev.saygo.app.test")
+            Preferences(context).controlConsent = false
+            PhoneControlService.voiceUiVisible = false
+        }
+        await("text cancelled") { SessionState.feedback.value.sequence > before }
+        assertFalse(SessionState.feedback.value.success)
+        assertTrue(focusedText().isNullOrEmpty())
+    }
+
+    @Test fun oldDisclosureDoesNotGrantNewScreenReadingAccess() {
+        val storage = context.getSharedPreferences("saygo_preferences", android.content.Context.MODE_PRIVATE)
+        val hadOld = storage.contains("control_disclosure_v1")
+        val old = storage.getBoolean("control_disclosure_v1", false)
+        try {
+            Preferences(context).controlConsent = false
+            storage.edit().putBoolean("control_disclosure_v1", true).commit()
+            assertFalse(Preferences(context).controlConsent)
+            runControl(Command.Tap("Search"))
+            assertFalse(SessionState.feedback.value.success)
+            assertEquals("Phone controls are off.", SessionState.feedback.value.title)
+        } finally {
+            storage.edit().apply { if (hadOld) putBoolean("control_disclosure_v1", old) else remove("control_disclosure_v1") }.commit()
+        }
+    }
+
+    private fun openControlTarget() {
+        context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.ControlTargetActivity")
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        await("control fixture") { automation.rootInActiveWindow?.packageName?.toString() == "dev.saygo.app.test" && screenHas("No action") }
+    }
+    private fun screenHas(text: String) = automation.rootInActiveWindow?.findAccessibilityNodeInfosByText(text)?.any { it.text?.toString() == text } == true
+    private fun focusedText(): String? {
+        val field = automation.rootInActiveWindow?.findFocus(android.view.accessibility.AccessibilityNodeInfo.FOCUS_INPUT) ?: return null
+        return if (field.isShowingHintText) "" else field.text?.toString()
+    }
+    private fun runControl(command: Command) {
+        val before = SessionState.feedback.value.sequence
+        instrumentation.runOnMainSync { PhoneControlService.current!!.executeWhenReady(command, "dev.saygo.app.test") }
+        await("control response") { SessionState.feedback.value.sequence > before }
+    }
+
     private fun showTestBubble() {
         val info = automation.serviceInfo
         info.flags = info.flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
