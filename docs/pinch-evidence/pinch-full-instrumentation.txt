@@ -1,0 +1,38 @@
+
+dev.saygo.app.CommandExecutorTest:.......
+dev.saygo.app.CommandRoutingTest:...
+dev.saygo.app.PhoneControlServiceTest:.
+Error in pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Timed out waiting for two fingers actually scale the other app
+	at org.junit.Assert.fail(Assert.java:89)
+	at dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:884)
+	at dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:648)
+.........
+Error in backIsRejectedIfTheOriginalForegroundAppChanged(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at dev.saygo.app.PhoneControlServiceTest.backIsRejectedIfTheOriginalForegroundAppChanged(PhoneControlServiceTest.kt:285)
+....................
+dev.saygo.app.SaygoUiTest:.......
+dev.saygo.app.SpeechSessionTest:.....
+
+Time: 203.647
+There were 2 failures:
+1) pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Timed out waiting for two fingers actually scale the other app
+	at org.junit.Assert.fail(Assert.java:89)
+	at dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:884)
+	at dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:648)
+2) backIsRejectedIfTheOriginalForegroundAppChanged(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at dev.saygo.app.PhoneControlServiceTest.backIsRejectedIfTheOriginalForegroundAppChanged(PhoneControlServiceTest.kt:285)
+
+FAILURES!!!
+Tests run: 54,  Failures: 2
+
+

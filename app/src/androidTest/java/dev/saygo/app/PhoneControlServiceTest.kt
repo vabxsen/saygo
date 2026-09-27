@@ -81,7 +81,7 @@ class PhoneControlServiceTest {
         instrumentation.runOnMainSync { PhoneControlService.current!!.executeWhenReady(Command.Swipe(Direction.UP), "com.example.anotherapp") }
         await("target rejection") { SessionState.feedback.value.sequence > before }
         assertFalse(SessionState.feedback.value.success)
-        assertTrue(SessionState.feedback.value.title.contains("app changed"))
+        assertTrue(SessionState.feedback.value.title, SessionState.feedback.value.title.contains("app changed"))
     }
 
     @Test fun interruptionCancelsWorkWaitingForTheVoicePanel() {
@@ -282,7 +282,7 @@ class PhoneControlServiceTest {
         instrumentation.runOnMainSync { PhoneControlService.voiceUiVisible = false }
         await("changed target rejected") { SessionState.feedback.value.sequence > before }
         assertFalse(SessionState.feedback.value.success)
-        assertTrue(SessionState.feedback.value.title.contains("app changed"))
+        assertTrue(SessionState.feedback.value.title, SessionState.feedback.value.title.contains("app changed"))
         assertEquals("dev.saygo.app.test", automation.rootInActiveWindow?.packageName?.toString())
     }
 
@@ -400,7 +400,7 @@ class PhoneControlServiceTest {
         instrumentation.runOnMainSync { PhoneControlService.voiceUiVisible = false }
         await("stale tap rejected") { SessionState.feedback.value.sequence > before }
         assertFalse(SessionState.feedback.value.success)
-        assertTrue(SessionState.feedback.value.title.contains("app changed"))
+        assertTrue(SessionState.feedback.value.title, SessionState.feedback.value.title.contains("app changed"))
         openControlTarget()
         runControl(Command.Tap("Message"))
         await("text field focused after tap") {
@@ -623,6 +623,107 @@ class PhoneControlServiceTest {
         runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
         instrumentation.runOnMainSync { PhoneControlService.current!!.disableSelf() }
         await("service and grid removed") { PhoneControlService.current == null && gridNode() == null }
+    }
+
+    @Test fun pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint() {
+        val evidence = mutableListOf<String>()
+        for (offset in listOf(false, true)) for (zoomIn in listOf(true, false)) {
+            val bounds = openPinchTarget(offset)
+            if (offset) assertTrue("Fixture must exercise offset screen coordinates", bounds.left > 0 && bounds.top > 0)
+            showTestBubble()
+            val startDistance = bounds.width() * if (zoomIn) .12f else .40f
+            dragBubbleTo(bounds.exactCenterX() - startDistance, bounds.exactCenterY())
+            val placed = bubbleBounds()
+            runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+            await("grid visible before pinch") { gridNode() != null }
+            val phrase = if (zoomIn) "Zoom in" else "Zoom out"
+            val before = SessionState.feedback.value.sequence
+            instrumentation.runOnMainSync {
+                val executor = dev.saygo.app.commands.CommandExecutor(context)
+                executor.execute(executor.parse(phrase)!!, "dev.saygo.app.test")
+            }
+            await("pinch callback") { SessionState.feedback.value.sequence > before }
+            assertEquals(if (zoomIn) "Zoom-in gesture sent." else "Zoom-out gesture sent.", SessionState.feedback.value.title)
+            var receipt = ""
+            await("two fingers actually scale the other app") {
+                receipt = automation.rootInActiveWindow?.findAccessibilityNodeInfosByText("Zoom=")?.firstOrNull()?.text?.toString().orEmpty()
+                val factor = Regex("Zoom=([0-9.]+)").find(receipt)?.groupValues?.get(1)?.toFloatOrNull()
+                receipt.contains("pointers=2 complete=true down=1 up=1") && factor != null &&
+                    (if (zoomIn) factor > 1.2f else factor < .85f)
+            }
+            assertNull(gridNode())
+            await("microphone restored after two-finger gesture") { bubbleNode() != null }
+            assertEquals(placed, bubbleBounds())
+            evidence += "$phrase offset=$offset bounds=$bounds: $receipt; microphone restored"
+        }
+        java.io.File(context.filesDir, "pinch-delivery.txt").writeText(evidence.joinToString("\n"))
+    }
+
+    @Test fun pinchRejectsAReplacedWindowDuringOverlayPreparation() {
+        openPinchTarget(false)
+        showTestBubble()
+        val before = SessionState.feedback.value.sequence
+        try {
+            instrumentation.runOnMainSync {
+                PhoneControlService.current!!.executeWhenReady(Command.Pinch(true), "dev.saygo.app.test")
+                android.os.Handler(android.os.Looper.getMainLooper()).post { PhoneControlService.voiceUiVisible = true }
+            }
+            await("pinch overlays detached") { bubbleNode() == null }
+            openGridTarget() // Same package, different window.
+            instrumentation.runOnMainSync { PhoneControlService.voiceUiVisible = false }
+            await("replaced pinch window rejected") { SessionState.feedback.value.sequence > before }
+            assertFalse(SessionState.feedback.value.success)
+            assertEquals("The window changed. Try again on the intended screen.", SessionState.feedback.value.title)
+            assertTrue(screenHas("Grid receiver ready"))
+            await("microphone restored after rejected pinch") { bubbleNode() != null }
+        } finally { instrumentation.runOnMainSync { PhoneControlService.voiceUiVisible = false } }
+    }
+
+    @Test fun pinchRechecksConsentBeforeDispatch() {
+        openPinchTarget(false)
+        val before = SessionState.feedback.value.sequence
+        instrumentation.runOnMainSync {
+            PhoneControlService.voiceUiVisible = true
+            PhoneControlService.current!!.executeWhenReady(Command.Pinch(false), "dev.saygo.app.test")
+            Preferences(context).controlConsent = false
+            PhoneControlService.voiceUiVisible = false
+        }
+        await("queued pinch rejected after consent withdrawn") { SessionState.feedback.value.sequence > before }
+        assertFalse(SessionState.feedback.value.success)
+        assertEquals("Phone controls are off.", SessionState.feedback.value.title)
+        assertTrue(screenHas("Pinch receiver ready"))
+    }
+
+    @Test fun pinchRejectsMissingOwnAndChangedOriginsWithoutTouchingTheScreen() {
+        openPinchTarget(false)
+        for (origin in listOf(null, context.packageName, "com.example.other")) {
+            val before = SessionState.feedback.value.sequence
+            instrumentation.runOnMainSync { PhoneControlService.current!!.executeWhenReady(Command.Pinch(true), origin) }
+            await("pinch origin rejected") { SessionState.feedback.value.sequence > before }
+            assertFalse(SessionState.feedback.value.success)
+            assertTrue(screenHas("Pinch receiver ready"))
+        }
+    }
+
+    private fun openPinchTarget(offset: Boolean): android.graphics.Rect {
+        context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.PinchTargetActivity")
+            .putExtra("offset", offset).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        automation.waitForIdle(300, 5000)
+        var result: android.graphics.Rect? = null
+        await("pinch fixture ready in both accessibility clients") {
+            val root = automation.rootInActiveWindow
+            val serviceRoot = PhoneControlService.current?.rootInActiveWindow
+            val bounds = android.graphics.Rect().also { root?.getBoundsInScreen(it) }
+            val serviceBounds = android.graphics.Rect().also { serviceRoot?.getBoundsInScreen(it) }
+            val ready = root?.packageName?.toString() == "dev.saygo.app.test" &&
+                root.findAccessibilityNodeInfosByText("Pinch receiver ready").isNotEmpty() &&
+                serviceRoot?.windowId == root.windowId && serviceBounds == bounds && !bounds.isEmpty
+            @Suppress("DEPRECATION")
+            serviceRoot?.recycle()
+            if (ready) result = bounds
+            ready
+        }
+        return checkNotNull(result)
     }
 
     private fun openGridTarget(): android.graphics.Rect {

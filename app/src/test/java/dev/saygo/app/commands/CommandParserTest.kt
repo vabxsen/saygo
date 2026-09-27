@@ -74,5 +74,12 @@ class CommandParserTest {
         assertEquals(Command.Tap("5"), CommandParser.parse("tap 5"))
         assertEquals(Command.EditText(TextOperation.INSERT, "tap cell 5"), CommandParser.parse("type tap cell 5"))
     }
+    @Test fun `pinch words preserve the physical direction and reject sequences`() {
+        listOf("Zoom in!", "pinch out").forEach { assertEquals(Command.Pinch(true), CommandParser.parse(it)) }
+        listOf("zoom out", "PINCH IN").forEach { assertEquals(Command.Pinch(false), CommandParser.parse(it)) }
+        listOf("zoom in twice", "zoom out then tap Search", "pinch", "zoom in 50 percent").forEach { assertNull(it, CommandParser.parse(it)) }
+        assertEquals(Command.Grid(GridOperation.ZOOM, 5), CommandParser.parse("zoom cell 5"))
+        assertEquals(Command.EditText(TextOperation.INSERT, "zoom in"), CommandParser.parse("type zoom in"))
+    }
     private fun inputDescription(value: String) = "Should reject: $value"
 }

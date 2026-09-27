@@ -1,0 +1,21 @@
+
+dev.saygo.app.PhoneControlServiceTest:
+Error in pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Timed out waiting for two fingers actually scale the other app
+	at org.junit.Assert.fail(Assert.java:89)
+	at dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:884)
+	at dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:648)
+
+
+Time: 19.782
+There was 1 failure:
+1) pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Timed out waiting for two fingers actually scale the other app
+	at org.junit.Assert.fail(Assert.java:89)
+	at dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:884)
+	at dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:648)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+

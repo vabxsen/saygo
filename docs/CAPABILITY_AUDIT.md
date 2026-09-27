@@ -43,3 +43,7 @@ Consequently, an unrestricted promise of “anything” is not a verified or sup
 ## Follow-up: explicit commands selected
 
 The user selected individual voice commands with Google Play support. Version 0.5.0 adds exact-label tap/long-press and focused-field insert/replace/clear/select-all commands. The table above records the audited 0.4.2 baseline; it must not be mistaken for a description of the current implementation. The new controls passed local runtime verification; see [0.5.0 results](DIRECT_CONTROLS_0.5.0.md). Arbitrary whole-task planning remains outside the selected direction; the original broad coverage requirement is still unproven.
+
+## Follow-up: grid and pinch controls
+
+Version 0.6.0 added a numbered grid for unlabelled tap targets, with 47 core tests passing on each of Android 10, 14 and 16. Version 0.7.0 adds explicit native pinch zoom and verifies real scaling in a separate app, including offset windows. See [grid results](GRID_0.6.0.md) and [pinch results](PINCH_0.7.0.md). These additions do not establish universal phone control or Google Play approval.

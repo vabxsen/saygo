@@ -173,7 +173,7 @@ class PhoneControlService : AccessibilityService() {
             dismissGrid(); SessionState.report("Grid hidden."); return
         }
         if (!prefs.controlConsent) { dismissGrid(); SessionState.report("Phone controls are off.", false); return }
-        if ((command is Command.Swipe || command is Command.Tap || command is Command.EditText || command is Command.Grid) && (originPackage == null || originPackage == packageName)) {
+        if ((command is Command.Swipe || command is Command.Pinch || command is Command.Tap || command is Command.EditText || command is Command.Grid) && (originPackage == null || originPackage == packageName)) {
             SessionState.report("Open the app you want to control, then use the floating microphone.", false)
             return
         }
@@ -184,6 +184,8 @@ class PhoneControlService : AccessibilityService() {
         }
         val deadline = SystemClock.uptimeMillis() + 2_000
         pending = object : Runnable {
+            private var preparedPinchWindow: Int? = null
+            private var preparedPinchBounds: Rect? = null
             override fun run() {
                 if (!prefs.controlConsent) {
                     dismissGrid()
@@ -297,6 +299,25 @@ class PhoneControlService : AccessibilityService() {
                     }
                     return
                 }
+                if (command is Command.Pinch) {
+                    if (bounds.width() < dp(80) || bounds.height() < dp(80) || bounds.left < 0 || bounds.top < 0) {
+                        cancelPending(); SessionState.report("This window is too small for a two-finger gesture.", false); return
+                    }
+                    if (preparedPinchWindow == null) {
+                        preparedPinchWindow = targetWindow
+                        preparedPinchBounds = Rect(bounds)
+                        bubbleSuspended = true
+                        bubble?.let { if (it.isAttachedToWindow) windows.removeViewImmediate(it) }
+                        // Settle both microphone and any dismissed grid before touching.
+                        handler.postDelayed(this, 80)
+                        return
+                    }
+                    if (preparedPinchWindow != targetWindow || preparedPinchBounds != bounds) {
+                        cancelPending(); SessionState.report("The window changed. Try again on the intended screen.", false); return
+                    }
+                    pinch(command.zoomIn, bounds)
+                    return
+                }
                 if (isBack) {
                     pending = null
                     val ok = performGlobalAction(GLOBAL_ACTION_BACK)
@@ -334,10 +355,30 @@ class PhoneControlService : AccessibilityService() {
         dispatchPath(path, 350, "Swipe sent.")
     }
 
-    private fun dispatchPath(path: Path, duration: Long, successMessage: String) {
+    private fun pinch(zoomIn: Boolean, bounds: Rect) {
+        val near = bounds.width() * .12f
+        val far = bounds.width() * .40f
+        val start = if (zoomIn) near else far
+        val end = if (zoomIn) far else near
+        val paths = listOf(-1, 1).map { side ->
+            Path().apply {
+                moveTo(bounds.exactCenterX() + side * start, bounds.exactCenterY())
+                lineTo(bounds.exactCenterX() + side * end, bounds.exactCenterY())
+            }
+        }
+        dispatchPaths(paths, 500, if (zoomIn) "Zoom-in gesture sent." else "Zoom-out gesture sent.")
+    }
+
+    private fun dispatchPath(path: Path, duration: Long, successMessage: String) =
+        dispatchPaths(listOf(path), duration, successMessage)
+
+    private fun dispatchPaths(paths: List<Path>, duration: Long, successMessage: String) {
         gestureInFlight = true
         cancelPending() // Clears preparation; gestureInFlight keeps the bubble detached.
-        val accepted = dispatchGesture(GestureDescription.Builder().addStroke(GestureDescription.StrokeDescription(path, 0, duration)).build(), object : GestureResultCallback() {
+        val gesture = GestureDescription.Builder().apply {
+            paths.forEach { addStroke(GestureDescription.StrokeDescription(it, 0, duration)) }
+        }.build()
+        val accepted = dispatchGesture(gesture, object : GestureResultCallback() {
             override fun onCompleted(gestureDescription: GestureDescription?) { finishGesture(successMessage, true) }
             override fun onCancelled(gestureDescription: GestureDescription?) { finishGesture("Gesture interrupted. Nothing else will run.", false) }
         }, handler)

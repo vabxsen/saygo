@@ -4,6 +4,7 @@ sealed interface Command {
     data class OpenApp(val name: String) : Command
     data class Search(val provider: SearchProvider, val query: String) : Command
     data class Swipe(val direction: Direction) : Command
+    data class Pinch(val zoomIn: Boolean) : Command
     data class Navigate(val destination: Destination) : Command
     data class Tap(val label: String, val longPress: Boolean = false) : Command
     data class EditText(val operation: TextOperation, val text: String = "") : Command
@@ -32,6 +33,8 @@ object CommandParser {
         if (text.isEmpty() || text.length > 240) return null
         val key = text.lowercase(java.util.Locale.ROOT)
         when (key) {
+            "zoom in", "pinch out" -> return Command.Pinch(true)
+            "zoom out", "pinch in" -> return Command.Pinch(false)
             "show grid" -> return Command.Grid(GridOperation.SHOW)
             "hide grid", "dismiss grid" -> return Command.Grid(GridOperation.HIDE)
             "grid back" -> return Command.Grid(GridOperation.BACK)

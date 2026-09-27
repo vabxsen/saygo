@@ -1,3 +1,5 @@
+> Current version: **0.7.0**. See [native pinch zoom and current results](PINCH_0.7.0.md). Earlier sections preserve verification history.
+
 > Current version: **0.6.0**. See [numbered grid and current results](GRID_0.6.0.md). The sections below preserve earlier verification history.
 
 > Current version: **0.5.0**. See [direct controls and current results](DIRECT_CONTROLS_0.5.0.md). The sections below preserve the 0.4.2 verification history.
