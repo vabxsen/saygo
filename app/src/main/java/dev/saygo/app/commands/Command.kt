@@ -7,8 +7,11 @@ sealed interface Command {
     data class Navigate(val destination: Destination) : Command
     data class Tap(val label: String, val longPress: Boolean = false) : Command
     data class EditText(val operation: TextOperation, val text: String = "") : Command
+    data class Grid(val operation: GridOperation, val cell: Int? = null) : Command
     data object Stop : Command
 }
+
+enum class GridOperation { SHOW, HIDE, ZOOM, BACK, TAP, LONG_PRESS }
 
 enum class TextOperation { INSERT, REPLACE, CLEAR, SELECT_ALL }
 
@@ -29,6 +32,9 @@ object CommandParser {
         if (text.isEmpty() || text.length > 240) return null
         val key = text.lowercase(java.util.Locale.ROOT)
         when (key) {
+            "show grid" -> return Command.Grid(GridOperation.SHOW)
+            "hide grid", "dismiss grid" -> return Command.Grid(GridOperation.HIDE)
+            "grid back" -> return Command.Grid(GridOperation.BACK)
             "clear text" -> return Command.EditText(TextOperation.CLEAR)
             "select all" -> return Command.EditText(TextOperation.SELECT_ALL)
             "stop", "cancel", "never mind" -> return Command.Stop
@@ -39,6 +45,15 @@ object CommandParser {
             "previous reel", "previous video", "scroll up", "swipe down" -> return Command.Swipe(Direction.DOWN)
             "swipe left" -> return Command.Swipe(Direction.LEFT)
             "swipe right" -> return Command.Swipe(Direction.RIGHT)
+        }
+        if (Regex("^(zoom|tap|long press) cell(?: |$)").containsMatchIn(key)) {
+            val match = Regex("^(zoom|tap|long press) cell ([1-9]|one|two|three|four|five|six|seven|eight|nine)$").matchEntire(key) ?: return null
+            val number = match.groupValues[2].toIntOrNull() ?: (listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine").indexOf(match.groupValues[2]) + 1)
+            return Command.Grid(when (match.groupValues[1]) {
+                "zoom" -> GridOperation.ZOOM
+                "tap" -> GridOperation.TAP
+                else -> GridOperation.LONG_PRESS
+            }, number)
         }
         Regex("^(tap|long press) (.+)$", RegexOption.IGNORE_CASE).matchEntire(text)?.let {
             return Command.Tap(it.groupValues[2], it.groupValues[1].equals("long press", true))

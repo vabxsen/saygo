@@ -35,3 +35,7 @@ The full local instrumentation suite includes real YouTube/Chrome routing. CI's 
 ## Direct control acceptance (0.5.0)
 
 Test exact labels, content descriptions and labels nested inside clickable parents. Duplicate, absent, disabled and partial labels must not trigger an action. A separate test APK records click and long-click delivery and exposes a real editable field. Verify literal punctuation, inserting at a selection, whole-field replacement, clear and select-all. Text must never be interpreted as another command or echoed in feedback. Repeat against actual messaging/search apps without sending anything during the test. Test changes of foreground app and revoked consent before dispatch. Old v1 disclosure acceptance must not grant v2 screen-reading access.
+
+## Grid acceptance (0.6.0)
+
+Verify real touches in an unlabelled external canvas at the four corner-cell centres and the central cell, with the microphone positioned over each target. Verify grid window bounds in screen coordinates and actual long-press delivery after zoom/back. Inspect rendered screenshots; an attached View alone is insufficient. Test hide/cancel, rotation, one-minute expiry, screen-off/wake, changed app/window, revoked consent and service shutdown. Delayed window events from before grid creation must not remove a fresh grid. Cancelling between overlay detachment and gesture dispatch must restore the microphone without touching the target.

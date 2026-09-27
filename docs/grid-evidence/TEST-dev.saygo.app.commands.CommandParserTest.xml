@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.saygo.app.commands.CommandParserTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-09-27T17:07:57.644Z" hostname="CHEESE" time="0.067">
+  <properties/>
+  <testcase name="search content is data not a second instruction" classname="dev.saygo.app.commands.CommandParserTest" time="0.04"/>
+  <testcase name="arbitrary or chained instructions never execute" classname="dev.saygo.app.commands.CommandParserTest" time="0.009"/>
+  <testcase name="explicit tap and edit commands stay single actions" classname="dev.saygo.app.commands.CommandParserTest" time="0.003"/>
+  <testcase name="every documented gesture maps to the physical swipe direction" classname="dev.saygo.app.commands.CommandParserTest" time="0.003"/>
+  <testcase name="launcher command preserves full app name" classname="dev.saygo.app.commands.CommandParserTest" time="0.001"/>
+  <testcase name="punctuation and casing from speech recognizers are tolerated" classname="dev.saygo.app.commands.CommandParserTest" time="0.002"/>
+  <testcase name="search payload retains case and embedded punctuation" classname="dev.saygo.app.commands.CommandParserTest" time="0.001"/>
+  <testcase name="conjunctions are accepted only for exact installed app labels" classname="dev.saygo.app.commands.CommandParserTest" time="0.002"/>
+  <testcase name="grid commands are explicit and bounded" classname="dev.saygo.app.commands.CommandParserTest" time="0.002"/>
+  <testcase name="navigation and cancellation use exact phrases" classname="dev.saygo.app.commands.CommandParserTest" time="0.002"/>
+  <testcase name="dictation preserves literal punctuation case and instructions" classname="dev.saygo.app.commands.CommandParserTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

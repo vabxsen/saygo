@@ -63,5 +63,16 @@ class CommandParserTest {
         assertEquals(Command.EditText(TextOperation.REPLACE, "C++ & café?"), CommandParser.parse("Replace text with C++ & café?"))
         assertNull(CommandParser.parse("type " + "x".repeat(2001)))
     }
+    @Test fun `grid commands are explicit and bounded`() {
+        assertEquals(Command.Grid(GridOperation.SHOW), CommandParser.parse("Show grid!"))
+        assertEquals(Command.Grid(GridOperation.HIDE), CommandParser.parse("dismiss grid"))
+        assertEquals(Command.Grid(GridOperation.BACK), CommandParser.parse("grid back"))
+        assertEquals(Command.Grid(GridOperation.ZOOM, 5), CommandParser.parse("zoom cell five"))
+        assertEquals(Command.Grid(GridOperation.TAP, 2), CommandParser.parse("tap cell 2"))
+        assertEquals(Command.Grid(GridOperation.LONG_PRESS, 9), CommandParser.parse("long press cell nine"))
+        listOf("tap cell 0", "tap cell 10", "zoom cell", "tap cell 5 then 6", "show grid and tap cell 2").forEach { assertNull(it, CommandParser.parse(it)) }
+        assertEquals(Command.Tap("5"), CommandParser.parse("tap 5"))
+        assertEquals(Command.EditText(TextOperation.INSERT, "tap cell 5"), CommandParser.parse("type tap cell 5"))
+    }
     private fun inputDescription(value: String) = "Should reject: $value"
 }

@@ -24,6 +24,11 @@ private val appCommands = listOf(
     CommandExample("Search YouTube for cooking", "Find videos"),
 )
 private val controlCommands = listOf(
+    CommandExample("Show grid", "Number unlabelled areas of the screen"),
+    CommandExample("Zoom cell 5", "Refine the grid inside one numbered cell"),
+    CommandExample("Tap cell 5", "Tap the centre of a numbered cell"),
+    CommandExample("Long press cell 5", "Touch and hold a numbered cell"),
+    CommandExample("Grid back / Hide grid", "Undo a zoom or close the grid"),
     CommandExample("Tap Search", "Tap one control by its exact label"),
     CommandExample("Long press a label", "Touch and hold a named control"),
     CommandExample("Type your words", "Insert text in the focused field"),
@@ -108,7 +113,7 @@ fun SaygoApp(
                                         SectionLabel("Stop listening")
                                         CommandRow(CommandExample("Cancel", "End listening without an action"))
                                     }
-                                    Text("One command at a time. Tap a field before dictating. Labels must match exactly and be unique. Some apps don’t expose usable controls. Multi-step actions aren’t supported.",
+                                    Text("One command at a time. Tap a field before dictating. Labels must match exactly and be unique. Use Show grid for unlabelled controls, then name a cell. The grid expires after a minute and closes when you scroll or change apps. Multi-step actions aren’t supported.",
                                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                                 2 -> {
@@ -146,7 +151,7 @@ fun SaygoApp(
                                         }
                                     }
                                     Rule()
-                                    Text("saygo 0.5.0 · English · Android 10+", style = MaterialTheme.typography.labelSmall,
+                                    Text("saygo 0.6.0 · English · Android 10+", style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                             }
@@ -167,7 +172,7 @@ fun SaygoApp(
         onDismissRequest = { controlDisclosure = false },
         icon = { Icon(Icons.Rounded.TouchApp, null) }, title = { Text("Control your phone by voice") },
         text = { Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text("saygo uses Android’s AccessibilityService to display a floating microphone and carry out your explicit tap, long-press, text-editing, swipe, Back, Home, and Recent apps commands.")
+            Text("saygo uses Android’s AccessibilityService to display a floating microphone and an optional numbered grid, and carry out your explicit tap, long-press, text-editing, swipe, Back, Home, and Recent apps commands.")
             Text("Android grants access to screen content and interactions. saygo reads the foreground app identity, window bounds, control labels and focused text field when you request a command. This lets it find the button or field you name. Screen content stays on your device and is not saved or sent to saygo servers. Text you dictate is entered into the other app, which handles it under its own privacy policy.")
             Text("One command triggers one predefined action. saygo never chooses or runs a sequence of actions for you. This permission is optional; opening apps and searching work without it. You can turn it off at any time in Setup or Android accessibility settings.")
         } },

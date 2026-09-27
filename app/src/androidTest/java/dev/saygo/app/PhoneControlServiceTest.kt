@@ -440,6 +440,203 @@ class PhoneControlServiceTest {
         await("control response") { SessionState.feedback.value.sequence > before }
     }
 
+    @Test fun numberedGridDeliversTapsAcrossUnlabelledCanvasWithBubbleAtTarget() {
+        val evidence = mutableListOf<String>()
+        for (number in listOf(1, 3, 5, 7, 9)) {
+            val bounds = openGridTarget()
+            showTestBubble()
+            val x = bounds.left + bounds.width() * (((number - 1) % 3) * 2 + 1) / 6f
+            val y = bounds.top + bounds.height() * (((number - 1) / 3) * 2 + 1) / 6f
+            dragBubbleTo(x, y)
+            val placed = bubbleBounds()
+            runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+            await("grid visible") { gridNode() != null }
+            val actualBounds = android.graphics.Rect()
+            val view = gridNode()!!
+            instrumentation.runOnMainSync {
+                val location = IntArray(2)
+                view.getLocationOnScreen(location)
+                actualBounds.set(location[0], location[1], location[0] + view.width, location[1] + view.height)
+            }
+            assertEquals("Grid must use screen coordinates", bounds, actualBounds)
+            runControl(Command.Grid(dev.saygo.app.commands.GridOperation.TAP, number))
+            assertEquals("Tap sent.", SessionState.feedback.value.title)
+            awaitGridTouch("Tap", x, y)
+            await("bubble restored") { bubbleNode() != null }
+            assertEquals(placed, bubbleBounds())
+            assertNull(gridNode())
+            evidence += "Cell $number: delivered at ($x, $y); overlay removed; microphone position retained."
+        }
+        java.io.File(context.filesDir, "grid-delivery.txt").writeText(evidence.joinToString("\n"))
+    }
+
+    @Test fun nestedGridZoomBackAndLongPressUseTheChosenArea() {
+        val bounds = openGridTarget()
+        enableWindowInspection()
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        await("full grid drawn") { gridNode() != null }
+        captureGrid("grid-full.png")
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.ZOOM, 5))
+        captureGrid("grid-zoom.png")
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.ZOOM, 9))
+        await("third grid level") { gridNode()?.contentDescription?.toString()?.contains("level 3") == true }
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.ZOOM, 1))
+        assertFalse(SessionState.feedback.value.success)
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.BACK))
+        assertTrue(SessionState.feedback.value.title, SessionState.feedback.value.success)
+        await("second grid level; current=" + gridNode()?.contentDescription) { gridNode()?.contentDescription?.toString()?.contains("level 2") == true }
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.LONG_PRESS, 9))
+        assertEquals("Long press sent.", SessionState.feedback.value.title)
+        awaitGridTouch("Hold", bounds.left + bounds.width() * 11 / 18f, bounds.top + bounds.height() * 11 / 18f)
+        assertNull(gridNode())
+    }
+
+    @Test fun gridHidesForVoiceAndDismissalCannotLeaveTheMicrophoneDetached() {
+        openGridTarget()
+        showTestBubble()
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        instrumentation.runOnMainSync { PhoneControlService.voiceUiVisible = true }
+        await("grid hidden for voice") { gridNode() == null }
+        instrumentation.runOnMainSync { PhoneControlService.voiceUiVisible = false }
+        await("grid restored after voice") { gridNode() != null }
+        val before = SessionState.feedback.value.sequence
+        instrumentation.runOnMainSync {
+            PhoneControlService.current!!.executeWhenReady(Command.Grid(dev.saygo.app.commands.GridOperation.TAP, 5), "dev.saygo.app.test")
+            // Runs after preparation detaches the overlays, before its delayed dispatch.
+            android.os.Handler(android.os.Looper.getMainLooper()).post { PhoneControlService.current!!.dismissGrid() }
+        }
+        await("cancelled coordinate action") { SessionState.feedback.value.sequence > before }
+        assertFalse(SessionState.feedback.value.success)
+        await("cancelled tap restores microphone") { bubbleNode() != null }
+        assertTrue(screenHas("Grid receiver ready"))
+    }
+
+    @Test fun gridRejectsChangedWindowAndReopeningDoesNotReviveCoordinates() {
+        openGridTarget()
+        enableWindowInspection()
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        instrumentation.runOnMainSync {
+            val oldEvent = android.view.accessibility.AccessibilityEvent.obtain(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
+            oldEvent.packageName = "com.android.settings"
+            oldEvent.eventTime = android.os.SystemClock.uptimeMillis() - 1000
+            PhoneControlService.current!!.onAccessibilityEvent(oldEvent)
+            oldEvent.recycle()
+        }
+        SystemClock.sleep(200) // Allow the debounced window validation to run.
+        assertNotNull("Delayed events from before grid creation must not dismiss it", gridNode())
+        openSettings()
+        await("grid removed on app switch") { gridNode() == null }
+        openGridTarget()
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.TAP, 5))
+        assertFalse(SessionState.feedback.value.success)
+        assertTrue(screenHas("Grid receiver ready"))
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        // A new Activity from the same package has a different window identity.
+        openControlTarget()
+        await("grid removed on window switch") { gridNode() == null }
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.TAP, 5))
+        assertFalse(SessionState.feedback.value.success)
+        assertTrue(screenHas("No action"))
+    }
+
+    @Test fun revokedConsentAndScreenOffRemoveGridWithoutTouchingTarget() {
+        openGridTarget()
+        enableWindowInspection()
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        Preferences(context).controlConsent = false
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.TAP, 5))
+        assertFalse(SessionState.feedback.value.success)
+        assertNull(gridNode())
+        assertTrue(screenHas("Grid receiver ready"))
+        Preferences(context).controlConsent = true
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        try {
+            shell("input keyevent KEYCODE_SLEEP")
+            await("screen actually off") { !context.getSystemService(android.os.PowerManager::class.java).isInteractive }
+            await("grid cleared on screen off") { gridNode() == null }
+        } finally {
+            shell("input keyevent KEYCODE_WAKEUP")
+            shell("wm dismiss-keyguard")
+        }
+        await("same window restored after wake") { context.getSystemService(android.os.PowerManager::class.java).isInteractive && screenHas("Grid receiver ready") }
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.TAP, 5))
+        assertFalse(SessionState.feedback.value.success)
+        assertTrue(screenHas("Grid receiver ready"))
+    }
+
+    @Test fun gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay() {
+        openGridTarget()
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.HIDE))
+        assertNull(gridNode())
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        instrumentation.runOnMainSync { dev.saygo.app.commands.CommandExecutor(context).execute(Command.Stop) }
+        assertNull(gridNode())
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        try {
+            assertTrue(automation.setRotation(UiAutomation.ROTATION_FREEZE_90))
+            await("grid dismissed on rotation") { gridNode() == null }
+        } finally { automation.setRotation(UiAutomation.ROTATION_UNFREEZE) }
+        openGridTarget()
+        val started = SystemClock.uptimeMillis()
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        assertNotNull(gridNode())
+        while (gridNode() != null && SystemClock.uptimeMillis() - started < 65_000) SystemClock.sleep(200)
+        assertNull("Grid should expire without another command", gridNode())
+        assertTrue("A fresh stable grid should last one minute", SystemClock.uptimeMillis() - started >= 59_000)
+        runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
+        instrumentation.runOnMainSync { PhoneControlService.current!!.disableSelf() }
+        await("service and grid removed") { PhoneControlService.current == null && gridNode() == null }
+    }
+
+    private fun openGridTarget(): android.graphics.Rect {
+        context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.GridTargetActivity")
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        await("grid target ready") { automation.rootInActiveWindow?.packageName?.toString() == "dev.saygo.app.test" && screenHas("Grid receiver ready") }
+        return android.graphics.Rect().also { automation.rootInActiveWindow!!.getBoundsInScreen(it) }
+    }
+    private fun enableWindowInspection() {
+        val info = automation.serviceInfo
+        info.flags = info.flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or android.accessibilityservice.AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+        automation.serviceInfo = info
+    }
+    // Touch-transparent, non-focusable windows are absent from UiAutomation's interactive
+    // window list. Inspect the real attached View, then independently check delivered input.
+    private fun gridNode(): android.view.View? {
+        var visible: android.view.View? = null
+        instrumentation.runOnMainSync {
+            val service = PhoneControlService.current
+            val grid = service?.let { PhoneControlService::class.java.getDeclaredField("grid").apply { isAccessible = true }.get(it) }
+            val view = grid?.let { it.javaClass.getDeclaredField("view").apply { isAccessible = true }.get(it) as android.view.View }
+            if (view?.isShown == true && view.isAttachedToWindow) visible = view
+        }
+        return visible
+    }
+    private fun captureGrid(name: String) {
+        val view = gridNode() ?: error("Grid missing")
+        val drawn = java.util.concurrent.CountDownLatch(1)
+        instrumentation.runOnMainSync {
+            view.postOnAnimation { view.postOnAnimation { drawn.countDown() } }
+        }
+        assertTrue("Grid frame completed", drawn.await(3, java.util.concurrent.TimeUnit.SECONDS))
+        val screenshot = automation.takeScreenshot() ?: error("No screenshot")
+        var bluePixels = 0
+        for (y in 0 until screenshot.height step 8) for (x in 0 until screenshot.width step 8) {
+            val pixel = screenshot.getPixel(x, y)
+            if (android.graphics.Color.blue(pixel) > 150 && android.graphics.Color.red(pixel) < 80) bluePixels++
+        }
+        assertTrue("Grid must actually be rendered in the screenshot", bluePixels > 40)
+        java.io.File(context.filesDir, name).outputStream().use { screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+        screenshot.recycle()
+    }
+    private fun awaitGridTouch(kind: String, x: Float, y: Float) {
+        await("$kind received at $x,$y") {
+            val text = automation.rootInActiveWindow?.findAccessibilityNodeInfosByText("$kind at ")?.firstOrNull()?.text?.toString().orEmpty()
+            val match = Regex("$kind at ([0-9]+),([0-9]+)").matchEntire(text)
+            match != null && kotlin.math.abs(match.groupValues[1].toInt() - x) <= 2 && kotlin.math.abs(match.groupValues[2].toInt() - y) <= 2
+        }
+    }
+
     private fun showTestBubble() {
         val info = automation.serviceInfo
         info.flags = info.flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS

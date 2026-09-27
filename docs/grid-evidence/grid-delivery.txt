@@ -1,0 +1,5 @@
+Cell 1: delivered at (180.0, 400.0); overlay removed; microphone position retained.
+Cell 3: delivered at (900.0, 400.0); overlay removed; microphone position retained.
+Cell 5: delivered at (540.0, 1200.0); overlay removed; microphone position retained.
+Cell 7: delivered at (180.0, 2000.0); overlay removed; microphone position retained.
+Cell 9: delivered at (900.0, 2000.0); overlay removed; microphone position retained.

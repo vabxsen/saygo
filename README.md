@@ -1,6 +1,8 @@
 # saygo
 
-**Current version: 0.5.0.** Adds direct taps, long presses and text editing. **59 tests passed** locally (43 Android/API36 + 16 JVM), with debug/release builds and lint passing. GitHub also passed 40 core tests on each of Android 10, 14 and 16. See [new controls and verification](docs/DIRECT_CONTROLS_0.5.0.md) and the [original capability audit](docs/CAPABILITY_AUDIT.md). This is not unrestricted phone control. Version 0.4.2 fixed all three rescan defects; its hosted build and API 29/34/36 core tests passed after correcting SDK setup. See [previous fixes](docs/FIXES_0.4.2.md).
+**Current version: 0.6.0.** Adds a numbered grid for unlabelled controls. **68 local tests passed** (49 Android/API36 + 19 JVM), with debug/release builds and lint passing. See [grid controls and verification](docs/GRID_0.6.0.md).
+
+Previous version **0.5.0**: Adds direct taps, long presses and text editing. **59 tests passed** locally (43 Android/API36 + 16 JVM), with debug/release builds and lint passing. GitHub also passed 40 core tests on each of Android 10, 14 and 16. See [new controls and verification](docs/DIRECT_CONTROLS_0.5.0.md) and the [original capability audit](docs/CAPABILITY_AUDIT.md). This is not unrestricted phone control. Version 0.4.2 fixed all three rescan defects; its hosted build and API 29/34/36 core tests passed after correcting SDK setup. See [previous fixes](docs/FIXES_0.4.2.md).
 
 A minimal Android voice-command app, written in Kotlin and Jetpack Compose.
 
@@ -30,6 +32,8 @@ Android may restrict accessibility settings for apps installed outside a trusted
 | `Open Instagram`, `Launch YouTube Music` | Launch an installed app by its full label |
 | `Search Google for <query>` | Open a Google web search |
 | `Search YouTube for <query>` | Open YouTube search in a handler app or browser |
+| `Show grid`, `Zoom cell 5`, `Grid back`, `Hide grid` | Display and refine a 3×3 coordinate guide; up to two zooms |
+| `Tap cell 5`, `Long press cell 5` | One touch at that cell’s centre; English number words also work |
 | `Tap Search`, `Long press Download` | Act on one visible control with that exact, unique label |
 | `Type <text>` | Insert literal text at the cursor, replacing selected text, in the focused field |
 | `Replace text with <text>`, `Clear text`, `Select all` | Edit the focused text field |
@@ -41,7 +45,7 @@ Android may restrict accessibility settings for apps installed outside a trusted
 
 The parser is case insensitive and tolerates extra spaces and sentence-ending punctuation. Unknown commands and chained instructions are rejected. Queries are URL encoded and never interpreted as additional actions.
 
-Not implemented: always-on listening, a wake word, coordinate/grid tapping, automatic Reels navigation, repeat scrolling, dedicated purchase/messaging workflows, or autonomous planning. Named controls must expose a unique usable accessibility label. Focus a text field before dictation; password fields require the keyboard. The app never presses Send automatically after typing. saygo does not promise to control every Android screen. It cannot bypass a locked phone or Android security controls.
+Not implemented: always-on listening, a wake word, dragging/pinch gestures, automatic Reels navigation, repeat scrolling, dedicated purchase/messaging workflows, or autonomous planning. Named controls must expose a unique usable accessibility label. For an unlabelled control, say “Show grid”, narrow its area with “Zoom cell <number>”, then say “Tap cell <number>”. The grid closes after a touch, app/window change, scroll, rotation, screen-off, cancellation, or one minute without another grid command. Coordinate taps do not identify what a button does; choose the area yourself. Focus a text field before dictation; password fields require the keyboard. The app never presses Send automatically after typing. saygo does not promise to control every Android screen. It cannot bypass a locked phone or Android security controls.
 
 ## Build
 
@@ -62,7 +66,7 @@ Set `ANDROID_HOME` to your SDK or create an ignored `local.properties` with `sdk
 - `speech/SpeechSession`: a single, bounded recognition session. On-device recognition is preferred when Android reports support. Otherwise the system provider is used after disclosure. No automatic retry loop.
 - `commands/CommandParser`: pure, deterministic grammar with unit tests. No LLM, remote planner, fuzzy action selection, or hidden multi-step actions.
 - `commands/CommandExecutor`: app intents, encoded search URLs, and explicit delegation to phone controls.
-- `control/PhoneControlService` and `NodeActions`: opt-in accessibility overlay, target validation, named control actions, focused-field text editing, gestures and navigation. Control labels and field contents are processed locally only when a command needs them. Stops pending work when interrupted or disabled.
+- `control/PhoneControlService`, `NodeActions`, `GridOverlay` and `GridRegion`: opt-in accessibility overlay, target validation, named control actions, focused-field text editing, gestures and navigation. Control labels and field contents are processed locally only when a command needs them. Stops pending work when interrupted or disabled.
 - `VoiceActivity`: visible microphone session over the current app. Closing or backgrounding it cancels recording. The service waits for the voice panel to leave before acting.
 - `data/`: consent/preferences stored locally; only the most recent result is held in memory. No raw audio, transcript, screenshot, or command-history persistence.
 

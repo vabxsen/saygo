@@ -1,6 +1,6 @@
 # Publication preparation
 
-This project has not been submitted to Google Play or uploaded to a GitHub repository. Neither policy compliance nor store approval is guaranteed by these implementation choices.
+Source is published at [vabxsen/saygo](https://github.com/vabxsen/saygo). The app has not been submitted to Google Play. Neither policy compliance nor store approval is guaranteed by these implementation choices.
 
 ## Google Play
 
@@ -16,11 +16,11 @@ This project has not been submitted to Google Play or uploaded to a GitHub repos
 
 Draft short description: **Open apps, search, and navigate your phone with simple voice commands.**
 
-Draft listing paragraph: **saygo listens when you tap its microphone and performs one supported English command. Open installed apps, search Google or YouTube, or enable optional phone controls for single swipes, Back, Home, and Recent apps. Phone controls use Android's AccessibilityService to show a floating microphone and perform your explicit commands. saygo uses the foreground app identity and window bounds locally to target a swipe; it does not read screen text or store screen contents. No account is required. Speech recognition availability and offline support depend on your device and speech provider.**
+Draft listing paragraph: **saygo listens when you tap its microphone and performs one supported English command. Open installed apps, search Google or YouTube, or enable optional phone controls for named taps and long presses, focused-field text editing, grid-directed taps, single swipes, Back, Home, and Recent apps. Phone controls use Android's AccessibilityService to show a floating microphone or optional numbered grid and perform your explicit commands. saygo processes foreground app identity, window bounds, control labels and the focused text field locally to carry out your command. It does not save screen contents or capture screenshots. Dictated text is entered into the app you control. No account is required. Speech recognition availability and offline support depend on your device and speech provider.**
 
 ## GitHub
 
-The source includes a Gradle wrapper, MIT license, contribution guidance, tests, and a CI workflow. Create the repository under the intended account, commit source only (respect `.gitignore`), and push. Attach a clearly labelled debug APK to a prerelease if distributing for testing. A production GitHub APK should be deliberately signed, versioned, and accompanied by a checksum. Do not publish the unsigned AAB as an installable phone download.
+The source includes a Gradle wrapper, MIT license, contribution guidance, tests, and a CI workflow. The repository is already published. Continue committing source and verification evidence while respecting `.gitignore`. Attach a clearly labelled debug APK to a prerelease if distributing for testing. A production GitHub APK should be deliberately signed, versioned, and accompanied by a checksum. Do not publish the unsigned AAB as an installable phone download.
 
 ## Primary references checked 2026-09-27
 
