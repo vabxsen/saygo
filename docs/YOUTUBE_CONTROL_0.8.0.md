@@ -35,10 +35,14 @@ Rebuild/reinstall the test APK without the property to restore AndroidJUnitRunne
 
 Default debug/test builds, 21 JVM tests and lint passed (zero errors, 10 existing warnings). The restored default runner passed all seven CommandExecutorTest cases. Production APK SHA-256 remains `14b7e56b708a77caef038b6af91d6a9fdd7336f229306696a949d89ba23aade4`, identical to the existing 0.8.0 artifact. Previous full local and Android 10/14/16 checks remain documented in the [speech audit](SPEECH_APP_AUDIT_0.8.0.md); they are not claimed as newly rerun here.
 
+Hosted regression follow-up: [build and Android 10/14/16 checks](https://github.com/vabxsen/saygo/actions/runs/36348141978) passed for `781fb87a9544c68ebb10290baad5363e3b53615e`. Each emulator ran **56 core tests**, with zero failures, errors or skips. [Downloaded report summary](youtube-control-evidence/hosted-results.json). These jobs exclude the three actual-app routing tests and do not invoke either manual probe.
+
 This check bypasses SpeechSession and VoiceActivity. Live microphone recognition and the complete spoken-command flow remain unverified. Instagram is absent from the emulator, Google search results previously hit a traffic challenge, and Play signing/submission/approval remain outstanding. Individual deterministic commands remain the product scope; unrestricted “anything” control is not established.
 
 ## Android 14 fixture failure
 
 The first hosted run of this follow-up passed build and Android 10/16, but Android 14 had [three failures among 56 tests](youtube-control-evidence/initial-api34-failures.json). All three stopped in `openSettings()` before sending the command under test: UiAutomation saw Settings, while the bound production service returned a null active-window root. This does not establish a command-dispatch defect, and the run is not counted as passing.
 
-The test setup now force-stops Settings before launching it and waits for accessibility events to settle. This isolates the target window across tests that repeatedly disconnect/reconnect the service. The existing service-root assertion and timeout remain; no test is skipped or retried and production behavior is unchanged. Subsequent results determine whether this setup change resolves the observed failure.
+The test setup now force-stops Settings before launching it and waits for accessibility events to settle. This isolates the target window across tests that repeatedly disconnect/reconnect the service. The existing service-root assertion and timeout remain; no test is skipped or retried and production behavior is unchanged. The subsequent hosted run passed all 56 tests on API29/34/36, including the three previously failing cases; the original failure evidence is retained above.
+
+With the isolated Settings setup, [all 37 local PhoneControlServiceTest cases passed](youtube-control-evidence/settings-fixture-instrumentation.txt) on API36; [test APK build passed](youtube-control-evidence/settings-fixture-build.log).
