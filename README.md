@@ -1,6 +1,8 @@
 # saygo
 
-**Current version: 0.8.0.** Adds explicit hold-and-drag between numbered grid cells and cancellation of queued input. **80 local tests passed** (59 Android/API36 + 21 JVM), with build, lint and release checks passing. GitHub also passed 56 core tests on each of Android 10, 14 and 16. See [drag commands and verification](docs/DRAG_0.8.0.md).
+**Current version: 0.9.0.** Adds explicit commands for notifications, Quick Settings and media volume. **88 local tests passed** (65 Android/API36 + 23 JVM), with build, lint and release checks passing. See [native system controls and verification](docs/SYSTEM_CONTROLS_0.9.0.md).
+
+**Previous version: 0.8.0.** Adds explicit hold-and-drag between numbered grid cells and cancellation of queued input. **80 local tests passed** (59 Android/API36 + 21 JVM), with build, lint and release checks passing. GitHub also passed 56 core tests on each of Android 10, 14 and 16. See [drag commands and verification](docs/DRAG_0.8.0.md).
 
 Additional [speech-provider and real-app audit](docs/SPEECH_APP_AUDIT_0.8.0.md): four synthetic-audio recognition probes passed, and YouTube displayed the recognized search query and video results. Google returned a traffic challenge; live microphone recognition and Instagram remain unverified.
 
@@ -14,7 +16,7 @@ Previous version **0.5.0**: Adds direct taps, long presses and text editing. **5
 
 A minimal Android voice-command app, written in Kotlin and Jetpack Compose.
 
-saygo opens installed apps, searches Google and YouTube, and optionally performs one tap, long press, text edit, swipe, drag, pinch-zoom or system navigation action per spoken command. English only. Android 10+ (`minSdk 29`), targeting Android 16 (`targetSdk 36`).
+saygo opens installed apps, searches Google and YouTube, and optionally performs one tap, long press, text edit, swipe, drag, pinch-zoom or system navigation action per spoken command. It can also open the notification shade or Quick Settings and adjust media volume. English only. Android 10+ (`minSdk 29`), targeting Android 16 (`targetSdk 36`).
 
 Version 0.4.0 implements the selected cobalt-and-white design: a bold two-line headline, circular microphone, concise command rows, and bottom navigation. Commands, Setup, the listening sheet, launcher accent, and floating microphone share the same visual system. Dark mode and enlarged system text are supported.
 
@@ -51,6 +53,9 @@ Android may restrict accessibility settings for apps installed outside a trusted
 | `Zoom in`, `Zoom out` | One two-finger gesture centred on the current app window; the target content must support pinch zoom |
 | `Swipe left`, `Swipe right` | One horizontal swipe |
 | `Go back`, `Go home`, `Recent apps` | Android system navigation |
+| `Open notifications`, `Open quick settings` | Show Android’s notification shade or device controls |
+| `Volume up`, `Volume down` | Raise or lower media volume by one step |
+| `Mute media`, `Unmute media` | Set media mute state without changing ring or alarm volume |
 | `Cancel`, `Stop`, `Never mind` | Cancel listening and queued input; input already sent cannot be undone |
 
 The parser is case insensitive and tolerates extra spaces and sentence-ending punctuation. Unknown commands and chained instructions are rejected. Queries are URL encoded and never interpreted as additional actions.
@@ -76,7 +81,7 @@ Set `ANDROID_HOME` to your SDK or create an ignored `local.properties` with `sdk
 - `speech/SpeechSession`: a single, bounded recognition session. On-device recognition is preferred when Android reports support. Otherwise the system provider is used after disclosure. No automatic retry loop.
 - `commands/CommandParser`: pure, deterministic grammar with unit tests. No LLM, remote planner, fuzzy action selection, or hidden multi-step actions.
 - `commands/CommandExecutor`: app intents, encoded search URLs, and explicit delegation to phone controls.
-- `control/PhoneControlService`, `NodeActions`, `GridOverlay` and `GridRegion`: opt-in accessibility overlay, target validation, named control actions, focused-field text editing, gestures and navigation. Control labels and field contents are processed locally only when a command needs them. Stops pending work when interrupted or disabled.
+- `control/PhoneControlService`, `DeviceControls`, `NodeActions`, `GridOverlay` and `GridRegion`: opt-in accessibility overlay, target validation, named control actions, focused-field text editing, gestures and navigation. Control labels and field contents are processed locally only when a command needs them. Stops pending work when interrupted or disabled.
 - `VoiceActivity`: visible microphone session over the current app. Closing or backgrounding it cancels recording. The service waits for the voice panel to leave before acting.
 - `data/`: consent/preferences stored locally; only the most recent result is held in memory. No raw audio, transcript, screenshot, or command-history persistence.
 

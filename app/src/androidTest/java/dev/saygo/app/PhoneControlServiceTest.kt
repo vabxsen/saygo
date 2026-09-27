@@ -1034,6 +1034,138 @@ class PhoneControlServiceTest {
         return null
     }
 
+    @Test fun notificationCommandOpensTheNativeShade() {
+        assertDevicePanel("open notifications", "notification_stack_scroller")
+    }
+
+    @Test fun quickSettingsCommandOpensTheExpandedNativePanel() {
+        assertDevicePanel("open quick settings", "quick_settings_panel")
+    }
+
+    private fun assertDevicePanel(phrase: String, panelId: String) {
+        val info = automation.serviceInfo
+        info.flags = info.flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
+        automation.serviceInfo = info
+        openGestureTarget()
+        try {
+            executeDevicePhrase(phrase)
+            await("native $panelId visible") {
+                val root = automation.rootInActiveWindow
+                root?.packageName?.toString() == "com.android.systemui" &&
+                    root.findAccessibilityNodeInfosByViewId("com.android.systemui:id/$panelId").any { it.isVisibleToUser }
+            }
+        } finally {
+            shell("cmd statusbar collapse")
+            await("system panel closed") { automation.rootInActiveWindow?.packageName?.toString() == "dev.saygo.app.test" }
+        }
+    }
+
+    @Test fun mediaUpAndDownChangeOneStepWithoutChangingRingOrAlarm() = withMediaVolume { audio ->
+        val before = audio.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
+        val ring = audio.getStreamVolume(android.media.AudioManager.STREAM_RING)
+        val alarm = audio.getStreamVolume(android.media.AudioManager.STREAM_ALARM)
+        executeDevicePhrase("volume up")
+        await("media raised one step") { audio.getStreamVolume(android.media.AudioManager.STREAM_MUSIC) == before + 1 }
+        executeDevicePhrase("volume down")
+        await("media lowered one step") { audio.getStreamVolume(android.media.AudioManager.STREAM_MUSIC) == before }
+        assertEquals(ring, audio.getStreamVolume(android.media.AudioManager.STREAM_RING))
+        assertEquals(alarm, audio.getStreamVolume(android.media.AudioManager.STREAM_ALARM))
+    }
+
+    @Test fun mediaMuteAndUnmuteAreExplicitAndIdempotent() = withMediaVolume { audio ->
+        val stream = android.media.AudioManager.STREAM_MUSIC
+        val before = audio.getStreamVolume(stream)
+        executeDevicePhrase("mute media")
+        await("media muted") { audio.isStreamMute(stream) }
+        executeDevicePhrase("mute media")
+        assertEquals("Media is already muted.", SessionState.feedback.value.title)
+        assertTrue(audio.isStreamMute(stream))
+        executeDevicePhrase("unmute media")
+        await("media unmuted at previous level") { !audio.isStreamMute(stream) && audio.getStreamVolume(stream) == before }
+        executeDevicePhrase("unmute media")
+        assertEquals("Media is already unmuted.", SessionState.feedback.value.title)
+        assertEquals(before, audio.getStreamVolume(stream))
+    }
+
+    @Test fun volumeLimitsGiveAccurateFeedbackWithoutWrapping() = withMediaVolume { audio ->
+        val stream = android.media.AudioManager.STREAM_MUSIC
+        val max = audio.getStreamMaxVolume(stream)
+        audio.setStreamVolume(stream, max, 0)
+        await("maximum media volume set") { audio.getStreamVolume(stream) == max }
+        executeDevicePhrase("volume up")
+        assertEquals("Media volume is already at maximum.", SessionState.feedback.value.title)
+        assertEquals(max, audio.getStreamVolume(stream))
+        val min = audio.getStreamMinVolume(stream)
+        audio.setStreamVolume(stream, min, 0)
+        await("minimum media volume set") { audio.getStreamVolume(stream) == min }
+        executeDevicePhrase("volume down")
+        assertEquals("Media volume is already at minimum.", SessionState.feedback.value.title)
+        assertEquals(min, audio.getStreamVolume(stream))
+    }
+
+    @Test fun newDeviceControlsRespectWaitingCancellationAndWithdrawnConsent() = withMediaVolume { audio ->
+        openGestureTarget()
+        val volume = audio.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
+        val executor = dev.saygo.app.commands.CommandExecutor(context)
+        dev.saygo.app.commands.DeviceAction.entries.forEach { action ->
+            val command = Command.DeviceControl(action)
+            val before = SessionState.feedback.value.sequence
+            instrumentation.runOnMainSync {
+                PhoneControlService.voiceUiVisible = true
+                executor.execute(command)
+            }
+            SystemClock.sleep(120)
+            assertEquals(before, SessionState.feedback.value.sequence)
+            instrumentation.runOnMainSync {
+                executor.execute(Command.Stop)
+                PhoneControlService.voiceUiVisible = false
+            }
+            val cancelled = SessionState.feedback.value.sequence
+            SystemClock.sleep(150)
+            assertEquals(cancelled, SessionState.feedback.value.sequence)
+            assertEquals(volume, audio.getStreamVolume(android.media.AudioManager.STREAM_MUSIC))
+            assertFalse(audio.isStreamMute(android.media.AudioManager.STREAM_MUSIC))
+            assertEquals("dev.saygo.app.test", automation.rootInActiveWindow?.packageName?.toString())
+            instrumentation.runOnMainSync {
+                Preferences(context).controlConsent = false
+                executor.execute(command)
+            }
+            assertFalse(SessionState.feedback.value.success)
+            assertEquals("Phone controls are off.", SessionState.feedback.value.title)
+            Preferences(context).controlConsent = true
+        }
+    }
+
+    private fun executeDevicePhrase(phrase: String) {
+        val executor = dev.saygo.app.commands.CommandExecutor(context)
+        val command = checkNotNull(executor.parse(phrase))
+        val before = SessionState.feedback.value.sequence
+        instrumentation.runOnMainSync { executor.execute(command) }
+        await("$phrase feedback") { SessionState.feedback.value.sequence > before }
+        assertTrue(SessionState.feedback.value.title, SessionState.feedback.value.success)
+    }
+
+    private fun withMediaVolume(block: (android.media.AudioManager) -> Unit) {
+        val audio = context.getSystemService(android.media.AudioManager::class.java)
+        val stream = android.media.AudioManager.STREAM_MUSIC
+        assertFalse("Dedicated test emulator must have variable media volume", audio.isVolumeFixed)
+        val wasMuted = audio.isStreamMute(stream)
+        // Read the remembered volume after unmuting; getStreamVolume returns zero while muted.
+        audio.adjustStreamVolume(stream, android.media.AudioManager.ADJUST_UNMUTE, 0)
+        await("initial unmute") { !audio.isStreamMute(stream) }
+        val original = audio.getStreamVolume(stream)
+        try {
+            val middle = (audio.getStreamMinVolume(stream) + audio.getStreamMaxVolume(stream)) / 2
+            audio.setStreamVolume(stream, middle, 0)
+            await("middle media volume") { audio.getStreamVolume(stream) == middle }
+            block(audio)
+        } finally {
+            audio.setStreamVolume(stream, original, 0)
+            audio.adjustStreamVolume(stream, if (wasMuted) android.media.AudioManager.ADJUST_MUTE else android.media.AudioManager.ADJUST_UNMUTE, 0)
+            await("media state restored") { audio.isStreamMute(stream) == wasMuted && (wasMuted || audio.getStreamVolume(stream) == original) }
+        }
+    }
+
     private fun openSettings() {
         // Each test rebinds accessibility. Use a fresh Settings window so setup does
         // not depend on the retained window and accessibility state of earlier tests.

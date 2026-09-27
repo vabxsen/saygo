@@ -55,3 +55,7 @@ Version 0.8.0 adds an explicit drag between two different numbered grid cells an
 ## Follow-up: actual speech provider and receiving apps
 
 Four synthetic PCM utterances passed through the real on-device recognizer and production command parser/executor on API36. YouTube displayed cooking search results. Chrome initially required onboarding, then Google presented a traffic challenge. Microphone capture and Instagram remain unverified; the file-input probe bypasses the production microphone session. See [speech and app audit](SPEECH_APP_AUDIT_0.8.0.md).
+
+## Follow-up: native system controls
+
+Version 0.9.0 adds explicit commands to open notifications or Quick Settings and raise, lower, mute or unmute media volume. These operate on the device after the usual consent, voice-panel and unlocked-screen checks. See [system-control verification](SYSTEM_CONTROLS_0.9.0.md). This expands individual command coverage; it does not establish universal phone control, always-on speech or Play approval.

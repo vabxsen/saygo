@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: dispatchPassed=true
+INSTRUMENTATION_RESULT: trace=open notifications => Notifications requested. (success=true, origin=com.google.android.apps.nexuslauncher)
+INSTRUMENTATION_CODE: -1

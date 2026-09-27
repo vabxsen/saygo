@@ -203,6 +203,11 @@ class PhoneControlService : AccessibilityService() {
                 if (getSystemService(KeyguardManager::class.java).isKeyguardLocked || !getSystemService(android.os.PowerManager::class.java).isInteractive) {
                     dismissGrid(); cancelPending(); SessionState.report("Unlock your phone before using phone controls.", false); return
                 }
+                if (command is Command.DeviceControl) {
+                    pending = null
+                    DeviceControls.execute(this@PhoneControlService, command.action)
+                    return
+                }
                 if (command is Command.Navigate && !isBack) {
                     pending = null
                     val action = when (command.destination) {

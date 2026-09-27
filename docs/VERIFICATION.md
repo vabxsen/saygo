@@ -1,3 +1,5 @@
+> Current version: **0.9.0**. See [native system controls](SYSTEM_CONTROLS_0.9.0.md). Earlier sections preserve verification history.
+
 > Additional 0.8.0 evidence: [actual YouTube Shorts controls](YOUTUBE_CONTROL_0.8.0.md). Opening, pause/resume and next/previous clips were observed through explicit commands; speech input was bypassed.
 
 > Additional 0.8.0 evidence: [actual speech-provider and receiving-app audit](SPEECH_APP_AUDIT_0.8.0.md). Synthetic-file recognition passes do not establish microphone capture.

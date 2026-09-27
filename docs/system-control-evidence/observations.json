@@ -1,0 +1,80 @@
+{
+  "version": "0.9.0",
+  "version_code": 16,
+  "local_android_tests": 65,
+  "jvm": [
+    {
+      "name": "dev.saygo.app.commands.CommandParserTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "dev.saygo.app.control.GridRegionTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "dev.saygo.app.speech.FeedbackQueueTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "lint": {
+    "Warning": 10
+  },
+  "native_panels": [
+    {
+      "stage": "notifications",
+      "captured_at_unix": 1790541691.2545655,
+      "native_panel_nodes": [
+        {
+          "resource_id": "com.android.systemui:id/notification_stack_scroller",
+          "bounds": "[0,0][1080,2316]",
+          "package": "com.android.systemui"
+        },
+        {
+          "resource_id": "com.android.systemui:id/quick_qs_panel",
+          "bounds": "[42,136][1038,536]",
+          "package": "com.android.systemui"
+        }
+      ]
+    },
+    {
+      "stage": "quick-settings",
+      "captured_at_unix": 1790541707.70964,
+      "native_panel_nodes": [
+        {
+          "resource_id": "com.android.systemui:id/notification_stack_scroller",
+          "bounds": "[0,0][1080,2316]",
+          "package": "com.android.systemui"
+        },
+        {
+          "resource_id": "com.android.systemui:id/quick_settings_panel",
+          "bounds": "[42,136][1038,1743]",
+          "package": "com.android.systemui"
+        },
+        {
+          "resource_id": "com.android.systemui:id/brightness_slider",
+          "bounds": "[42,325][1038,535]",
+          "package": "com.android.systemui"
+        },
+        {
+          "resource_id": "com.android.systemui:id/qs_pager",
+          "bounds": "[42,535][1038,1438]",
+          "package": "com.android.systemui"
+        }
+      ]
+    }
+  ],
+  "artifacts": {
+    "saygo-0.9.0-debug.apk": "48ff6d80f1fb8a9d81ae4014b214c81bc416c9a2cb93e6330df3b7665535a5bf",
+    "saygo-0.9.0-unsigned.aab": "a2bb6d5bb749a86594227332ed73daef2730edc0a1e24f4d4e7138d7c9264c19"
+  },
+  "scope": "API36 emulator; literal commands bypass speech input; host audio output disabled"
+}

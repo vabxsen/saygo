@@ -6,6 +6,7 @@ sealed interface Command {
     data class Swipe(val direction: Direction) : Command
     data class Pinch(val zoomIn: Boolean) : Command
     data class Navigate(val destination: Destination) : Command
+    data class DeviceControl(val action: DeviceAction) : Command
     data class Tap(val label: String, val longPress: Boolean = false) : Command
     data class EditText(val operation: TextOperation, val text: String = "") : Command
     data class Grid(val operation: GridOperation, val cell: Int? = null, val destinationCell: Int? = null) : Command
@@ -19,6 +20,7 @@ enum class TextOperation { INSERT, REPLACE, CLEAR, SELECT_ALL }
 enum class SearchProvider { GOOGLE, YOUTUBE }
 enum class Direction { UP, DOWN, LEFT, RIGHT }
 enum class Destination { BACK, HOME, RECENTS }
+enum class DeviceAction { NOTIFICATIONS, QUICK_SETTINGS, MEDIA_UP, MEDIA_DOWN, MEDIA_MUTE, MEDIA_UNMUTE }
 
 /** Deliberately finite grammar: one utterance maps to at most one predefined action. */
 object CommandParser {
@@ -33,6 +35,12 @@ object CommandParser {
         if (text.isEmpty() || text.length > 240) return null
         val key = text.lowercase(java.util.Locale.ROOT)
         when (key) {
+            "open notifications", "show notifications" -> return Command.DeviceControl(DeviceAction.NOTIFICATIONS)
+            "open quick settings", "show quick settings" -> return Command.DeviceControl(DeviceAction.QUICK_SETTINGS)
+            "volume up", "media volume up" -> return Command.DeviceControl(DeviceAction.MEDIA_UP)
+            "volume down", "media volume down" -> return Command.DeviceControl(DeviceAction.MEDIA_DOWN)
+            "mute media" -> return Command.DeviceControl(DeviceAction.MEDIA_MUTE)
+            "unmute media" -> return Command.DeviceControl(DeviceAction.MEDIA_UNMUTE)
             "zoom in", "pinch out" -> return Command.Pinch(true)
             "zoom out", "pinch in" -> return Command.Pinch(false)
             "show grid" -> return Command.Grid(GridOperation.SHOW)

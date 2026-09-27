@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: dispatchPassed=true
+INSTRUMENTATION_RESULT: trace=open quick settings => Quick Settings requested. (success=true, origin=com.android.systemui)
+INSTRUMENTATION_CODE: -1

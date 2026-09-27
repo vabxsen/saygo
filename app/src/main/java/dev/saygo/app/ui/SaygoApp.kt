@@ -43,6 +43,10 @@ private val controlCommands = listOf(
     CommandExample("Go back", "Return to the previous screen"),
     CommandExample("Go home", "Return to your home screen"),
     CommandExample("Recent apps", "Show recent apps"),
+    CommandExample("Open notifications", "Show Android’s notification shade"),
+    CommandExample("Open quick settings", "Show Android’s device controls"),
+    CommandExample("Volume up / Volume down", "Change media volume by one step"),
+    CommandExample("Mute media / Unmute media", "Silence or restore media audio"),
 )
 
 @Composable
@@ -128,7 +132,7 @@ fun SaygoApp(
                                             if (microphoneGranted) onAppSettings else speak,
                                             if (microphoneGranted) "Enabled" else "Enable")
                                         Rule()
-                                        ActionRow("Phone controls", "Optional taps, typing and navigation",
+                                        ActionRow("Phone controls", "Optional taps, typing and phone controls",
                                             if (connected) "Review access" else "Set up phone controls",
                                             { controlDisclosure = true }, if (connected) "Enabled" else "Enable")
                                     }
@@ -174,7 +178,7 @@ fun SaygoApp(
         onDismissRequest = { controlDisclosure = false },
         icon = { Icon(Icons.Rounded.TouchApp, null) }, title = { Text("Control your phone by voice") },
         text = { Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text("saygo uses Android’s AccessibilityService to display a floating microphone and an optional numbered grid, and carry out your explicit tap, long-press, text-editing, swipe, drag, pinch-zoom, Back, Home, and Recent apps commands.")
+            Text("saygo uses Android’s AccessibilityService to display a floating microphone and an optional numbered grid, and carry out your explicit tap, long-press, text-editing, swipe, drag, pinch-zoom, Back, Home, Recent apps, notification shade, Quick Settings and media volume commands.")
             Text("Android grants access to screen content and interactions. saygo reads the foreground app identity, window bounds, control labels and focused text field when you request a command. This lets it find the button or field you name. Screen content stays on your device and is not saved or sent to saygo servers. Text you dictate is entered into the other app, which handles it under its own privacy policy.")
             Text("One command triggers one predefined action. saygo never chooses or runs a sequence of actions for you. This permission is optional; opening apps and searching work without it. You can turn it off at any time in Setup or Android accessibility settings.")
         } },

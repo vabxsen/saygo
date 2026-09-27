@@ -90,5 +90,26 @@ class CommandParserTest {
         }
         assertEquals(Command.EditText(TextOperation.INSERT, "drag cell 1 to cell 9"), CommandParser.parse("type drag cell 1 to cell 9"))
     }
+    @Test fun `device controls recognize only their explicit supported phrases`() {
+        mapOf(
+            "Open notifications" to DeviceAction.NOTIFICATIONS,
+            "show notifications" to DeviceAction.NOTIFICATIONS,
+            "Open quick settings!" to DeviceAction.QUICK_SETTINGS,
+            "show quick settings" to DeviceAction.QUICK_SETTINGS,
+            "VOLUME UP" to DeviceAction.MEDIA_UP,
+            "media volume up" to DeviceAction.MEDIA_UP,
+            "volume down" to DeviceAction.MEDIA_DOWN,
+            "media volume down" to DeviceAction.MEDIA_DOWN,
+            "mute media" to DeviceAction.MEDIA_MUTE,
+            "unmute media" to DeviceAction.MEDIA_UNMUTE,
+        ).forEach { (phrase, action) -> assertEquals(phrase, Command.DeviceControl(action), CommandParser.parse(phrase)) }
+    }
+    @Test fun `device controls do not infer streams repetitions or action chains`() {
+        listOf("mute", "unmute", "volume up twice", "mute ringtone", "set volume to 50",
+            "volume down then go home", "open notifications and clear all", "show quick settings and enable wifi"
+        ).forEach { assertNull(it, CommandParser.parse(it)) }
+        assertEquals(Command.EditText(TextOperation.INSERT, "mute media"), CommandParser.parse("type mute media"))
+        assertEquals(Command.Search(SearchProvider.GOOGLE, "volume up"), CommandParser.parse("search Google for volume up"))
+    }
     private fun inputDescription(value: String) = "Should reject: $value"
 }

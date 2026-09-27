@@ -39,3 +39,7 @@ Test exact labels, content descriptions and labels nested inside clickable paren
 ## Grid acceptance (0.6.0)
 
 Verify real touches in an unlabelled external canvas at the four corner-cell centres and the central cell, with the microphone positioned over each target. Verify grid window bounds in screen coordinates and actual long-press delivery after zoom/back. Inspect rendered screenshots; an attached View alone is insufficient. Test hide/cancel, rotation, one-minute expiry, screen-off/wake, changed app/window, revoked consent and service shutdown. Delayed window events from before grid creation must not remove a fresh grid. Cancelling between overlay detachment and gesture dispatch must restore the microphone without touching the target.
+
+## Native system controls (0.9.0)
+
+Enable phone controls on a dedicated emulator. Say “Open notifications” and verify the actual notification shade; say “Open quick settings” and verify the expanded device controls. From an intermediate media-volume level, verify “Volume up” and “Volume down” each change one step without changing ring or alarm volume. Verify “Mute media” and “Unmute media”, repeating each to confirm it does not toggle back. Check maximum/minimum feedback. Cancel while the voice panel is open, withdraw control consent, and try from a locked or non-interactive screen: no device control should execute. Restore original media settings afterward. Verify these with real microphone input separately; parser/executor tests do not establish recognition.
