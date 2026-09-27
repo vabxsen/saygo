@@ -370,7 +370,9 @@ class PhoneControlService : AccessibilityService() {
                     bounds.exactCenterY() + if (horizontal) 0f else side * end)
             }
         }
-        dispatchPaths(paths, 500, if (zoomIn) "Zoom-in gesture sent." else "Zoom-out gesture sent.")
+        // Android 10 samples injected motion every 100 ms; keep enough steps near the scaling threshold.
+        val duration = if (android.os.Build.VERSION.SDK_INT == 29) 1_200L else 500L
+        dispatchPaths(paths, duration, if (zoomIn) "Zoom-in gesture sent." else "Zoom-out gesture sent.")
     }
 
     private fun dispatchPath(path: Path, duration: Long, successMessage: String) =

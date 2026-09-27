@@ -1,0 +1,20 @@
+[
+  {
+    "run": "https://github.com/vabxsen/saygo/actions/runs/36339346071",
+    "report": "TEST-emulator-5554 - 10-_app-.xml",
+    "test": "pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint",
+    "trace": "java.lang.AssertionError: Timed out waiting for two fingers actually scale the other app\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:884)\nat dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:648)\n"
+  },
+  {
+    "run": "https://github.com/vabxsen/saygo/actions/runs/36339346071",
+    "report": "TEST-emulator-5554 - 14-_app-.xml",
+    "test": "pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint",
+    "trace": "java.lang.AssertionError: Timed out waiting for two fingers actually scale the other app\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:884)\nat dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:648)\n"
+  },
+  {
+    "run": "https://github.com/vabxsen/saygo/actions/runs/36339346071",
+    "report": "TEST-emulator-5554 - 16-_app-.xml",
+    "test": "pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint",
+    "trace": "java.lang.AssertionError: Timed out waiting for two fingers actually scale the other app\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:884)\nat dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:648)\n"
+  }
+]

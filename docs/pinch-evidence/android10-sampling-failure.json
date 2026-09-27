@@ -1,0 +1,18 @@
+{
+  "receipts": [
+    "09-27 18:30:40.078  6009  6009 I PinchReceipt: Zoom=1.667 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0",
+    "09-27 18:30:42.047  6009  6009 I PinchReceipt: Zoom=0.556 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0",
+    "09-27 18:30:44.030  6009  6009 I PinchReceipt: Zoom=1.663 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0",
+    "09-27 18:30:46.002  6009  6009 I PinchReceipt: Zoom=0.667 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0",
+    "09-27 18:30:48.219  6009  6009 I PinchReceipt: Zoom=1.118 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0",
+    "09-27 18:30:49.992  6009  6009 I PinchReceipt: Zoom=1.000 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0"
+  ],
+  "failures": [
+    {
+      "name": "pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint",
+      "failure": "java.lang.AssertionError: Timed out waiting for two fingers actually scale the other app\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:889)\nat dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:651)\n"
+    }
+  ],
+  "run": "https://github.com/vabxsen/saygo/actions/runs/36340714690",
+  "api": 29
+}

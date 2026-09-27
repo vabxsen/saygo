@@ -1,4 +1,6 @@
-Zoom in offset=false bounds=Rect(0, 0 - 1080, 2400): Zoom=1.929 pointers=2 complete=true down=1 up=1; microphone restored
-Zoom out offset=false bounds=Rect(0, 0 - 1080, 2400): Zoom=0.554 pointers=2 complete=true down=1 up=1; microphone restored
-Zoom in offset=true bounds=Rect(80, 160 - 890, 1760): Zoom=1.453 pointers=2 complete=true down=1 up=1; microphone restored
-Zoom out offset=true bounds=Rect(80, 160 - 890, 1760): Zoom=0.783 pointers=2 complete=true down=1 up=1; microphone restored
+Zoom in offset=false wide=false bounds=Rect(0, 0 - 1080, 2400): Zoom=1.893 pointers=2 complete=true down=1 up=1; microphone restored
+Zoom out offset=false wide=false bounds=Rect(0, 0 - 1080, 2400): Zoom=0.517 pointers=2 complete=true down=1 up=1; microphone restored
+Zoom in offset=true wide=false bounds=Rect(80, 160 - 890, 1760): Zoom=1.816 pointers=2 complete=true down=1 up=1; microphone restored
+Zoom out offset=true wide=false bounds=Rect(80, 160 - 890, 1760): Zoom=0.523 pointers=2 complete=true down=1 up=1; microphone restored
+Zoom in offset=true wide=true bounds=Rect(54, 160 - 1026, 640): Zoom=1.504 pointers=2 complete=true down=1 up=1; microphone restored
+Zoom out offset=true wide=true bounds=Rect(54, 160 - 1026, 640): Zoom=0.695 pointers=2 complete=true down=1 up=1; microphone restored

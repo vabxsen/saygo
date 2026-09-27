@@ -1,0 +1,23 @@
+
+dev.saygo.app.PhoneControlServiceTest:
+Error in pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Timed out waiting for bubble positioned
+	at org.junit.Assert.fail(Assert.java:89)
+	at dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:887)
+	at dev.saygo.app.PhoneControlServiceTest.dragBubbleTo(PhoneControlServiceTest.kt:841)
+	at dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:637)
+
+
+Time: 15.83
+There was 1 failure:
+1) pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Timed out waiting for bubble positioned
+	at org.junit.Assert.fail(Assert.java:89)
+	at dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:887)
+	at dev.saygo.app.PhoneControlServiceTest.dragBubbleTo(PhoneControlServiceTest.kt:841)
+	at dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:637)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
