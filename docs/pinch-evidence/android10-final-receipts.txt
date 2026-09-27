@@ -1,0 +1,6 @@
+09-27 18:40:44.235  6223  6223 I PinchReceipt: Zoom=1.840 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0
+09-27 18:40:47.159  6223  6223 I PinchReceipt: Zoom=0.520 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0
+09-27 18:40:49.724  6223  6223 I PinchReceipt: Zoom=1.719 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0
+09-27 18:40:52.412  6223  6223 I PinchReceipt: Zoom=0.631 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0
+09-27 18:40:54.925  6223  6223 I PinchReceipt: Zoom=1.209 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0
+09-27 18:40:57.642  6223  6223 I PinchReceipt: Zoom=0.905 pointers=2 complete=true down=1 up=1 minSpan=170 density=1.0

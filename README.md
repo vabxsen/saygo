@@ -1,6 +1,6 @@
 # saygo
 
-**Current version: 0.7.0.** Adds native two-finger zoom. **74 local tests passed** (54 Android/API36 + 20 JVM), with build, lint and release checks passing. See [pinch commands and verification](docs/PINCH_0.7.0.md).
+**Current version: 0.7.0.** Adds native two-finger zoom. **74 local tests passed** (54 Android/API36 + 20 JVM), with build, lint and release checks passing. GitHub also passed 51 core tests on each of Android 10, 14 and 16. See [pinch commands and verification](docs/PINCH_0.7.0.md).
 
 **Previous version: 0.6.0.** Adds a numbered grid for unlabelled controls. **69 local tests passed** (50 Android/API36 + 19 JVM), with debug/release builds and lint passing. GitHub also passed 47 core tests on each of Android 10, 14 and 16. See [grid controls and verification](docs/GRID_0.6.0.md).
 
