@@ -1,0 +1,756 @@
+{
+  "run": "https://github.com/vabxsen/saygo/actions/runs/36337790631",
+  "commit": "64cd106b651eb37fa0957dfb1736582da7e6c0d1",
+  "jobs": [
+    {
+      "name": "build",
+      "conclusion": "success"
+    },
+    {
+      "name": "emulator (34)",
+      "conclusion": "success"
+    },
+    {
+      "name": "emulator (29)",
+      "conclusion": "success"
+    },
+    {
+      "name": "emulator (36)",
+      "conclusion": "success"
+    }
+  ],
+  "emulators": [
+    {
+      "api": 29,
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "exactInstalledConjunctionLabelsLaunchOnlyOneApp",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.366"
+        },
+        {
+          "name": "youtubeSearchRetainsTheQueryAndUsesTheCorrectEndpoint",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.005"
+        },
+        {
+          "name": "missingBrowserAndSecurityFailuresBecomeVisibleFeedback",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.003"
+        },
+        {
+          "name": "unknownAppReportsFailureInsteadOfLaunchingAnUnrelatedApp",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.0"
+        },
+        {
+          "name": "searchQueryCannotInjectUrlParametersOrChangeTheHost",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.004"
+        },
+        {
+          "name": "cancellationDoesNotLaunchAnything",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.001"
+        },
+        {
+          "name": "anInstalledAppResolvesToItsOwnLauncher",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.101"
+        },
+        {
+          "name": "disablingServiceRemovesItsBubbleAndConnectionState",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.318"
+        },
+        {
+          "name": "revokedConsentAndScreenOffRemoveGridWithoutTouchingTarget",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "3.156"
+        },
+        {
+          "name": "namedTapsDescriptionsParentsAndLongPressReachAnotherApp",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.307"
+        },
+        {
+          "name": "disablingControlsDuringASwipeCannotRestoreTheBubble",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.211"
+        },
+        {
+          "name": "withdrawnConsentRejectsActions",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.307"
+        },
+        {
+          "name": "floatingMicrophoneCanBeShownHiddenAndDraggedWithoutClicking",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.551"
+        },
+        {
+          "name": "aVoicePanelThatDoesNotCloseTimesOutWithoutAnAction",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.287"
+        },
+        {
+          "name": "gridRejectsChangedWindowAndReopeningDoesNotReviveCoordinates",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.066"
+        },
+        {
+          "name": "stableGridExpiresAfterOneMinuteAndShutdownRemovesIt",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "60.615"
+        },
+        {
+          "name": "backIsRejectedIfTheOriginalForegroundAppChanged",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.735"
+        },
+        {
+          "name": "dictationSelectionReplacementAndClearReachFocusedField",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.812"
+        },
+        {
+          "name": "withdrawingConsentAlsoCancelsAlreadyQueuedNavigation",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.177"
+        },
+        {
+          "name": "homeBackAndRecentsDispatchSuccessfully",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "6.129"
+        },
+        {
+          "name": "gridHideCancelAndRotationRemoveTheOverlay",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.215"
+        },
+        {
+          "name": "ownAppAndUnknownOriginsAreRejected",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.127"
+        },
+        {
+          "name": "everySwipeDirectionIsAcceptedByAndroid",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.67"
+        },
+        {
+          "name": "rejectsTheGestureWhenTheForegroundAppChanged",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.31"
+        },
+        {
+          "name": "queuedTapRejectsChangedAppAndQueuedTextRejectsRevokedConsent",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.265"
+        },
+        {
+          "name": "oldDisclosureDoesNotGrantNewScreenReadingAccess",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.153"
+        },
+        {
+          "name": "dispatchesExactlyOneGestureToTheValidatedForegroundApp",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.191"
+        },
+        {
+          "name": "swipesReachTheTargetInEveryDirectionWithTheBubbleAtTheirStart",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "8.107"
+        },
+        {
+          "name": "gridHidesForVoiceAndDismissalCannotLeaveTheMicrophoneDetached",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.308"
+        },
+        {
+          "name": "backRequiresAnOriginAndStillWorksFromSaygo",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.581"
+        },
+        {
+          "name": "nestedGridZoomBackAndLongPressUseTheChosenArea",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.659"
+        },
+        {
+          "name": "numberedGridDeliversTapsAcrossUnlabelledCanvasWithBubbleAtTarget",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "7.782"
+        },
+        {
+          "name": "missingAmbiguousAndDisabledLabelsNeverClick",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.503"
+        },
+        {
+          "name": "interruptionCancelsWorkWaitingForTheVoicePanel",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.906"
+        },
+        {
+          "name": "hidingTheBubbleDuringASwipeKeepsItHiddenAfterCompletion",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.107"
+        },
+        {
+          "name": "homeAndCommandGuideAreAvailableWithoutPermissions",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.934"
+        },
+        {
+          "name": "privacyCanBeOpenedScrolledAndDismissed",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.96"
+        },
+        {
+          "name": "homeShortcutsAndSettingsReturnToHome",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.855"
+        },
+        {
+          "name": "microphoneDisclosureCanBeDeclined",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.636"
+        },
+        {
+          "name": "bothPreferenceRowsToggleAndPersistAcrossRecreation",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.807"
+        },
+        {
+          "name": "accessibilityDisclosureRequiresExplicitAcceptance",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.68"
+        },
+        {
+          "name": "googleExampleAndEntireGuideRemainReachable",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "1.836"
+        },
+        {
+          "name": "explicitClosePreventsActionsAndStatusUpdates",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.003"
+        },
+        {
+          "name": "resultIsDeliveredOnceAndLateCallbacksAreIgnored",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.001"
+        },
+        {
+          "name": "emptyRecognitionProducesOneRetryableError",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.001"
+        },
+        {
+          "name": "readinessBeginningAndEndHaveDistinctStatus",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.001"
+        },
+        {
+          "name": "speechErrorsHaveActionableMessagesAndNeverDeliverCommands",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.001"
+        }
+      ]
+    },
+    {
+      "api": 34,
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "exactInstalledConjunctionLabelsLaunchOnlyOneApp",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.395"
+        },
+        {
+          "name": "youtubeSearchRetainsTheQueryAndUsesTheCorrectEndpoint",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.0"
+        },
+        {
+          "name": "missingBrowserAndSecurityFailuresBecomeVisibleFeedback",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.0"
+        },
+        {
+          "name": "unknownAppReportsFailureInsteadOfLaunchingAnUnrelatedApp",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.026"
+        },
+        {
+          "name": "searchQueryCannotInjectUrlParametersOrChangeTheHost",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.029"
+        },
+        {
+          "name": "cancellationDoesNotLaunchAnything",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.005"
+        },
+        {
+          "name": "anInstalledAppResolvesToItsOwnLauncher",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.005"
+        },
+        {
+          "name": "disablingServiceRemovesItsBubbleAndConnectionState",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.479"
+        },
+        {
+          "name": "revokedConsentAndScreenOffRemoveGridWithoutTouchingTarget",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "4.155"
+        },
+        {
+          "name": "namedTapsDescriptionsParentsAndLongPressReachAnotherApp",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.302"
+        },
+        {
+          "name": "disablingControlsDuringASwipeCannotRestoreTheBubble",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.151"
+        },
+        {
+          "name": "withdrawnConsentRejectsActions",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.281"
+        },
+        {
+          "name": "floatingMicrophoneCanBeShownHiddenAndDraggedWithoutClicking",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.892"
+        },
+        {
+          "name": "aVoicePanelThatDoesNotCloseTimesOutWithoutAnAction",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.29"
+        },
+        {
+          "name": "gridRejectsChangedWindowAndReopeningDoesNotReviveCoordinates",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.501"
+        },
+        {
+          "name": "stableGridExpiresAfterOneMinuteAndShutdownRemovesIt",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "60.748"
+        },
+        {
+          "name": "backIsRejectedIfTheOriginalForegroundAppChanged",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.554"
+        },
+        {
+          "name": "dictationSelectionReplacementAndClearReachFocusedField",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.882"
+        },
+        {
+          "name": "withdrawingConsentAlsoCancelsAlreadyQueuedNavigation",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.207"
+        },
+        {
+          "name": "homeBackAndRecentsDispatchSuccessfully",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.473"
+        },
+        {
+          "name": "gridHideCancelAndRotationRemoveTheOverlay",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "3.324"
+        },
+        {
+          "name": "ownAppAndUnknownOriginsAreRejected",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.199"
+        },
+        {
+          "name": "everySwipeDirectionIsAcceptedByAndroid",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.944"
+        },
+        {
+          "name": "rejectsTheGestureWhenTheForegroundAppChanged",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.256"
+        },
+        {
+          "name": "queuedTapRejectsChangedAppAndQueuedTextRejectsRevokedConsent",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.334"
+        },
+        {
+          "name": "oldDisclosureDoesNotGrantNewScreenReadingAccess",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.205"
+        },
+        {
+          "name": "dispatchesExactlyOneGestureToTheValidatedForegroundApp",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.209"
+        },
+        {
+          "name": "swipesReachTheTargetInEveryDirectionWithTheBubbleAtTheirStart",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "6.961"
+        },
+        {
+          "name": "gridHidesForVoiceAndDismissalCannotLeaveTheMicrophoneDetached",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.242"
+        },
+        {
+          "name": "backRequiresAnOriginAndStillWorksFromSaygo",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.886"
+        },
+        {
+          "name": "nestedGridZoomBackAndLongPressUseTheChosenArea",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.732"
+        },
+        {
+          "name": "numberedGridDeliversTapsAcrossUnlabelledCanvasWithBubbleAtTarget",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "6.907"
+        },
+        {
+          "name": "missingAmbiguousAndDisabledLabelsNeverClick",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.578"
+        },
+        {
+          "name": "interruptionCancelsWorkWaitingForTheVoicePanel",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.332"
+        },
+        {
+          "name": "hidingTheBubbleDuringASwipeKeepsItHiddenAfterCompletion",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.88"
+        },
+        {
+          "name": "homeAndCommandGuideAreAvailableWithoutPermissions",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.935"
+        },
+        {
+          "name": "privacyCanBeOpenedScrolledAndDismissed",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "1.065"
+        },
+        {
+          "name": "homeShortcutsAndSettingsReturnToHome",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "1.084"
+        },
+        {
+          "name": "microphoneDisclosureCanBeDeclined",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.679"
+        },
+        {
+          "name": "bothPreferenceRowsToggleAndPersistAcrossRecreation",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "1.082"
+        },
+        {
+          "name": "accessibilityDisclosureRequiresExplicitAcceptance",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.784"
+        },
+        {
+          "name": "googleExampleAndEntireGuideRemainReachable",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "2.286"
+        },
+        {
+          "name": "explicitClosePreventsActionsAndStatusUpdates",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.006"
+        },
+        {
+          "name": "resultIsDeliveredOnceAndLateCallbacksAreIgnored",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.005"
+        },
+        {
+          "name": "emptyRecognitionProducesOneRetryableError",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.001"
+        },
+        {
+          "name": "readinessBeginningAndEndHaveDistinctStatus",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.003"
+        },
+        {
+          "name": "speechErrorsHaveActionableMessagesAndNeverDeliverCommands",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.0"
+        }
+      ]
+    },
+    {
+      "api": 36,
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "exactInstalledConjunctionLabelsLaunchOnlyOneApp",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.145"
+        },
+        {
+          "name": "youtubeSearchRetainsTheQueryAndUsesTheCorrectEndpoint",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.001"
+        },
+        {
+          "name": "missingBrowserAndSecurityFailuresBecomeVisibleFeedback",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.0"
+        },
+        {
+          "name": "unknownAppReportsFailureInsteadOfLaunchingAnUnrelatedApp",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.002"
+        },
+        {
+          "name": "searchQueryCannotInjectUrlParametersOrChangeTheHost",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.001"
+        },
+        {
+          "name": "cancellationDoesNotLaunchAnything",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.001"
+        },
+        {
+          "name": "anInstalledAppResolvesToItsOwnLauncher",
+          "classname": "dev.saygo.app.CommandExecutorTest",
+          "time": "0.027"
+        },
+        {
+          "name": "disablingServiceRemovesItsBubbleAndConnectionState",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.566"
+        },
+        {
+          "name": "revokedConsentAndScreenOffRemoveGridWithoutTouchingTarget",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "3.105"
+        },
+        {
+          "name": "namedTapsDescriptionsParentsAndLongPressReachAnotherApp",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.967"
+        },
+        {
+          "name": "disablingControlsDuringASwipeCannotRestoreTheBubble",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.291"
+        },
+        {
+          "name": "withdrawnConsentRejectsActions",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.204"
+        },
+        {
+          "name": "floatingMicrophoneCanBeShownHiddenAndDraggedWithoutClicking",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "3.174"
+        },
+        {
+          "name": "aVoicePanelThatDoesNotCloseTimesOutWithoutAnAction",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.284"
+        },
+        {
+          "name": "gridRejectsChangedWindowAndReopeningDoesNotReviveCoordinates",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.603"
+        },
+        {
+          "name": "stableGridExpiresAfterOneMinuteAndShutdownRemovesIt",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "60.584"
+        },
+        {
+          "name": "backIsRejectedIfTheOriginalForegroundAppChanged",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.758"
+        },
+        {
+          "name": "dictationSelectionReplacementAndClearReachFocusedField",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.188"
+        },
+        {
+          "name": "withdrawingConsentAlsoCancelsAlreadyQueuedNavigation",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.177"
+        },
+        {
+          "name": "homeBackAndRecentsDispatchSuccessfully",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.365"
+        },
+        {
+          "name": "gridHideCancelAndRotationRemoveTheOverlay",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "2.929"
+        },
+        {
+          "name": "ownAppAndUnknownOriginsAreRejected",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.197"
+        },
+        {
+          "name": "everySwipeDirectionIsAcceptedByAndroid",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.863"
+        },
+        {
+          "name": "rejectsTheGestureWhenTheForegroundAppChanged",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.203"
+        },
+        {
+          "name": "queuedTapRejectsChangedAppAndQueuedTextRejectsRevokedConsent",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.664"
+        },
+        {
+          "name": "oldDisclosureDoesNotGrantNewScreenReadingAccess",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.181"
+        },
+        {
+          "name": "dispatchesExactlyOneGestureToTheValidatedForegroundApp",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.153"
+        },
+        {
+          "name": "swipesReachTheTargetInEveryDirectionWithTheBubbleAtTheirStart",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "7.26"
+        },
+        {
+          "name": "gridHidesForVoiceAndDismissalCannotLeaveTheMicrophoneDetached",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.308"
+        },
+        {
+          "name": "backRequiresAnOriginAndStillWorksFromSaygo",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.883"
+        },
+        {
+          "name": "nestedGridZoomBackAndLongPressUseTheChosenArea",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.559"
+        },
+        {
+          "name": "numberedGridDeliversTapsAcrossUnlabelledCanvasWithBubbleAtTarget",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "6.958"
+        },
+        {
+          "name": "missingAmbiguousAndDisabledLabelsNeverClick",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.811"
+        },
+        {
+          "name": "interruptionCancelsWorkWaitingForTheVoicePanel",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "1.082"
+        },
+        {
+          "name": "hidingTheBubbleDuringASwipeKeepsItHiddenAfterCompletion",
+          "classname": "dev.saygo.app.PhoneControlServiceTest",
+          "time": "0.86"
+        },
+        {
+          "name": "homeAndCommandGuideAreAvailableWithoutPermissions",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.86"
+        },
+        {
+          "name": "privacyCanBeOpenedScrolledAndDismissed",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.96"
+        },
+        {
+          "name": "homeShortcutsAndSettingsReturnToHome",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.988"
+        },
+        {
+          "name": "microphoneDisclosureCanBeDeclined",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.529"
+        },
+        {
+          "name": "bothPreferenceRowsToggleAndPersistAcrossRecreation",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.982"
+        },
+        {
+          "name": "accessibilityDisclosureRequiresExplicitAcceptance",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "0.71"
+        },
+        {
+          "name": "googleExampleAndEntireGuideRemainReachable",
+          "classname": "dev.saygo.app.SaygoUiTest",
+          "time": "2.135"
+        },
+        {
+          "name": "explicitClosePreventsActionsAndStatusUpdates",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.001"
+        },
+        {
+          "name": "resultIsDeliveredOnceAndLateCallbacksAreIgnored",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.001"
+        },
+        {
+          "name": "emptyRecognitionProducesOneRetryableError",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.006"
+        },
+        {
+          "name": "readinessBeginningAndEndHaveDistinctStatus",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.003"
+        },
+        {
+          "name": "speechErrorsHaveActionableMessagesAndNeverDeliverCommands",
+          "classname": "dev.saygo.app.SpeechSessionTest",
+          "time": "0.004"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "run": "https://github.com/vabxsen/saygo/actions/runs/36336021104",
+    "report": "TEST-emulator-5554 - 14-_app-.xml",
+    "test": "gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay",
+    "message": null,
+    "trace": "java.lang.NullPointerException\nat dev.saygo.app.PhoneControlServiceTest.openGridTarget(PhoneControlServiceTest.kt:596)\nat dev.saygo.app.PhoneControlServiceTest.gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay(PhoneControlServiceTest.kt:580)\n"
+  },
+  {
+    "run": "https://github.com/vabxsen/saygo/actions/runs/36336021104",
+    "report": "TEST-emulator-5554 - 14-_app-.xml",
+    "test": "homeBackAndRecentsDispatchSuccessfully",
+    "message": null,
+    "trace": "java.lang.AssertionError: Timed out waiting for Settings foreground\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:724)\nat dev.saygo.app.PhoneControlServiceTest.openSettings(PhoneControlServiceTest.kt:709)\nat dev.saygo.app.PhoneControlServiceTest.homeBackAndRecentsDispatchSuccessfully(PhoneControlServiceTest.kt:104)\n"
+  },
+  {
+    "run": "https://github.com/vabxsen/saygo/actions/runs/36337342606",
+    "report": "TEST-emulator-5554 - 14-_app-.xml",
+    "test": "gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay",
+    "message": null,
+    "trace": "java.lang.AssertionError: A fresh stable grid should last one minute\nat org.junit.Assert.fail(Assert.java:89)\nat org.junit.Assert.assertTrue(Assert.java:42)\nat dev.saygo.app.PhoneControlServiceTest.gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay(PhoneControlServiceTest.kt:619)\n"
+  },
+  {
+    "run": "https://github.com/vabxsen/saygo/actions/runs/36337342606",
+    "report": "TEST-emulator-5554 - 14-_app-.xml",
+    "test": "nestedGridZoomBackAndLongPressUseTheChosenArea",
+    "message": null,
+    "trace": "java.lang.IllegalStateException: Grid missing; feedback=Show a new grid on this screen first.\nat dev.saygo.app.PhoneControlServiceTest.captureGrid(PhoneControlServiceTest.kt:660)\nat dev.saygo.app.PhoneControlServiceTest.nestedGridZoomBackAndLongPressUseTheChosenArea(PhoneControlServiceTest.kt:491)\n"
+  },
+  {
+    "run": "https://github.com/vabxsen/saygo/actions/runs/36337342606",
+    "report": "TEST-emulator-5554 - 16-_app-.xml",
+    "test": "gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay",
+    "message": null,
+    "trace": "java.lang.AssertionError: A fresh stable grid should last one minute\nat org.junit.Assert.fail(Assert.java:89)\nat org.junit.Assert.assertTrue(Assert.java:42)\nat dev.saygo.app.PhoneControlServiceTest.gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay(PhoneControlServiceTest.kt:619)\n"
+  }
+]

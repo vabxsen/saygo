@@ -1,0 +1,25 @@
+
+dev.saygo.app.CommandExecutorTest:.......
+dev.saygo.app.CommandRoutingTest:...
+dev.saygo.app.PhoneControlServiceTest:.
+Error in gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: A fresh stable grid should last one minute
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay(PhoneControlServiceTest.kt:619)
+.........................
+dev.saygo.app.SaygoUiTest:.......
+dev.saygo.app.SpeechSessionTest:.....
+
+Time: 85.372
+There was 1 failure:
+1) gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: A fresh stable grid should last one minute
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.gridHideCancelRotationExpiryAndShutdownRemoveTheOverlay(PhoneControlServiceTest.kt:619)
+
+FAILURES!!!
+Tests run: 49,  Failures: 1
+
+
