@@ -48,9 +48,10 @@ public class PinchTargetActivity extends Activity {
         if (getIntent().getBooleanExtra("offset", false)) {
             android.view.WindowManager.LayoutParams params = getWindow().getAttributes();
             params.gravity = Gravity.TOP | Gravity.LEFT;
-            params.x = 80; params.y = 160;
-            params.width = getResources().getDisplayMetrics().widthPixels * 3 / 4;
-            params.height = getResources().getDisplayMetrics().heightPixels * 2 / 3;
+            boolean wide = getIntent().getBooleanExtra("wide", false);
+            params.x = wide ? getResources().getDisplayMetrics().widthPixels / 20 : 80; params.y = 160;
+            params.width = getResources().getDisplayMetrics().widthPixels * (wide ? 9 : 3) / (wide ? 10 : 4);
+            params.height = wide ? Math.max((int)(96 * getResources().getDisplayMetrics().density), getResources().getDisplayMetrics().heightPixels / 5) : getResources().getDisplayMetrics().heightPixels * 2 / 3;
             getWindow().setAttributes(params);
         }
     }

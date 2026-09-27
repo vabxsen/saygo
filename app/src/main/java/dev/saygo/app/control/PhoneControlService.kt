@@ -356,14 +356,18 @@ class PhoneControlService : AccessibilityService() {
     }
 
     private fun pinch(zoomIn: Boolean, bounds: Rect) {
-        val near = bounds.width() * .12f
-        val far = bounds.width() * .40f
+        val horizontal = bounds.width() >= bounds.height()
+        val span = maxOf(bounds.width(), bounds.height())
+        val near = span * .18f
+        val far = span * .36f
         val start = if (zoomIn) near else far
         val end = if (zoomIn) far else near
         val paths = listOf(-1, 1).map { side ->
             Path().apply {
-                moveTo(bounds.exactCenterX() + side * start, bounds.exactCenterY())
-                lineTo(bounds.exactCenterX() + side * end, bounds.exactCenterY())
+                moveTo(bounds.exactCenterX() + if (horizontal) side * start else 0f,
+                    bounds.exactCenterY() + if (horizontal) 0f else side * start)
+                lineTo(bounds.exactCenterX() + if (horizontal) side * end else 0f,
+                    bounds.exactCenterY() + if (horizontal) 0f else side * end)
             }
         }
         dispatchPaths(paths, 500, if (zoomIn) "Zoom-in gesture sent." else "Zoom-out gesture sent.")

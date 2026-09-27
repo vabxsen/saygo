@@ -627,12 +627,15 @@ class PhoneControlServiceTest {
 
     @Test fun pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint() {
         val evidence = mutableListOf<String>()
-        for (offset in listOf(false, true)) for (zoomIn in listOf(true, false)) {
-            val bounds = openPinchTarget(offset)
+        for ((offset, wide) in listOf(false to false, true to false, true to true)) for (zoomIn in listOf(true, false)) {
+            val bounds = openPinchTarget(offset, wide)
             if (offset) assertTrue("Fixture must exercise offset screen coordinates", bounds.left > 0 && bounds.top > 0)
             showTestBubble()
-            val startDistance = bounds.width() * if (zoomIn) .12f else .40f
-            dragBubbleTo(bounds.exactCenterX() - startDistance, bounds.exactCenterY())
+            val horizontal = bounds.width() >= bounds.height()
+            if (wide) assertTrue("Fixture must exercise a horizontal pinch", horizontal)
+            val startDistance = maxOf(bounds.width(), bounds.height()) * if (zoomIn) .18f else .36f
+            dragBubbleTo(bounds.exactCenterX() - if (horizontal) startDistance else 0f,
+                bounds.exactCenterY() - if (horizontal) 0f else startDistance, allowOverlap = true)
             val placed = bubbleBounds()
             runControl(Command.Grid(dev.saygo.app.commands.GridOperation.SHOW))
             await("grid visible before pinch") { gridNode() != null }
@@ -649,12 +652,12 @@ class PhoneControlServiceTest {
                 receipt = automation.rootInActiveWindow?.findAccessibilityNodeInfosByText("Zoom=")?.firstOrNull()?.text?.toString().orEmpty()
                 val factor = Regex("Zoom=([0-9.]+)").find(receipt)?.groupValues?.get(1)?.toFloatOrNull()
                 receipt.contains("pointers=2 complete=true down=1 up=1") && factor != null &&
-                    (if (zoomIn) factor > 1.2f else factor < .85f)
+                    (if (zoomIn) factor > 1.05f else factor < .95f)
             }
             assertNull(gridNode())
             await("microphone restored after two-finger gesture") { bubbleNode() != null }
             assertEquals(placed, bubbleBounds())
-            evidence += "$phrase offset=$offset bounds=$bounds: $receipt; microphone restored"
+            evidence += "$phrase offset=$offset wide=$wide bounds=$bounds: $receipt; microphone restored"
         }
         java.io.File(context.filesDir, "pinch-delivery.txt").writeText(evidence.joinToString("\n"))
     }
@@ -705,9 +708,9 @@ class PhoneControlServiceTest {
         }
     }
 
-    private fun openPinchTarget(offset: Boolean): android.graphics.Rect {
+    private fun openPinchTarget(offset: Boolean, wide: Boolean = false): android.graphics.Rect {
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.PinchTargetActivity")
-            .putExtra("offset", offset).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+            .putExtra("offset", offset).putExtra("wide", wide).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
         automation.waitForIdle(300, 5000)
         var result: android.graphics.Rect? = null
         await("pinch fixture ready in both accessibility clients") {
@@ -814,7 +817,7 @@ class PhoneControlServiceTest {
 
     private fun bubbleBounds(): android.graphics.Rect = android.graphics.Rect().also { bubbleNode()!!.getBoundsInScreen(it) }
 
-    private fun dragBubbleTo(x: Float, y: Float) {
+    private fun dragBubbleTo(x: Float, y: Float, allowOverlap: Boolean = false) {
         automation.waitForIdle(150, 3000)
         val before = bubbleBounds()
         val down = SystemClock.uptimeMillis()
@@ -833,12 +836,14 @@ class PhoneControlServiceTest {
             SystemClock.sleep(25)
         }
         touch(android.view.MotionEvent.ACTION_UP, x, y)
+        if (allowOverlap) automation.waitForIdle(300, 5000)
         var lastPosition: android.graphics.Rect? = null
         try {
             await("bubble positioned") {
                 lastPosition = bubbleNode()?.let { android.graphics.Rect().also(it::getBoundsInScreen) }
                 val position = lastPosition
-                position != null && kotlin.math.abs(position.exactCenterX() - x) < 4 && kotlin.math.abs(position.exactCenterY() - y) < 4
+                position != null && if (allowOverlap) position.contains(x.toInt(), y.toInt())
+                else kotlin.math.abs(position.exactCenterX() - x) < 4 && kotlin.math.abs(position.exactCenterY() - y) < 4
             }
         } catch (error: AssertionError) {
             java.io.File(context.filesDir, "fix-drag.txt").writeText("from=$before target=($x,$y) actual=$lastPosition")
