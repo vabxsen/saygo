@@ -1,0 +1,8 @@
+
+dev.saygo.app.CommandExecutorTest:.......
+
+Time: 1.507
+
+OK (7 tests)
+
+

@@ -13,10 +13,15 @@ android {
         targetSdk = 36
         versionCode = 15
         versionName = "0.8.0"
-        // The audio-file probe is opt-in and never replaces the normal CI suite.
-        testInstrumentationRunner = if (providers.gradleProperty("syntheticSpeechProbe").orNull == "true") {
-            "dev.saygo.app.SyntheticSpeechProbe"
-        } else "androidx.test.runner.AndroidJUnitRunner"
+        // Manual probes are opt-in and never replace the normal CI suite.
+        val speechProbe = providers.gradleProperty("syntheticSpeechProbe").orNull == "true"
+        val commandProbe = providers.gradleProperty("explicitCommandProbe").orNull == "true"
+        require(!(speechProbe && commandProbe)) { "Select only one manual probe runner" }
+        testInstrumentationRunner = when {
+            speechProbe -> "dev.saygo.app.SyntheticSpeechProbe"
+            commandProbe -> "dev.saygo.app.ExplicitCommandProbe"
+            else -> "androidx.test.runner.AndroidJUnitRunner"
+        }
     }
     buildTypes {
         release {

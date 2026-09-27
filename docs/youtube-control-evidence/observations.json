@@ -1,0 +1,219 @@
+{
+  "scope": "Explicit parser/executor commands on dedicated API36 emulator; no speech input, no host audio output",
+  "youtube_version": "21.38.130",
+  "observations": [
+    {
+      "stage": "search",
+      "captured_at_unix": 1790539811.438684,
+      "package": "com.google.android.youtube",
+      "labels": [
+        {
+          "label": "cooking",
+          "bounds": "[147,157][723,241]"
+        },
+        {
+          "label": "Pasta | Pasta recipe | How to make pasta 🍝🍝😋, 49 million views, CookTube Official, 1 year ago - play Short",
+          "bounds": "[32,1756][529,2211]"
+        },
+        {
+          "label": "Instant Bread bites 😋 ASMR Cooking 🎧 #shorts #asmr #food #cooking #breadbites #shricooking #recipe, 10 million views, GANESH SHRI COOKING, 1 year ago - play Short",
+          "bounds": "[551,1756][1048,2211]"
+        }
+      ]
+    },
+    {
+      "stage": "open",
+      "captured_at_unix": 1790539856.3664527,
+      "package": "com.google.android.youtube",
+      "labels": [
+        {
+          "label": "Go to channel @CookTubeOfficial",
+          "bounds": "[42,1960][126,2044]"
+        },
+        {
+          "label": "Pasta | Pasta recipe | How to make pasta 🍝🍝😋",
+          "bounds": "[42,2066][912,2114]"
+        },
+        {
+          "label": "Pause video",
+          "bounds": "[477,1110][603,1236]"
+        },
+        {
+          "label": "Next Video",
+          "bounds": "[477,1236][603,1362]"
+        },
+        {
+          "label": "0 minutes 14 seconds of 0 minutes 17 seconds",
+          "bounds": "[0,2147][1080,2273]"
+        }
+      ]
+    },
+    {
+      "stage": "paused",
+      "captured_at_unix": 1790539885.3860912,
+      "package": "com.google.android.youtube",
+      "labels": [
+        {
+          "label": "Go to channel @CookTubeOfficial",
+          "bounds": "[42,1960][126,2044]"
+        },
+        {
+          "label": "Pasta | Pasta recipe | How to make pasta 🍝🍝😋",
+          "bounds": "[42,2066][912,2114]"
+        },
+        {
+          "label": "Play video",
+          "bounds": "[477,1110][603,1236]"
+        },
+        {
+          "label": "Next Video",
+          "bounds": "[477,1236][603,1362]"
+        },
+        {
+          "label": "0 minutes 0 seconds of 0 minutes 17 seconds",
+          "bounds": "[0,2147][1080,2273]"
+        }
+      ]
+    },
+    {
+      "stage": "paused-second",
+      "captured_at_unix": 1790539902.8843305,
+      "package": "com.google.android.youtube",
+      "labels": [
+        {
+          "label": "Go to channel @CookTubeOfficial",
+          "bounds": "[42,1960][126,2044]"
+        },
+        {
+          "label": "Pasta | Pasta recipe | How to make pasta 🍝🍝😋",
+          "bounds": "[42,2066][912,2114]"
+        },
+        {
+          "label": "Play video",
+          "bounds": "[477,1110][603,1236]"
+        },
+        {
+          "label": "Next Video",
+          "bounds": "[477,1236][603,1362]"
+        },
+        {
+          "label": "0 minutes 0 seconds of 0 minutes 17 seconds",
+          "bounds": "[0,2147][1080,2273]"
+        }
+      ]
+    },
+    {
+      "stage": "resumed",
+      "captured_at_unix": 1790539926.7428436,
+      "package": "com.google.android.youtube",
+      "labels": [
+        {
+          "label": "Go to channel @CookTubeOfficial",
+          "bounds": "[42,1960][126,2044]"
+        },
+        {
+          "label": "Pasta | Pasta recipe | How to make pasta 🍝🍝😋",
+          "bounds": "[42,2066][912,2114]"
+        },
+        {
+          "label": "Pause video",
+          "bounds": "[477,1110][603,1236]"
+        },
+        {
+          "label": "Next Video",
+          "bounds": "[477,1236][603,1362]"
+        },
+        {
+          "label": "0 minutes 8 seconds of 0 minutes 17 seconds",
+          "bounds": "[0,2147][1080,2273]"
+        }
+      ]
+    },
+    {
+      "stage": "next",
+      "captured_at_unix": 1790539951.8520136,
+      "package": "com.google.android.youtube",
+      "labels": [
+        {
+          "label": "Go to channel @ganeshshricooking",
+          "bounds": "[42,1865][126,1949]"
+        },
+        {
+          "label": "Instant Bread bites 😋 ASMR Cooking 🎧 #shorts​ #asmr​ #food​ #cooking​ #breadbites​ #shricooking​ #recipe​",
+          "bounds": "[42,1971][912,2019]"
+        },
+        {
+          "label": "Previous Video",
+          "bounds": "[477,984][603,1110]"
+        },
+        {
+          "label": "Pause video",
+          "bounds": "[477,1110][603,1236]"
+        },
+        {
+          "label": "Next Video",
+          "bounds": "[477,1236][603,1362]"
+        },
+        {
+          "label": "0 minutes 7 seconds of 0 minutes 31 seconds",
+          "bounds": "[0,2147][1080,2273]"
+        }
+      ]
+    },
+    {
+      "stage": "previous",
+      "captured_at_unix": 1790540001.323834,
+      "package": "com.google.android.youtube",
+      "labels": [
+        {
+          "label": "Go to channel @CookTubeOfficial",
+          "bounds": "[42,1960][126,2044]"
+        },
+        {
+          "label": "Pasta | Pasta recipe | How to make pasta 🍝🍝😋",
+          "bounds": "[42,2066][912,2114]"
+        },
+        {
+          "label": "Pause video",
+          "bounds": "[477,1110][603,1236]"
+        },
+        {
+          "label": "Next Video",
+          "bounds": "[477,1236][603,1362]"
+        },
+        {
+          "label": "0 minutes 7 seconds of 0 minutes 17 seconds",
+          "bounds": "[0,2147][1080,2273]"
+        }
+      ]
+    }
+  ],
+  "default_runner_smoke_tests": 7,
+  "jvm_reports": [
+    {
+      "name": "dev.saygo.app.commands.CommandParserTest",
+      "tests": "13",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "dev.saygo.app.control.GridRegionTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "dev.saygo.app.speech.FeedbackQueueTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "lint": {
+    "Warning": 10
+  },
+  "production_apk_sha256": "14b7e56b708a77caef038b6af91d6a9fdd7336f229306696a949d89ba23aade4"
+}

@@ -4,6 +4,8 @@
 
 Additional [speech-provider and real-app audit](docs/SPEECH_APP_AUDIT_0.8.0.md): four synthetic-audio recognition probes passed, and YouTube displayed the recognized search query and video results. Google returned a traffic challenge; live microphone recognition and Instagram remain unverified.
 
+[YouTube Shorts control audit](docs/YOUTUBE_CONTROL_0.8.0.md): explicit grid, tap and swipe commands opened a Short, paused/resumed playback, advanced to another clip and returned. These checks bypass speech input.
+
 **Previous version: 0.7.0.** Adds native two-finger zoom. **74 local tests passed** (54 Android/API36 + 20 JVM), with build, lint and release checks passing. GitHub also passed 51 core tests on each of Android 10, 14 and 16. See [pinch commands and verification](docs/PINCH_0.7.0.md).
 
 **Previous version: 0.6.0.** Adds a numbered grid for unlabelled controls. **69 local tests passed** (50 Android/API36 + 19 JVM), with debug/release builds and lint passing. GitHub also passed 47 core tests on each of Android 10, 14 and 16. See [grid controls and verification](docs/GRID_0.6.0.md).

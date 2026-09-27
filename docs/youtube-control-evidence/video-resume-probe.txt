@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: dispatchPassed=true
+INSTRUMENTATION_RESULT: trace=tap Play video => Tap requested. (success=true, origin=com.google.android.youtube)
+INSTRUMENTATION_CODE: -1

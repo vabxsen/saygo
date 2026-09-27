@@ -49,3 +49,7 @@ The normal runner was restored and all **59 Android instrumentation tests and 21
 The [hosted run](https://github.com/vabxsen/saygo/actions/runs/36345983281) also passed build and **56 core tests on each of Android 10, 14 and 16**, with no failures, errors or skips. Tested commit: `bf71451b15366fd534ad542e141ec8cdfd905806`. [Detailed reports](speech-app-evidence/hosted-results.json) confirm the optional probe does not alter the default suite. These hosted jobs do not invoke synthetic recognition and exclude the three Chrome/YouTube routing tests run locally.
 
 Live microphone recognition, actual Instagram Reels, playback/feed transitions in the named apps, and other-device behavior remain unverified. Google search results were blocked by Google's traffic challenge; it was not bypassed. Google Play submission/approval, signing and publisher-specific details also remain outstanding. The original “anything” requirement remains unproven.
+
+## Subsequent receiving-app check
+
+The [YouTube control follow-up](YOUTUBE_CONTROL_0.8.0.md) verified opening a Short, pause/resume and next/previous clip transitions through explicit production commands. It bypassed speech input; the earlier microphone limits still apply.

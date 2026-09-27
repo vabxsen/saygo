@@ -1,0 +1,4 @@
+INSTRUMENTATION_RESULT: dispatchPassed=true
+INSTRUMENTATION_RESULT: trace=show grid => Grid shown. Say zoom cell 5 or tap cell 5. Hide grid closes it. (success=true, origin=com.google.android.youtube)
+tap cell 7 => Tap sent. (success=true, origin=com.google.android.youtube)
+INSTRUMENTATION_CODE: -1
