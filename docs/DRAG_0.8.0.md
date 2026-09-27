@@ -18,7 +18,7 @@ The initial tests caught an implementation defect: a stationary continued stroke
 
 Evidence: [full Android suite](drag-evidence/drag-full-instrumentation.txt), [actual touch/drop receipts](drag-evidence/drag-delivery.txt), [final build](drag-evidence/drag-final-build.log), and JVM XML/lint reports in [drag-evidence](drag-evidence/).
 
-Hosted Android 10, 14 and 16 checks for this version are pending. Earlier versions' passes do not establish this version's compatibility.
+The [hosted run](https://github.com/vabxsen/saygo/actions/runs/36343304990) passed build and **56 core tests on each of Android 10, 14 and 16**, with zero failures, errors or skips. Tested app/test commit: `899294712a5955b4292dbea4f32bbd91c51755b3`. See [hosted evidence](drag-evidence/hosted-results.json). CI excludes the three actual Chrome/YouTube routing cases covered locally.
 
 ## Remaining scope
 
