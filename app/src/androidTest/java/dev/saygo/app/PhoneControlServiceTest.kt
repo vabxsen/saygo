@@ -860,68 +860,60 @@ class PhoneControlServiceTest {
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.DragTargetActivity")
             .putExtra("native", native).putExtra("offset", offset)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-        automation.waitForIdle(300, 5000)
-        var result: android.graphics.Rect? = null
-        await("drag fixture ready in both clients") {
-            val root = automation.rootInActiveWindow
-            val serviceRoot = PhoneControlService.current?.rootInActiveWindow
-            val bounds = android.graphics.Rect().also { root?.getBoundsInScreen(it) }
-            val other = android.graphics.Rect().also { serviceRoot?.getBoundsInScreen(it) }
-            val ready = root?.packageName?.toString() == "dev.saygo.app.test" &&
-                root.findAccessibilityNodeInfosByText("Drag receiver ready").isNotEmpty() &&
-                serviceRoot?.windowId == root.windowId && other == bounds && !bounds.isEmpty
-            @Suppress("DEPRECATION")
-            serviceRoot?.recycle()
-            if (ready) result = bounds
-            ready
-        }
-        return checkNotNull(result)
+        return awaitStableFixture("Drag receiver ready")
     }
 
     private fun openPinchTarget(offset: Boolean, wide: Boolean = false): android.graphics.Rect {
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.PinchTargetActivity")
             .putExtra("offset", offset).putExtra("wide", wide).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-        automation.waitForIdle(300, 5000)
-        var result: android.graphics.Rect? = null
-        await("pinch fixture ready in both accessibility clients") {
-            val root = automation.rootInActiveWindow
-            val serviceRoot = PhoneControlService.current?.rootInActiveWindow
-            val bounds = android.graphics.Rect().also { root?.getBoundsInScreen(it) }
-            val serviceBounds = android.graphics.Rect().also { serviceRoot?.getBoundsInScreen(it) }
-            val ready = root?.packageName?.toString() == "dev.saygo.app.test" &&
-                root.findAccessibilityNodeInfosByText("Pinch receiver ready").isNotEmpty() &&
-                serviceRoot?.windowId == root.windowId && serviceBounds == bounds && !bounds.isEmpty
-            @Suppress("DEPRECATION")
-            serviceRoot?.recycle()
-            if (ready) result = bounds
-            ready
-        }
-        return checkNotNull(result)
+        return awaitStableFixture("Pinch receiver ready")
     }
 
     private fun openGridTarget(): android.graphics.Rect {
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.GridTargetActivity")
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-        // The node tree can appear before the Activity launch animation settles its bounds.
+        return awaitStableFixture("Grid receiver ready")
+    }
+
+    private fun awaitStableFixture(label: String): android.graphics.Rect {
         automation.waitForIdle(300, 5000)
-        var observedBounds: android.graphics.Rect? = null
-        await("grid target ready") {
+        var observed: android.graphics.Rect? = null
+        var windowId: Int? = null
+        var stableSince = 0L
+        await("$label with settled bounds in both accessibility clients") {
+            if (android.os.Build.VERSION.SDK_INT >= 33) {
+                automation.clearCache()
+                instrumentation.runOnMainSync { PhoneControlService.current?.clearCache() }
+            }
             val root = automation.rootInActiveWindow
-            if (root?.packageName?.toString() != "dev.saygo.app.test" || root.findAccessibilityNodeInfosByText("Grid receiver ready").isEmpty()) false
-            else {
-                val bounds = android.graphics.Rect().also(root::getBoundsInScreen)
-                val serviceRoot = PhoneControlService.current?.rootInActiveWindow
-                val serviceBounds = android.graphics.Rect()
-                serviceRoot?.getBoundsInScreen(serviceBounds)
-                val ready = !bounds.isEmpty && serviceRoot?.windowId == root.windowId && serviceBounds == bounds &&
-                    serviceRoot.findAccessibilityNodeInfosByText("Grid receiver ready").isNotEmpty()
+            val serviceRoot = PhoneControlService.current?.rootInActiveWindow
+            try {
+                // A cached node can retain an intermediate launch-animation position.
+                // Refresh both clients and require stable geometry before choosing cells.
+                val refreshed = root?.refresh() == true && serviceRoot?.refresh() == true
+                val bounds = android.graphics.Rect().also { root?.getBoundsInScreen(it) }
+                val other = android.graphics.Rect().also { serviceRoot?.getBoundsInScreen(it) }
+                val ready = refreshed && root?.packageName?.toString() == "dev.saygo.app.test" &&
+                    root.findAccessibilityNodeInfosByText(label).isNotEmpty() &&
+                    serviceRoot?.windowId == root.windowId && other == bounds && !bounds.isEmpty
+                if (!ready) {
+                    observed = null
+                    stableSince = 0L
+                    false
+                } else if (observed != bounds || windowId != root?.windowId) {
+                    observed = bounds
+                    windowId = root?.windowId
+                    stableSince = SystemClock.uptimeMillis()
+                    false
+                } else SystemClock.uptimeMillis() - stableSince >= 300
+            } finally {
+                @Suppress("DEPRECATION")
+                root?.recycle()
                 @Suppress("DEPRECATION")
                 serviceRoot?.recycle()
-                if (ready) observedBounds = bounds
-                ready
             }
         }
-        return checkNotNull(observedBounds)
+        return checkNotNull(observed)
     }
     private fun enableWindowInspection() {
         val info = automation.serviceInfo
@@ -1103,6 +1095,9 @@ class PhoneControlServiceTest {
         try {
             executeDevicePhrase(phrase)
             await("native $panelId visible") {
+                // The initial collapsed shade and expanded controls share a window.
+                // Do not let cached child nodes hide the second native expansion.
+                if (android.os.Build.VERSION.SDK_INT >= 33) automation.clearCache()
                 val root = automation.rootInActiveWindow
                 root?.packageName?.toString() == "com.android.systemui" &&
                     root.findAccessibilityNodeInfosByViewId("com.android.systemui:id/$panelId").any { it.isVisibleToUser }

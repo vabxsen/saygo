@@ -1,0 +1,109 @@
+
+dev.saygo.app.CommandExecutorTest:.......
+dev.saygo.app.PhoneControlServiceTest:..........
+Error in dragHoldsOnePointerAndDeliversNativeDropWithBubbleAtSource(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Raw drag from 70,131 to 230,415 held=true down=1 up=1 firstMove=589 distance=326 expected:<140.0> but was:<70.0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at dev.saygo.app.PhoneControlServiceTest.assertDragCoordinates(PhoneControlServiceTest.kt:855)
+	at dev.saygo.app.PhoneControlServiceTest.dragHoldsOnePointerAndDeliversNativeDropWithBubbleAtSource(PhoneControlServiceTest.kt:733)
+
+Error in dragUsesTheZoomedGridAndRejectsMissingOrIdenticalCells(dev.saygo.app.PhoneControlServiceTest):
+org.junit.ComparisonFailure: expected:<[Drag gesture sen]t.> but was:<[Show a new grid on this screen firs]t.>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at dev.saygo.app.PhoneControlServiceTest.dragUsesTheZoomedGridAndRejectsMissingOrIdenticalCells(PhoneControlServiceTest.kt:763)
+..
+Error in gridRejectsChangedWindowAndReopeningDoesNotReviveCoordinates(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Delayed events from before grid creation must not dismiss it
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at dev.saygo.app.PhoneControlServiceTest.gridRejectsChangedWindowAndReopeningDoesNotReviveCoordinates(PhoneControlServiceTest.kt:551)
+.
+Error in stableGridExpiresAfterOneMinuteAndShutdownRemovesIt(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: A fresh stable grid should last one minute
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.stableGridExpiresAfterOneMinuteAndShutdownRemovesIt(PhoneControlServiceTest.kt:622)
+.
+Error in replacedWindowDuringHoldNeverReceivesDragMovement(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: The test app must signal actual pointer DOWN
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.onDragDown(PhoneControlServiceTest.kt:844)
+	at dev.saygo.app.PhoneControlServiceTest.replacedWindowDuringHoldNeverReceivesDragMovement(PhoneControlServiceTest.kt:802)
+...............
+Error in gridHidesForVoiceAndDismissalCannotLeaveTheMicrophoneDetached(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Timed out waiting for queued grid command completes on original app after voice panel closes
+	at org.junit.Assert.fail(Assert.java:89)
+	at dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:1268)
+	at dev.saygo.app.PhoneControlServiceTest.gridHidesForVoiceAndDismissalCannotLeaveTheMicrophoneDetached(PhoneControlServiceTest.kt:521)
+...
+Error in nestedGridZoomBackAndLongPressUseTheChosenArea(dev.saygo.app.PhoneControlServiceTest):
+java.lang.IllegalStateException: Grid missing; feedback=Show a new grid on this screen first.
+	at dev.saygo.app.PhoneControlServiceTest.captureGrid(PhoneControlServiceTest.kt:944)
+	at dev.saygo.app.PhoneControlServiceTest.nestedGridZoomBackAndLongPressUseTheChosenArea(PhoneControlServiceTest.kt:491)
+
+Error in numberedGridDeliversTapsAcrossUnlabelledCanvasWithBubbleAtTarget(dev.saygo.app.PhoneControlServiceTest):
+java.lang.AssertionError: Grid must use screen coordinates expected:<Rect(43, 0 - 363, 640)> but was:<Rect(0, 0 - 320, 640)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at dev.saygo.app.PhoneControlServiceTest.numberedGridDeliversTapsAcrossUnlabelledCanvasWithBubbleAtTarget(PhoneControlServiceTest.kt:472)
+.....
+dev.saygo.app.SaygoUiTest:.......
+dev.saygo.app.SpeechSessionTest:.....
+
+Time: 130.259
+There were 8 failures:
+1) dragHoldsOnePointerAndDeliversNativeDropWithBubbleAtSource(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Raw drag from 70,131 to 230,415 held=true down=1 up=1 firstMove=589 distance=326 expected:<140.0> but was:<70.0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at dev.saygo.app.PhoneControlServiceTest.assertDragCoordinates(PhoneControlServiceTest.kt:855)
+	at dev.saygo.app.PhoneControlServiceTest.dragHoldsOnePointerAndDeliversNativeDropWithBubbleAtSource(PhoneControlServiceTest.kt:733)
+2) dragUsesTheZoomedGridAndRejectsMissingOrIdenticalCells(dev.saygo.app.PhoneControlServiceTest)
+org.junit.ComparisonFailure: expected:<[Drag gesture sen]t.> but was:<[Show a new grid on this screen firs]t.>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at dev.saygo.app.PhoneControlServiceTest.dragUsesTheZoomedGridAndRejectsMissingOrIdenticalCells(PhoneControlServiceTest.kt:763)
+3) gridRejectsChangedWindowAndReopeningDoesNotReviveCoordinates(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Delayed events from before grid creation must not dismiss it
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at dev.saygo.app.PhoneControlServiceTest.gridRejectsChangedWindowAndReopeningDoesNotReviveCoordinates(PhoneControlServiceTest.kt:551)
+4) stableGridExpiresAfterOneMinuteAndShutdownRemovesIt(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: A fresh stable grid should last one minute
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.stableGridExpiresAfterOneMinuteAndShutdownRemovesIt(PhoneControlServiceTest.kt:622)
+5) replacedWindowDuringHoldNeverReceivesDragMovement(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: The test app must signal actual pointer DOWN
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at dev.saygo.app.PhoneControlServiceTest.onDragDown(PhoneControlServiceTest.kt:844)
+	at dev.saygo.app.PhoneControlServiceTest.replacedWindowDuringHoldNeverReceivesDragMovement(PhoneControlServiceTest.kt:802)
+6) gridHidesForVoiceAndDismissalCannotLeaveTheMicrophoneDetached(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Timed out waiting for queued grid command completes on original app after voice panel closes
+	at org.junit.Assert.fail(Assert.java:89)
+	at dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:1268)
+	at dev.saygo.app.PhoneControlServiceTest.gridHidesForVoiceAndDismissalCannotLeaveTheMicrophoneDetached(PhoneControlServiceTest.kt:521)
+7) nestedGridZoomBackAndLongPressUseTheChosenArea(dev.saygo.app.PhoneControlServiceTest)
+java.lang.IllegalStateException: Grid missing; feedback=Show a new grid on this screen first.
+	at dev.saygo.app.PhoneControlServiceTest.captureGrid(PhoneControlServiceTest.kt:944)
+	at dev.saygo.app.PhoneControlServiceTest.nestedGridZoomBackAndLongPressUseTheChosenArea(PhoneControlServiceTest.kt:491)
+8) numberedGridDeliversTapsAcrossUnlabelledCanvasWithBubbleAtTarget(dev.saygo.app.PhoneControlServiceTest)
+java.lang.AssertionError: Grid must use screen coordinates expected:<Rect(43, 0 - 363, 640)> but was:<Rect(0, 0 - 320, 640)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at dev.saygo.app.PhoneControlServiceTest.numberedGridDeliversTapsAcrossUnlabelledCanvasWithBubbleAtTarget(PhoneControlServiceTest.kt:472)
+
+FAILURES!!!
+Tests run: 64,  Failures: 8
+
+

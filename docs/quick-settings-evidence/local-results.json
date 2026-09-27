@@ -1,0 +1,22 @@
+{
+  "version": "0.9.1",
+  "versionCode": 17,
+  "productionCommit": "3ce83440bebe9e40d91403027e4c3d05865fc2b9",
+  "localCore": {
+    "api": 36,
+    "profile": "320x640, density 160, Google Play Store image",
+    "animations": "all three global animation scales set to 0 for run and restored afterward",
+    "tests": 64,
+    "failures": 0,
+    "scope": "excludes three actual Chrome/YouTube routing tests; no microphone or Instagram test"
+  },
+  "jvmTests": 23,
+  "apkSigning": "v2 verified",
+  "apkAlignment": "16 KB verified",
+  "minSdk": 29,
+  "targetSdk": 36,
+  "artifacts": {
+    "saygo-0.9.1-debug.apk": "9623b6f6e856b77c050aab78883ce227d0d73cc695cb8714d98b78445560158d",
+    "saygo-0.9.1-unsigned.aab": "cd48be831e079d14cf93bdf9a6c351d3094c70c003fbaef7f486c69803c51ed3"
+  }
+}
