@@ -1,6 +1,6 @@
 # saygo
 
-**Current version: 1.0.0.** Download the installable APK from [GitHub Releases](https://github.com/vabxsen/saygo/releases/tag/v1.0.0). This release retains the verified 0.9.3 command behavior and uses version code 20. The APK uses the existing debug signing identity so it can update earlier test installs; Google Play publication remains separate.
+**Current version: 1.0.0.** Download the installable APK from [GitHub Releases](https://github.com/vabxsen/saygo/releases/tag/v1.0.0). This release retains the verified 0.9.3 command behavior and uses version code 20. Download `saygo-1.0.0-release.apk`, an optimized, non-debuggable APK signed with the dedicated Saygo release key. Earlier debug builds must be uninstalled once before installing it because their signing key differs. Google Play publication remains separate.
 
 **Previous version: 0.9.3.** Extends the bounded Quick Settings continuation to Android 14 after a hosted reproduction of the collapsed-shade failure. Build, lint, 23 JVM tests and four local native panel/cancellation checks passed. GitHub also passed all 64 core tests on each of Android 10, 14 and 16. See [verification and limits](docs/QUICK_SETTINGS_0.9.3.md).
 

@@ -9,3 +9,7 @@ keystore.properties
 *.apk
 *.aab
 captures/
+*.p12
+*.pfx
+release-signing.json
+signing/
