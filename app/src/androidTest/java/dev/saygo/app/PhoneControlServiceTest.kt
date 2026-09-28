@@ -973,12 +973,10 @@ class PhoneControlServiceTest {
     }
 
     private fun openGestureTarget() {
+        val previousWindowId = automation.rootInActiveWindow?.windowId
         context.startActivity(Intent().setClassName("dev.saygo.app.test", "dev.saygo.app.GestureTargetActivity")
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-        await("gesture target ready") {
-            val node = automation.rootInActiveWindow
-            node?.packageName?.toString() == "dev.saygo.app.test" && node.findAccessibilityNodeInfosByText("Gesture target: ready").isNotEmpty()
-        }
+        awaitStableFixture("Gesture target: ready", previousWindowId)
     }
 
     private fun bubbleBounds(): android.graphics.Rect = android.graphics.Rect().also { bubbleNode()!!.getBoundsInScreen(it) }
@@ -1043,7 +1041,7 @@ class PhoneControlServiceTest {
         executeDevicePhrase("open quick settings")
         instrumentation.runOnMainSync { dev.saygo.app.commands.CommandExecutor(context).execute(Command.Stop) }
         val cancelled = SessionState.feedback.value.sequence
-        SystemClock.sleep(1100)
+        SystemClock.sleep(2300)
         assertEquals("No later panel request after Stop", cancelled, SessionState.feedback.value.sequence)
         assertTrue(SessionState.feedback.value.title.startsWith("Cancelled."))
     }
@@ -1064,7 +1062,7 @@ class PhoneControlServiceTest {
             assertFalse(SessionState.feedback.value.success)
         }
         val after = SessionState.feedback.value.sequence
-        SystemClock.sleep(1100)
+        SystemClock.sleep(2300)
         assertEquals("No later request after consent withdrawal", after, SessionState.feedback.value.sequence)
     }
 
@@ -1096,6 +1094,7 @@ class PhoneControlServiceTest {
         await("target window focused before opening a system panel") {
             automation.windows.any { it.isFocused && it.root?.packageName?.toString() == "dev.saygo.app.test" }
         }
+        val beforePanel = SessionState.feedback.value.sequence
         try {
             executeDevicePhrase(phrase)
             await("native $panelId visible") {
@@ -1120,7 +1119,7 @@ class PhoneControlServiceTest {
                 }
             }
             root?.let { inspect(it) }
-            val details = "package=${root?.packageName}; windows=" + automation.windows.map {
+            val details = "feedbackCount=${SessionState.feedback.value.sequence - beforePanel}; feedback=${SessionState.feedback.value.title}; package=${root?.packageName}; windows=" + automation.windows.map {
                 "${it.id}:active=${it.isActive}:focused=${it.isFocused}"
             } + "; viewIds=$ids"
             @Suppress("DEPRECATION")

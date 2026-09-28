@@ -9,10 +9,20 @@ import android.widget.TextView;
 
 /** Separate test-APK window; uses only framework classes, with no app runtime dependency. */
 public class GestureTargetActivity extends Activity {
+    private TextView label;
+    private boolean entered;
+
+    @Override public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        if (!entered) {
+            entered = true;
+            label.setText("Gesture target: ready");
+        }
+    }
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        final TextView label = new TextView(this);
-        label.setText("Gesture target: ready");
+        label = new TextView(this);
+        label.setText("Gesture target: opening");
         label.setGravity(Gravity.CENTER);
         label.setTextSize(24f);
         label.setOnTouchListener(new View.OnTouchListener() {

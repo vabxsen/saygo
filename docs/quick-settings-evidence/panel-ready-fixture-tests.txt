@@ -1,0 +1,8 @@
+
+dev.saygo.app.PhoneControlServiceTest:.....
+
+Time: 24.547
+
+OK (5 tests)
+
+

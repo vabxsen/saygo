@@ -211,7 +211,6 @@ class PhoneControlService : AccessibilityService() {
                             handler.postDelayed(this, repeatAt - SystemClock.uptimeMillis())
                             return
                         }
-                        pending = null
                         // A global panel can take focus without changing this service's
                         // cached windows. Refresh before checking current input focus.
                         if (android.os.Build.VERSION.SDK_INT >= 33) clearCache()
@@ -219,7 +218,13 @@ class PhoneControlService : AccessibilityService() {
                         val stillInPanel = root?.packageName?.toString() == "com.android.systemui"
                         @Suppress("DEPRECATION")
                         root?.recycle()
-                        // Never reopen the panel after the user has left SystemUI.
+                        // Cold SystemUI startup can outlast the first delay. Keep waiting
+                        // within the bounded queue; repeat only while the panel has focus.
+                        if (!stillInPanel && SystemClock.uptimeMillis() + 80 < deadline) {
+                            handler.postDelayed(this, 80)
+                            return
+                        }
+                        pending = null
                         if (stillInPanel) DeviceControls.execute(this@PhoneControlService, command.action)
                         return
                     }
@@ -233,7 +238,7 @@ class PhoneControlService : AccessibilityService() {
                             android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
                     if (needsRepeat) {
                         repeatQuickSettingsAt = SystemClock.uptimeMillis() + 800
-                        deadline = repeatQuickSettingsAt!! + 800
+                        deadline = repeatQuickSettingsAt!! + 1200
                         handler.postDelayed(this, 800)
                     } else pending = null
                     return

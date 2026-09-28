@@ -1,3 +1,5 @@
+> Current version: **0.9.2**. See [native panel readiness](QUICK_SETTINGS_0.9.2.md). Earlier sections preserve verification history.
+
 > Current version: **0.9.1**. See [Quick Settings after boot](QUICK_SETTINGS_0.9.1.md). Earlier sections preserve verification history.
 
 > Current version: **0.9.0**. See [native system controls](SYSTEM_CONTROLS_0.9.0.md). Earlier sections preserve verification history.

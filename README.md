@@ -1,6 +1,8 @@
 # saygo
 
-**Current version: 0.9.1.** Fixes the first Quick Settings expansion on Android 16 with animations disabled. Build, lint, 23 JVM tests and the local cold-boot regression passed; the full emulator matrix is pending. See [patch verification and limits](docs/QUICK_SETTINGS_0.9.1.md).
+**Current version: 0.9.2.** Waits for SystemUI focus before the bounded Android 16 Quick Settings continuation. Build, lint, 23 JVM tests and four local panel/control checks passed; hosted compatibility is pending. See [verification and limits](docs/QUICK_SETTINGS_0.9.2.md).
+
+**Previous version: 0.9.1.** Added the bounded Quick Settings continuation and repaired animated test-fixture setup. Local tests passed, but Android 16 CI failures remained. See [the recorded results](docs/QUICK_SETTINGS_0.9.1.md).
 
 **Previous version: 0.9.0.** Adds explicit commands for notifications, Quick Settings and media volume. **88 local tests passed** (65 Android/API36 + 23 JVM), with build, lint and release checks passing. See [native system controls and verification](docs/SYSTEM_CONTROLS_0.9.0.md).
 
