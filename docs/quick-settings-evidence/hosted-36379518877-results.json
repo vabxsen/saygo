@@ -19,7 +19,7 @@
       "failedCases": [
         {
           "name": "notificationCommandOpensTheNativeShade",
-          "detail": null
+          "detail": "java.lang.AssertionError: Timed out waiting for launcher focused before opening a system panel\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:1281)\nat dev.saygo.app.PhoneControlServiceTest.assertDevicePanel(PhoneControlServiceTest.kt:1105)\nat dev.saygo.app.PhoneControlServiceTest.notificationCommandOpensTheNativeShade(PhoneControlServiceTest.kt:1040)\n"
         }
       ]
     }
