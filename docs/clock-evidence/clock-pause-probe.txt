@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: dispatchPassed=true
+INSTRUMENTATION_RESULT: trace=tap pause => Tap requested. (success=true, origin=com.google.android.deskclock)
+INSTRUMENTATION_CODE: -1

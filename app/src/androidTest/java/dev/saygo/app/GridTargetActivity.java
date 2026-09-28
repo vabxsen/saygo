@@ -1,6 +1,5 @@
 package dev.saygo.app;
 
-import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,16 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 /** Unlabelled canvas in a separate process; reports real touch delivery. */
-public class GridTargetActivity extends Activity {
+public class GridTargetActivity extends ReadyTargetActivity {
     private TextView result;
-    private boolean entered;
-
-    @Override public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
-        if (!entered) {
-            entered = true;
-            result.setText("Grid receiver ready");
-        }
+    @Override protected void onTargetReady() {
+        result.setText("Grid receiver ready");
     }
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);

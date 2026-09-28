@@ -1,0 +1,20 @@
+[
+  {
+    "resource-id": "com.google.android.deskclock:id/stopwatch_time_text",
+    "text": "00",
+    "content-desc": "",
+    "bounds": "[127,197][193,271]"
+  },
+  {
+    "resource-id": "com.google.android.deskclock:id/stopwatch_hundredths_text",
+    "text": "00",
+    "content-desc": "",
+    "bounds": "[151,248][193,299]"
+  },
+  {
+    "resource-id": "com.google.android.deskclock:id/fab",
+    "text": "",
+    "content-desc": "Start",
+    "bounds": "[112,424][208,520]"
+  }
+]

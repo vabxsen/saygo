@@ -28,6 +28,8 @@ Version 0.4.0 implements the selected cobalt-and-white design: a bold two-line h
 
 Version 0.4.1 fixes microphone-denial recovery, consent checks for queued actions, and spoken-feedback cancellation. All 32 Android instrumentation tests and 13 unit tests pass on the checked emulator. See [the functional audit](docs/FUNCTIONAL_AUDIT.md) for every button, test evidence, and explicit limits.
 
+[Google Clock stopwatch audit](docs/CLOCK_CONTROL_0.9.2.md): individual commands opened, started, paused and reset the real stopwatch. This check bypasses speech input.
+
 ## Try it
 
 1. Install the supplied debug APK on a test phone, or build one below.

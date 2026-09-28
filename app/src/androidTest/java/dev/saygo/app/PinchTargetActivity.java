@@ -1,6 +1,5 @@
 package dev.saygo.app;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -11,16 +10,10 @@ import android.widget.TextView;
 import java.util.Locale;
 
 /** Receives real two-finger events and runs Android's native scale detector. */
-public class PinchTargetActivity extends Activity {
+public class PinchTargetActivity extends ReadyTargetActivity {
     private TextView result;
-    private boolean entered;
-
-    @Override public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
-        if (!entered) {
-            entered = true;
-            result.setText("Pinch receiver ready");
-        }
+    @Override protected void onTargetReady() {
+        result.setText("Pinch receiver ready");
     }
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);

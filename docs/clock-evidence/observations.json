@@ -1,0 +1,29 @@
+{
+  "app": "com.google.android.deskclock",
+  "versionName": "7.5 (563137996)",
+  "versionCode": 76002074,
+  "androidAPI": 36,
+  "saygoVersion": "0.9.2",
+  "productionCommit": "579852822f2556c40fa43f7c56543d72d8a39a6a",
+  "scope": "ExplicitCommandProbe bypasses microphone and VoiceActivity; each literal command uses the production parser, executor and accessibility service.",
+  "commands": [
+    "open clock",
+    "tap stopwatch",
+    "tap start",
+    "tap pause",
+    "tap reset",
+    "tap clock"
+  ],
+  "observed": {
+    "initialStopwatch": "00.00, Start",
+    "runningScreenshot": "49.35, Pause icon",
+    "pausedScreenshot": "1:31.00, Play icon",
+    "laterPausedScreenshot": "1:31.00, Play icon",
+    "reset": "00.00, Start"
+  },
+  "restoration": "Stopwatch reset and Clock tab restored; no alarms created or changed.",
+  "limits": [
+    "Not a microphone or speech-recognition check",
+    "Does not verify alarms, timers or all Clock versions"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "run": "https://github.com/vabxsen/saygo/actions/runs/36377364377",
+  "commit": "c7af0bb4cd56decb8e7bca4e82db7e692c39f399",
+  "emulators": [
+    {
+      "artifact": "emulator-api-29-reports",
+      "tests": 64,
+      "failures": []
+    },
+    {
+      "artifact": "emulator-api-34-reports",
+      "tests": 64,
+      "failures": [
+        {
+          "test": "pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint",
+          "failure": "java.lang.AssertionError: Timed out waiting for Pinch receiver ready with settled bounds in both accessibility clients\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:1273)\nat dev.saygo.app.PhoneControlServiceTest.awaitStableFixture(PhoneControlServiceTest.kt:886)\nat dev.saygo.app.PhoneControlServiceTest.openPinchTarget(PhoneControlServiceTest.kt:871)\nat dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:631)\n"
+        }
+      ]
+    },
+    {
+      "artifact": "emulator-api-36-reports",
+      "tests": 64,
+      "failures": [
+        {
+          "test": "pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint",
+          "failure": "java.lang.AssertionError: Timed out waiting for Pinch receiver ready with settled bounds in both accessibility clients\nat org.junit.Assert.fail(Assert.java:89)\nat dev.saygo.app.PhoneControlServiceTest.await(PhoneControlServiceTest.kt:1273)\nat dev.saygo.app.PhoneControlServiceTest.awaitStableFixture(PhoneControlServiceTest.kt:886)\nat dev.saygo.app.PhoneControlServiceTest.openPinchTarget(PhoneControlServiceTest.kt:871)\nat dev.saygo.app.PhoneControlServiceTest.pinchCommandsDeliverTwoPointersAndNativeScalingWithOverlaysAtTheTouchPoint(PhoneControlServiceTest.kt:631)\n"
+        }
+      ]
+    }
+  ]
+}

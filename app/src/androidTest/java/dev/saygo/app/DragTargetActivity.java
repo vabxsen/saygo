@@ -1,6 +1,5 @@
 package dev.saygo.app;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.graphics.Canvas;
 import android.graphics.Point;
@@ -13,16 +12,10 @@ import android.widget.TextView;
 import java.util.Locale;
 
 /** Separate app: native drag-and-drop or raw continuous-pointer evidence. */
-public class DragTargetActivity extends Activity {
+public class DragTargetActivity extends ReadyTargetActivity {
     private TextView result;
-    private boolean entered;
-
-    @Override public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
-        if (!entered) {
-            entered = true;
-            result.setText("Drag receiver ready");
-        }
+    @Override protected void onTargetReady() {
+        result.setText("Drag receiver ready");
     }
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);

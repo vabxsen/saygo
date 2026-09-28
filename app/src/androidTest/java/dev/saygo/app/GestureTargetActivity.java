@@ -1,6 +1,5 @@
 package dev.saygo.app;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -8,16 +7,10 @@ import android.view.View;
 import android.widget.TextView;
 
 /** Separate test-APK window; uses only framework classes, with no app runtime dependency. */
-public class GestureTargetActivity extends Activity {
+public class GestureTargetActivity extends ReadyTargetActivity {
     private TextView label;
-    private boolean entered;
-
-    @Override public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
-        if (!entered) {
-            entered = true;
-            label.setText("Gesture target: ready");
-        }
+    @Override protected void onTargetReady() {
+        label.setText("Gesture target: ready");
     }
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);

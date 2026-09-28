@@ -883,39 +883,47 @@ class PhoneControlServiceTest {
         var observed: android.graphics.Rect? = null
         var windowId: Int? = null
         var stableSince = 0L
-        await("$label with settled bounds in both accessibility clients") {
-            if (android.os.Build.VERSION.SDK_INT >= 33) {
-                automation.clearCache()
-                instrumentation.runOnMainSync { PhoneControlService.current?.clearCache() }
+        var lastState = "not observed"
+        try {
+            await("$label with settled bounds in both accessibility clients") {
+                if (android.os.Build.VERSION.SDK_INT >= 33) {
+                    automation.clearCache()
+                    instrumentation.runOnMainSync { PhoneControlService.current?.clearCache() }
+                }
+                val root = automation.rootInActiveWindow
+                val serviceRoot = PhoneControlService.current?.rootInActiveWindow
+                try {
+                    // A cached node can retain an intermediate launch-animation position.
+                    // Refresh both clients and require stable geometry before choosing cells.
+                    val refreshed = root?.refresh() == true && serviceRoot?.refresh() == true
+                    val bounds = android.graphics.Rect().also { root?.getBoundsInScreen(it) }
+                    val other = android.graphics.Rect().also { serviceRoot?.getBoundsInScreen(it) }
+                    val hasLabel = root?.findAccessibilityNodeInfosByText(label)?.isNotEmpty() == true
+                    lastState = "ui=${root?.packageName}/${root?.windowId} service=${serviceRoot?.packageName}/${serviceRoot?.windowId} " +
+                        "previous=$previousWindowId bounds=$bounds serviceBounds=$other refreshed=$refreshed readyLabel=$hasLabel"
+                    val ready = refreshed && root?.packageName?.toString() == "dev.saygo.app.test" &&
+                        root.windowId != previousWindowId &&
+                        hasLabel &&
+                        serviceRoot?.windowId == root.windowId && other == bounds && !bounds.isEmpty
+                    if (!ready) {
+                        observed = null
+                        stableSince = 0L
+                        false
+                    } else if (observed != bounds || windowId != root?.windowId) {
+                        observed = bounds
+                        windowId = root?.windowId
+                        stableSince = SystemClock.uptimeMillis()
+                        false
+                    } else SystemClock.uptimeMillis() - stableSince >= 300
+                } finally {
+                    @Suppress("DEPRECATION")
+                    root?.recycle()
+                    @Suppress("DEPRECATION")
+                    serviceRoot?.recycle()
+                }
             }
-            val root = automation.rootInActiveWindow
-            val serviceRoot = PhoneControlService.current?.rootInActiveWindow
-            try {
-                // A cached node can retain an intermediate launch-animation position.
-                // Refresh both clients and require stable geometry before choosing cells.
-                val refreshed = root?.refresh() == true && serviceRoot?.refresh() == true
-                val bounds = android.graphics.Rect().also { root?.getBoundsInScreen(it) }
-                val other = android.graphics.Rect().also { serviceRoot?.getBoundsInScreen(it) }
-                val ready = refreshed && root?.packageName?.toString() == "dev.saygo.app.test" &&
-                    root.windowId != previousWindowId &&
-                    root.findAccessibilityNodeInfosByText(label).isNotEmpty() &&
-                    serviceRoot?.windowId == root.windowId && other == bounds && !bounds.isEmpty
-                if (!ready) {
-                    observed = null
-                    stableSince = 0L
-                    false
-                } else if (observed != bounds || windowId != root?.windowId) {
-                    observed = bounds
-                    windowId = root?.windowId
-                    stableSince = SystemClock.uptimeMillis()
-                    false
-                } else SystemClock.uptimeMillis() - stableSince >= 300
-            } finally {
-                @Suppress("DEPRECATION")
-                root?.recycle()
-                @Suppress("DEPRECATION")
-                serviceRoot?.recycle()
-            }
+        } catch (failure: AssertionError) {
+            throw AssertionError("Fixture $label: $lastState", failure)
         }
         return checkNotNull(observed)
     }
