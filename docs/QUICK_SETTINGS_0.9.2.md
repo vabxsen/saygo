@@ -8,8 +8,12 @@ The earlier [0.9.1 report](QUICK_SETTINGS_0.9.1.md) preserves local passes and h
 
 ## Verification
 
-Build, 23 JVM tests, lint and the unsigned release bundle passed. The cold-boot Quick Settings test and three notification/cancellation/consent tests passed on the local API36 Play Store image with animations disabled. [Evidence](quick-settings-evidence/). The final five-test panel/control/swipe subset also passed with the lifecycle-based gesture fixture. Hosted results are pending. Native panel checks still require the visible expanded panel, and cancellation checks wait beyond the two-second continuation limit. The lifecycle-based grid/drag/pinch test fixtures remain; they passed all 64 core tests with normal animations in the 0.9.1 local run.
+Build, 23 JVM tests, lint and the unsigned release bundle passed. The cold-boot Quick Settings test and three notification/cancellation/consent tests passed on the local API36 Play Store image with animations disabled. [Evidence](quick-settings-evidence/). The final five-test panel/control/swipe subset also passed with the lifecycle-based gesture fixture. The full local API36 core suite also passed all 64 tests with normal animations. [The first hosted run](quick-settings-evidence/hosted-36366617340-results.json) passed build and all 64 API29 tests. API34/API36 each failed only while waiting for the GestureTargetActivity fixture before the Quick Settings command was sent. Those runs do not demonstrate a production dispatch failure and are not counted as compatibility passes. Native panel checks still require the visible expanded panel, and cancellation checks wait beyond the two-second continuation limit. The lifecycle-based grid/drag/pinch test fixtures remain; they passed all 64 core tests with normal animations in the 0.9.1 local run.
 
 ## Limits
 
 Live microphone recognition, actual Instagram Reels, all-device/OEM coverage and Google Play approval remain unverified. The release bundle remains unsigned; publisher setup and Play submission are incomplete. See the [capability audit](CAPABILITY_AUDIT.md).
+
+## Launcher-based panel check
+
+The native notification and Quick Settings assertions now start from the emulator's resolved home launcher instead of launching a fixture Activity. This removes the unrelated first-activity readiness dependency from global panel tests. The test still uses the production parser/executor/service and requires the actual expanded native panel; it restores the launcher by collapsing the shade in `finally`. Gesture tests keep their separate lifecycle-aware fixtures. Both refined native panel tests passed locally after a cold boot with animations disabled. The test APK build passed. Hosted results of this refinement are pending.

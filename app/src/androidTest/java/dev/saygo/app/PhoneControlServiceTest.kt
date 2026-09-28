@@ -1088,11 +1088,15 @@ class PhoneControlServiceTest {
         info.flags = info.flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or
             android.accessibilityservice.AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
         automation.serviceInfo = info
-        openGestureTarget()
-        // A visible node can precede the end of Activity launch and its shade-collapse work.
+        // Global panels do not need a newly launched target Activity. Start from the
+        // launcher so fixture lifecycle/animation callbacks cannot gate this test.
+        val home = shell("cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME")
+            .lineSequence().last { it.contains('/') }.substringBefore('/')
+        shell("input keyevent KEYCODE_HOME")
         automation.waitForIdle(300, 5_000)
-        await("target window focused before opening a system panel") {
-            automation.windows.any { it.isFocused && it.root?.packageName?.toString() == "dev.saygo.app.test" }
+        await("launcher focused before opening a system panel") {
+            if (android.os.Build.VERSION.SDK_INT >= 33) automation.clearCache()
+            automation.windows.any { it.isFocused && it.root?.packageName?.toString() == home }
         }
         val beforePanel = SessionState.feedback.value.sequence
         try {
@@ -1127,7 +1131,10 @@ class PhoneControlServiceTest {
             throw AssertionError("$phrase: $details", failure)
         } finally {
             shell("cmd statusbar collapse")
-            await("system panel closed") { automation.rootInActiveWindow?.packageName?.toString() == "dev.saygo.app.test" }
+            await("system panel closed") {
+                if (android.os.Build.VERSION.SDK_INT >= 33) automation.clearCache()
+                automation.rootInActiveWindow?.packageName?.toString() == home
+            }
         }
     }
 
