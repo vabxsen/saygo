@@ -1100,7 +1100,10 @@ class PhoneControlServiceTest {
         // launcher so fixture lifecycle/animation callbacks cannot gate this test.
         val home = shell("cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME")
             .lineSequence().last { it.contains('/') }.substringBefore('/')
-        shell("input keyevent KEYCODE_HOME")
+        // A preceding global-action test may leave SystemUI above the launcher.
+        // HOME alone can leave that shade focused; close it before preparing home.
+        shell("cmd statusbar collapse")
+        shell("am start -W -a android.intent.action.MAIN -c android.intent.category.HOME")
         automation.waitForIdle(300, 5_000)
         await("launcher focused before opening a system panel") {
             if (android.os.Build.VERSION.SDK_INT >= 33) automation.clearCache()

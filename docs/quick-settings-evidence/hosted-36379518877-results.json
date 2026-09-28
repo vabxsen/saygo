@@ -1,0 +1,29 @@
+{
+  "reports": [
+    {
+      "apiArtifact": "emulator-api-29-reports",
+      "tests": "64",
+      "failures": "0",
+      "failedCases": []
+    },
+    {
+      "apiArtifact": "emulator-api-34-reports",
+      "tests": "64",
+      "failures": "0",
+      "failedCases": []
+    },
+    {
+      "apiArtifact": "emulator-api-36-reports",
+      "tests": "64",
+      "failures": "1",
+      "failedCases": [
+        {
+          "name": "notificationCommandOpensTheNativeShade",
+          "detail": null
+        }
+      ]
+    }
+  ],
+  "run": "https://github.com/vabxsen/saygo/actions/runs/36379518877",
+  "commit": "886a927870adf62dbedf0541dcb1f5fbd6418aeb"
+}
