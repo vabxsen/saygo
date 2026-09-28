@@ -229,11 +229,11 @@ class PhoneControlService : AccessibilityService() {
                         return
                     }
                     val accepted = DeviceControls.execute(this@PhoneControlService, command.action)
-                    // Android 16 can stop at the collapsed shade on its first expansion
+                    // Android 14 and newer can stop at the collapsed shade on first expansion
                     // after boot with animations disabled. One idempotent native repeat
                     // completes that same request; it stays in the cancellable queue.
                     val needsRepeat = accepted && command.action == dev.saygo.app.commands.DeviceAction.QUICK_SETTINGS &&
-                        android.os.Build.VERSION.SDK_INT >= 36 &&
+                        android.os.Build.VERSION.SDK_INT >= 34 &&
                         android.provider.Settings.Global.getFloat(contentResolver,
                             android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
                     if (needsRepeat) {

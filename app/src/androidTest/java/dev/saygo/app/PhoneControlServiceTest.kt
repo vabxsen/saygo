@@ -1065,7 +1065,7 @@ class PhoneControlServiceTest {
         }
         await("initial panel request") { SessionState.feedback.value.sequence > before && SessionState.feedback.value.title == "Quick Settings requested." }
         Preferences(context).controlConsent = false
-        if (android.os.Build.VERSION.SDK_INT >= 36) {
+        if (android.os.Build.VERSION.SDK_INT >= 34) {
             await("repeat rejected after consent withdrawal") { SessionState.feedback.value.title == "Phone controls are off." }
             assertFalse(SessionState.feedback.value.success)
         }

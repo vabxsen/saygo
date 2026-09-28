@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: dispatchPassed=true
+INSTRUMENTATION_RESULT: trace=tap search settings => Tap requested. (success=true, origin=com.android.settings)
+INSTRUMENTATION_CODE: -1

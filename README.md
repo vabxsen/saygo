@@ -1,6 +1,8 @@
 # saygo
 
-**Current version: 0.9.2.** Waits for SystemUI focus before the bounded Android 16 Quick Settings continuation. Build, lint, 23 JVM tests and four local panel/control checks passed; hosted compatibility is pending. See [verification and limits](docs/QUICK_SETTINGS_0.9.2.md).
+**Current version: 0.9.3.** Extends the bounded Quick Settings continuation to Android 14 after a hosted reproduction of the collapsed-shade failure. Local build, lint, 23 JVM tests and four native panel/cancellation checks passed; hosted compatibility is pending. See [verification and limits](docs/QUICK_SETTINGS_0.9.3.md).
+
+**Previous version: 0.9.2.** Waits for SystemUI focus before the bounded Android 16 Quick Settings continuation. Build, lint, 23 JVM tests and four local panel/control checks passed; hosted Android 10/16 passed, while Android 14 retained one Quick Settings failure. See [verification and limits](docs/QUICK_SETTINGS_0.9.2.md).
 
 **Previous version: 0.9.1.** Added the bounded Quick Settings continuation and repaired animated test-fixture setup. Local tests passed, but Android 16 CI failures remained. See [the recorded results](docs/QUICK_SETTINGS_0.9.1.md).
 
@@ -29,6 +31,8 @@ Version 0.4.0 implements the selected cobalt-and-white design: a bold two-line h
 Version 0.4.1 fixes microphone-denial recovery, consent checks for queued actions, and spoken-feedback cancellation. All 32 Android instrumentation tests and 13 unit tests pass on the checked emulator. See [the functional audit](docs/FUNCTIONAL_AUDIT.md) for every button, test evidence, and explicit limits.
 
 [Google Clock stopwatch audit](docs/CLOCK_CONTROL_0.9.2.md): individual commands opened, started, paused and reset the real stopwatch. This check bypasses speech input.
+
+[Android Settings search audit](docs/SETTINGS_CONTROL_0.9.2.md): explicit commands typed, replaced and cleared a query in the native search field. This check bypasses speech input.
 
 ## Try it
 

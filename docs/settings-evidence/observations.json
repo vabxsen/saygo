@@ -1,0 +1,49 @@
+[
+  {
+    "stage": "typed",
+    "field": {
+      "text": "bluetooth",
+      "resource-id": "com.google.android.settings.intelligence:id/open_search_view_edit_text",
+      "package": "com.google.android.settings.intelligence",
+      "class": "android.widget.EditText",
+      "focused": "true"
+    },
+    "resultTitles": [
+      "Bluetooth",
+      "Bluetooth address",
+      "Bluetooth scanning",
+      "Bluetooth scanning",
+      "Pair new device",
+      "Bluetooth tethering"
+    ]
+  },
+  {
+    "stage": "replaced",
+    "field": {
+      "text": "wifi",
+      "resource-id": "com.google.android.settings.intelligence:id/open_search_view_edit_text",
+      "package": "com.google.android.settings.intelligence",
+      "class": "android.widget.EditText",
+      "focused": "true"
+    },
+    "resultTitles": [
+      "Wi-Fi",
+      "Wi-Fi hotspot",
+      "Wi-Fi Direct",
+      "Wi-Fi scanning",
+      "Wi-Fi scanning",
+      "Wi-Fi control"
+    ]
+  },
+  {
+    "stage": "cleared",
+    "field": {
+      "text": "Search settings",
+      "resource-id": "com.google.android.settings.intelligence:id/open_search_view_edit_text",
+      "package": "com.google.android.settings.intelligence",
+      "class": "android.widget.EditText",
+      "focused": "true"
+    },
+    "resultTitles": []
+  }
+]

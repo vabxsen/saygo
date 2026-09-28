@@ -1,6 +1,6 @@
 # Capability audit against the original requirement
 
-## Current assessment: 0.9.2
+## Current assessment: 0.9.3
 
 The original “anything a person can do on their phone” requirement remains **unmet and unproven**. The user selected individual deterministic commands with Google Play support. The app now covers a wider set of those commands, but passing tests must not be treated as universal task coverage.
 
@@ -16,12 +16,13 @@ The original “anything a person can do on their phone” requirement remains *
 | System navigation and device controls | Back/Home/Recents plus explicit notifications, Quick Settings and media-volume commands. Current native tests inspect visible panels and actual audio state. [0.9.0 controls](SYSTEM_CONTROLS_0.9.0.md), [0.9.2 follow-up](QUICK_SETTINGS_0.9.2.md) | Supported commands verified within the recorded device/test scope |
 | Clock stopwatch | Explicit open/tab/start/pause/reset commands operated the actual Google Clock app; the stopped time remained 1:31.00 in later captures and reset to zero. [Clock audit](CLOCK_CONTROL_0.9.2.md) | This stopwatch flow verified; speech input, alarms and timers not covered |
 | Calls, messages, alarms, files and arbitrary app workflows | Generic individual controls may be used inside compatible apps, but no complete acceptance matrix verifies every such task. There are no dedicated task planners or integrations for these categories. | Broad task coverage incomplete |
+| Android Settings search editing | Individual commands opened search, typed `bluetooth`, replaced it with `wifi` and cleared it in the actual Settings Intelligence app on API36. [Settings audit](SETTINGS_CONTROL_0.9.2.md) | Receiving field verified; microphone input and other settings workflows unverified |
 | Continuous listening / wake word | Production listening is tap-initiated, one result per session, bounded to 15 seconds. | Always-on listening and wake word not implemented |
 | Android 10+ on all phones | Packaged minSdk29/target36 verified; per-version emulator reports are linked from the current verification page. OEM variations, physical devices and all-device behavior are not established by the emulator matrix. | Supported minimum verified; universal compatibility unproven |
 | Google Play and GitHub distribution | Source is committed/pushed to the requested GitHub repository. Debug APK and unsigned release AAB are built. Publisher-specific privacy details, production signing, Play submission and review remain outstanding. | GitHub delivered; Google Play release incomplete |
 | Security and platform limits | Locked/non-interactive screen guards, consent rechecks, target validation and cancellation remain. Secure/password fields and Android restrictions are not bypassed. | Deliberate boundaries; these prevent an unrestricted “anything” promise |
 
-The [system-control audit](SYSTEM_CONTROLS_0.9.0.md) and [0.9.2 follow-up](QUICK_SETTINGS_0.9.2.md) record validation and hosted failures/follow-ups. Earlier evidence is explicitly versioned. Live microphone input, actual Instagram/Reels, Google search results, broader task coverage and Play distribution still require additional evidence or external setup. The goal must remain open.
+The [0.9.3 Android 14 fix](QUICK_SETTINGS_0.9.3.md) records the current patch and verification status. The [system-control audit](SYSTEM_CONTROLS_0.9.0.md) and [0.9.2 follow-up](QUICK_SETTINGS_0.9.2.md) record validation and hosted failures/follow-ups. Earlier evidence is explicitly versioned. Live microphone input, actual Instagram/Reels, Google search results, broader task coverage and Play distribution still require additional evidence or external setup. The goal must remain open.
 
 ## Historical baseline and follow-ups
 

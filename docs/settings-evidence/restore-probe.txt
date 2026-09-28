@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: dispatchPassed=true
+INSTRUMENTATION_RESULT: trace=go home => Home requested. (success=true, origin=com.google.android.settings.intelligence)
+INSTRUMENTATION_CODE: -1

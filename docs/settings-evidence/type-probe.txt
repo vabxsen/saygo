@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: dispatchPassed=true
+INSTRUMENTATION_RESULT: trace=type bluetooth => Text entered. (success=true, origin=com.google.android.settings.intelligence)
+INSTRUMENTATION_CODE: -1
